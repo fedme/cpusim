@@ -38,9 +38,7 @@ const parseInstruction = (instruction: string) => {
 }
 
 export const executeNextInstruction = () => {
-  const { code, codeRowIndex } = store.getState().cpu
-
-  const instructions = code.split(/\r?\n/).filter(i => i !== '')
+  const { instructions, codeRowIndex } = store.getState().cpu
 
   if (codeRowIndex >= instructions.length) {
     return true

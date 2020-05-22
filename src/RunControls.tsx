@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { executeNextInstruction } from './codeParser'
-import { reset } from './store/cpuSlice'
+import { reset, loadInstructions } from './store/cpuSlice'
 
 export const RunControls = () => {
   const dispatch = useDispatch()
@@ -23,6 +23,8 @@ export const RunControls = () => {
     }
 
     // execute code
+    dispatch(loadInstructions())
+
     const instructionInterval = window.setInterval(() => {
       const terminated = executeNextInstruction()
 

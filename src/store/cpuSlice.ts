@@ -1,11 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 type cpuState = {
-  code: string;
-  codeRowIndex: number;
-  r0: number;
-  r1: number;
-  a: number;
+  code: string // TODO: move to a different slice
+  codeRowIndex: number // TODO: move to a different slice
+  instructions: string[] // TODO: move to a different slice
+  r0: number
+  r1: number
+  a: number
 }
 
 const initialCode = `SET R0 1
@@ -16,6 +17,7 @@ ADD
 const initialState: cpuState = {
   code: initialCode,
   codeRowIndex: 0,
+  instructions: initialCode.split(/\r?\n/).filter(i => i !== ''),
   r0: 0,
   r1: 0,
   a: 0
@@ -27,11 +29,18 @@ const cpuSlice = createSlice({
   reducers: {
 
     reset(state) {
-      state.code = initialState.code
-      state.codeRowIndex = initialState.codeRowIndex
+      state.codeRowIndex = 0
       state.r0 = initialState.r0
       state.r1 = initialState.r1
       state.a = initialState.a
+    },
+
+    setCode(state, action: PayloadAction<string>) {
+      state.code = action.payload
+    },
+
+    loadInstructions(state) {
+      state.instructions = state.code.split(/\r?\n/).filter(i => i !== '')
     },
 
     incrementCodeRowIndex(state) {
@@ -55,6 +64,8 @@ const cpuSlice = createSlice({
 
 export const {
   reset,
+  setCode,
+  loadInstructions,
   incrementCodeRowIndex,
   setR0,
   setR1,
