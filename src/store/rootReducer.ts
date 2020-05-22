@@ -2,7 +2,7 @@ import { combineReducers } from '@reduxjs/toolkit'
 import cpuReducer from './cpuSlice'
 
 const rootReducer = combineReducers({
-  user: cpuReducer
+  cpu: cpuReducer
 })
 
 export type RootState = ReturnType<typeof rootReducer>

@@ -20,7 +20,7 @@
     "typescript": "^3.7.5"
   },
   "scripts": {
-    "prestart": "NODE_ENV=production npm run tailwind:build",
+    "prestart": "npm run tailwind:build",
     "start": "react-scripts start",
     "prebuild": "NODE_ENV=production npm run tailwind:build",
     "build": "react-scripts build",
