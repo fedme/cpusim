@@ -1,0 +1,80 @@
+{
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "extends": [
+        "airbnb-typescript",
+        "react-app"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    },
+    "settings": {
+        "import/resolver": {
+            "typescript": {
+                "alwaysTryTypes": true
+            }
+        }
+    },
+    "rules": {
+        "semi": "off",
+        "max-len": [
+            2,
+            {
+                "code": 125
+            }
+        ],
+        "react/prop-types": [
+            0
+        ],
+        "import/prefer-default-export": "off",
+        "comma-dangle": [
+            "error",
+            "never"
+        ],
+        "arrow-parens": 0,
+        "no-use-before-define": 0,
+        "no-param-reassign": 0,
+        "react/jsx-max-props-per-line": [
+            1,
+            {
+                "maximum": 2
+            }
+        ],
+        "react/jsx-filename-extension": [
+            1,
+            {
+                "extensions": [
+                    ".tsx"
+                ]
+            }
+        ],
+        "import/extensions": [
+            "error",
+            "ignorePackages",
+            {
+                "js": "never",
+                "jsx": "never",
+                "ts": "never",
+                "tsx": "never"
+            }
+        ],
+        "react/jsx-one-expression-per-line": 0,
+        "@typescript-eslint/no-empty-function": [
+            "error",
+            {
+                "allow": [
+                    "arrowFunctions"
+                ]
+            }
+        ],
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/semi": [
+            "error",
+            "never"
+        ],
+        "@typescript-eslint/no-use-before-define": 0
+    }
+}
