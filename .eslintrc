@@ -22,7 +22,7 @@
         "max-len": [
             2,
             {
-                "code": 125
+                "code": 155
             }
         ],
         "react/prop-types": [

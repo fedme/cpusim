@@ -37,8 +37,13 @@ export const RunControls = () => {
   }
 
   return (
-    <button className="bg-blue-500 mt-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={run}>
-      Run
-    </button>
+    <div className="flex items-baseline">
+      <button
+        className="px-3 py-2 rounded-md text-sm font-medium text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700"
+        onClick={run}
+      >
+        Run
+      </button>
+    </div>
   )
 }

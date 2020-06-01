@@ -61,6 +61,7 @@
     "eslint-config-airbnb-typescript": "^7.2.1",
     "eslint-import-resolver-typescript": "^2.0.0",
     "postcss-cli": "^7.1.1",
-    "tailwindcss": "^1.4.4"
+    "tailwindcss": "^1.4.4",
+    "use-resize-observer": "^6.1.0"
   }
 }
