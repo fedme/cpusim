@@ -24,6 +24,7 @@ const parseAdd = () => {
 }
 
 const parseInstruction = (instruction: string) => {
+  // eslint-disable-next-line no-console
   console.log('Executing instruction ', instruction)
 
   const instructionType = instruction.split(' ')[0]

@@ -75,6 +75,7 @@
             "error",
             "never"
         ],
-        "@typescript-eslint/no-use-before-define": 0
+        "@typescript-eslint/no-use-before-define": 0,
+        "linebreak-style": 0
     }
 }
