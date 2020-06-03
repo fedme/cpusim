@@ -1,5 +1,7 @@
 import React, { useRef } from 'react'
 import AceEditor from 'react-ace'
+import 'ace-builds/src-noconflict/mode-java'
+import 'ace-builds/src-noconflict/theme-github'
 import { useDebouncedCallback } from 'use-debounce'
 import useResizeObserver from 'use-resize-observer'
 import { useSelector, useDispatch } from 'react-redux'
@@ -17,6 +19,8 @@ export const CodeEditor = () => {
   return (
     <div className="w-full h-full" ref={ref}>
       <AceEditor
+        mode="java"
+        theme="github"
         value={code}
         onChange={onCodeChangeDebounced}
         width={width.toString()}
@@ -24,3 +28,18 @@ export const CodeEditor = () => {
     </div>
   )
 }
+
+// export class CustomHighlightRules extends window.ace.acequire('ace/mode/text_highlight_rules').TextHighlightRules {
+//   constructor() {
+//     super()
+//     this.$rules = {
+//       start: [{
+//         token: 'comment',
+//         regex: '#.*$'
+//       }, {
+//         token: 'string',
+//         regex: '".*?"'
+//       }]
+//     }
+//   }
+// }
