@@ -18,17 +18,16 @@ export function configureMonacoEditor(monacoInstance: typeof monacoEditor) {
   })
   // Define a new theme that contains only rules that match this language
   monacoInstance.editor.defineTheme('cpusimTheme', {
-    base: 'vs-dark',
+    base: 'vs',
     inherit: true,
     rules: [
-      { token: 'instruction', foreground: 'FF6188', fontStyle: 'bold' },
-      { token: 'register', foreground: 'FC9867' },
-      { token: 'address', foreground: 'A9DC76' },
-      { token: 'ixAddress', foreground: '78DCE8' },
-      { token: 'spAddress', foreground: 'AB9DF2' }
+      { token: 'instruction', foreground: '62C8E6', fontStyle: 'bold' },
+      { token: 'register', foreground: '68AF00' },
+      { token: 'address', foreground: '000000' },
+      { token: 'ixAddress', foreground: 'FF9600' },
+      { token: 'spAddress', foreground: 'F92672' }
     ],
     colors: {
-      'editor.background': '#2C292D'
     }
   })
 }
