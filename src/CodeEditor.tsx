@@ -1,7 +1,6 @@
 import React, { useRef } from 'react'
-import AceEditor from 'react-ace'
-import 'ace-builds/src-noconflict/mode-java'
-import 'ace-builds/src-noconflict/theme-github'
+import Editor from '@monaco-editor/react'
+import { editor } from 'monaco-editor'
 import { useDebouncedCallback } from 'use-debounce'
 import useResizeObserver from 'use-resize-observer'
 import { useSelector, useDispatch } from 'react-redux'
@@ -9,37 +8,35 @@ import { RootState } from './store/rootReducer'
 import { setCode } from './store/cpuSlice'
 
 export const CodeEditor = () => {
-  const ref = useRef(null)
-  const { width = 1 } = useResizeObserver({ ref })
+  const containerRef = useRef(null)
+  const editorRef = useRef<editor.IStandaloneCodeEditor>()
+
+  const { width = 1 } = useResizeObserver({ ref: containerRef })
   const dispatch = useDispatch()
   const { code } = useSelector((state: RootState) => state.cpu)
   const onCodeChange = (newValue: string) => dispatch(setCode(newValue))
   const [onCodeChangeDebounced] = useDebouncedCallback(onCodeChange, 500)
 
+  function handleEditorDidMount(getEditorValue: () => string, editorInstance: editor.IStandaloneCodeEditor) {
+    editorRef.current = editorInstance
+    editorInstance.onDidChangeModelContent(ev => {
+      onCodeChangeDebounced(getEditorValue())
+    })
+  }
+
+
   return (
-    <div className="w-full h-full" ref={ref}>
-      <AceEditor
-        mode="java"
-        theme="github"
+    <div className="w-full h-full" ref={containerRef}>
+      <Editor
+        width={width}
+        height="60vh"
+        language="javascript"
         value={code}
-        onChange={onCodeChangeDebounced}
-        width={width.toString()}
+        editorDidMount={handleEditorDidMount}
+        options={{
+          minimap: { enabled: false }
+        }}
       />
     </div>
   )
 }
-
-// export class CustomHighlightRules extends window.ace.acequire('ace/mode/text_highlight_rules').TextHighlightRules {
-//   constructor() {
-//     super()
-//     this.$rules = {
-//       start: [{
-//         token: 'comment',
-//         regex: '#.*$'
-//       }, {
-//         token: 'string',
-//         regex: '".*?"'
-//       }]
-//     }
-//   }
-// }
