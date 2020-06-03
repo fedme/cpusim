@@ -20,7 +20,8 @@
     "react-scripts": "3.4.1",
     "react-transition-group": "^4.4.1",
     "typescript": "^3.7.5",
-    "use-debounce": "^3.4.2"
+    "use-debounce": "^3.4.2",
+    "use-resize-observer": "^6.1.0"
   },
   "scripts": {
     "prestart": "npm run tailwind:build",
@@ -61,7 +62,6 @@
     "eslint-config-airbnb-typescript": "^7.2.1",
     "eslint-import-resolver-typescript": "^2.0.0",
     "postcss-cli": "^7.1.1",
-    "tailwindcss": "^1.4.4",
-    "use-resize-observer": "^6.1.0"
+    "tailwindcss": "^1.4.4"
   }
 }
