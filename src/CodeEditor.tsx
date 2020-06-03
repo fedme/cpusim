@@ -1,11 +1,18 @@
 import React, { useRef } from 'react'
-import Editor from '@monaco-editor/react'
+import Editor, { monaco } from '@monaco-editor/react'
 import { editor } from 'monaco-editor'
 import { useDebouncedCallback } from 'use-debounce'
 import useResizeObserver from 'use-resize-observer'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from './store/rootReducer'
 import { setCode } from './store/cpuSlice'
+import { configureMonacoEditor } from './monacoEditorSettings'
+
+monaco
+  .init()
+  .then(configureMonacoEditor)
+  // eslint-disable-next-line no-console
+  .catch(error => console.error('An error occurred during initialization of Monaco: ', error))
 
 export const CodeEditor = () => {
   const containerRef = useRef(null)
@@ -26,8 +33,9 @@ export const CodeEditor = () => {
     <div className="w-full h-full" ref={containerRef}>
       <Editor
         width={width}
-        height="60vh"
-        language="javascript"
+        height="80vh"
+        language="cpusim"
+        theme="cpusimTheme"
         value={code}
         editorDidMount={onEditorDidMount}
         options={{
