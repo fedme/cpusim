@@ -10,20 +10,17 @@ import { setCode } from './store/cpuSlice'
 export const CodeEditor = () => {
   const containerRef = useRef(null)
   const editorRef = useRef<editor.IStandaloneCodeEditor>()
-
   const { width = 1 } = useResizeObserver({ ref: containerRef })
   const dispatch = useDispatch()
+
   const { code } = useSelector((state: RootState) => state.cpu)
   const onCodeChange = (newValue: string) => dispatch(setCode(newValue))
   const [onCodeChangeDebounced] = useDebouncedCallback(onCodeChange, 500)
 
-  function handleEditorDidMount(getEditorValue: () => string, editorInstance: editor.IStandaloneCodeEditor) {
+  const onEditorDidMount = (getEditorValue: () => string, editorInstance: editor.IStandaloneCodeEditor) => {
     editorRef.current = editorInstance
-    editorInstance.onDidChangeModelContent(ev => {
-      onCodeChangeDebounced(getEditorValue())
-    })
+    editorInstance.onDidChangeModelContent(_ => onCodeChangeDebounced(getEditorValue()))
   }
-
 
   return (
     <div className="w-full h-full" ref={containerRef}>
@@ -32,7 +29,7 @@ export const CodeEditor = () => {
         height="60vh"
         language="javascript"
         value={code}
-        editorDidMount={handleEditorDidMount}
+        editorDidMount={onEditorDidMount}
         options={{
           minimap: { enabled: false }
         }}
