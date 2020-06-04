@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { cpusimGrammar } from '../parser'
 
 type cpuState = {
   code: string // TODO: move to a different slice
@@ -37,6 +38,8 @@ const cpuSlice = createSlice({
 
     setCode(state, action: PayloadAction<string>) {
       state.code = action.payload
+      console.log('grammar match succeded', cpusimGrammar.match(state.code).succeeded())
+      console.log('grammar match message', cpusimGrammar.match(state.code).shortMessage)
     },
 
     loadInstructions(state) {
