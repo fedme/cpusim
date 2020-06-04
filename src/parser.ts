@@ -1,4 +1,4 @@
-import { grammar, Grammar } from 'ohm-js'
+import { grammar, Grammar } from 'ohm-fork'
 
 export const cpusimGrammar: Grammar = grammar(`CpuSim {
     Exp = Instruction*

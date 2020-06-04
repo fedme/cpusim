@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { toAST } from 'ohm-fork/extras'
 import { cpusimGrammar } from '../parser'
 
 type cpuState = {
@@ -38,8 +39,12 @@ const cpuSlice = createSlice({
 
     setCode(state, action: PayloadAction<string>) {
       state.code = action.payload
-      console.log('grammar match succeded', cpusimGrammar.match(state.code).succeeded())
-      console.log('grammar match message', cpusimGrammar.match(state.code).shortMessage)
+
+      const match = cpusimGrammar.match(state.code)
+      console.log('grammar match succeded', match.succeeded())
+      console.log('grammar match message', match.shortMessage)
+      console.log('grammar match failures', (match as any).getRightmostFailures())
+      console.log('ast', toAST(match))
     },
 
     loadInstructions(state) {
