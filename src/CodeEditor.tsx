@@ -10,6 +10,7 @@ import { RootState } from './store/rootReducer'
 import { setCode, initialCode } from './store/cpuSlice'
 import { configureMonacoEditor, getMonacoMarkers, MonacoEditor } from './monacoEditor'
 
+// TODO: configureMonacoEditor() and adding markers generates a Monaco warning about web workers. To be investigated...
 
 export const CodeEditor = () => {
   // Set up Monaco
@@ -21,7 +22,7 @@ export const CodeEditor = () => {
         setMonacoInstance(instance)
         configureMonacoEditor(instance)
       })
-    // eslint-disable-next-line no-console
+      // eslint-disable-next-line no-console
       .catch(error => console.error('An error occurred during initialization of Monaco: ', error))
   }, [])
 
@@ -34,13 +35,15 @@ export const CodeEditor = () => {
   const onCodeChange = useCallback((newValue: string) => dispatch(setCode(newValue)), [dispatch])
   const [onCodeChangeDebounced] = useDebouncedCallback(onCodeChange, 500)
 
-  const onEditorDidMount = (getEditorValue: () => string, editorInstance: editor.IStandaloneCodeEditor) => {
-    editorRef.current = editorInstance
-    // TODO: this fires twice at every change for some reason
-    editorInstance.onDidChangeModelContent(_ => onCodeChangeDebounced(getEditorValue()))
-  }
+  const onEditorDidMount = useCallback(
+    (getEditorValue: () => string, editorInstance: editor.IStandaloneCodeEditor) => {
+      editorRef.current = editorInstance
+      editorInstance.onDidChangeModelContent(_ => onCodeChangeDebounced(getEditorValue()))
+    },
+    [onCodeChangeDebounced]
+  )
 
-  // TODO: this generates a Monaco warning about web workers. To investigate...
+  // Add markers on syntax errors
   if (monacoInstance && editorRef.current) {
     monacoInstance.editor.setModelMarkers(editorRef.current.getModel()!, 'owner', getMonacoMarkers(syntaxErrors))
   }
