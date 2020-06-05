@@ -5,13 +5,7 @@ import { SyntaxError } from './parser'
 
 export type MonacoEditor = typeof monacoEditor
 
-// TODO: find something better than this hack, which introduces web worker warnings
-// eslint-disable-next-line import/no-mutable-exports
-export let MONACO_INSTANCE: MonacoEditor
-
 export function configureMonacoEditor(monacoInstance: MonacoEditor) {
-  MONACO_INSTANCE = monacoInstance
-
   // Register a new language
   monacoInstance.languages.register({ id: 'cpusim' })
   // Register a tokens provider for the language

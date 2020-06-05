@@ -11,7 +11,7 @@ type cpuState = {
   a: number
 }
 
-const initialCode = `SET R0 1
+export const initialCode = `SET R0 1
 SET R1 2
 ADD
 `
