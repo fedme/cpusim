@@ -1,7 +1,16 @@
 
 import * as monacoEditor from 'monaco-editor/esm/vs/editor/editor.api'
+import { editor, MarkerSeverity } from 'monaco-editor'
+import { SyntaxError } from './parser'
 
-export function configureMonacoEditor(monacoInstance: typeof monacoEditor) {
+export type MonacoEditor = typeof monacoEditor
+
+// eslint-disable-next-line import/no-mutable-exports
+export let MONACO_INSTANCE: MonacoEditor
+
+export function configureMonacoEditor(monacoInstance: MonacoEditor) {
+  MONACO_INSTANCE = monacoInstance
+
   // Register a new language
   monacoInstance.languages.register({ id: 'cpusim' })
   // Register a tokens provider for the language
@@ -31,3 +40,14 @@ export function configureMonacoEditor(monacoInstance: typeof monacoEditor) {
     }
   })
 }
+
+export const getMonacoMarkers = (syntaxErrors: SyntaxError[]) => syntaxErrors.reduce((errors: editor.IMarkerData[], error) => errors.concat(
+  {
+    startLineNumber: error.row,
+    startColumn: error.col,
+    endLineNumber: error.row,
+    endColumn: error.col + 1,
+    message: error.message,
+    severity: MarkerSeverity.Error
+  }
+), [])

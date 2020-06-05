@@ -1,10 +1,9 @@
-import { grammar, Grammar } from 'ohm-fork'
+import { grammar, Grammar, MatchResult } from 'ohm-fork'
+import { toAST } from 'ohm-fork/extras'
 
-export const cpusimGrammar: Grammar = grammar(`CpuSim {
-    Exp = Instruction*
-    
+const cpusimGrammar: Grammar = grammar(`CpuSim {
     Instruction = 
-        Nop 
+        | Nop 
         | Hlt 
         | Add 
         | Sub 
@@ -22,10 +21,12 @@ export const cpusimGrammar: Grammar = grammar(`CpuSim {
         | Pop
         | Cal
         | Ret
+        | Integer
+        | end
         
-    Integer = digit*
+    Integer = digit+
     
-    Address = digit*
+    Address = digit+
     
     IXAddress = "@"Address
     
@@ -105,3 +106,47 @@ export const cpusimGrammar: Grammar = grammar(`CpuSim {
   
   }  
 `)
+
+interface Match {
+  matched: boolean
+  message?: string
+  matchResult: MatchResult
+  ast: {}
+}
+
+const matchRows = (rows: string[]) => rows.reduce((matches: Match[], row) => {
+  const matchResult = cpusimGrammar.match(row)
+  const match: Match = {
+    matched: matchResult.succeeded(),
+    message: matchResult.shortMessage?.split(': ')[1],
+    matchResult,
+    ast: matchResult.succeeded() ? toAST(matchResult) : {}
+  }
+  return matches.concat(match)
+}, [])
+
+export const parseCode = (code: string) => {
+  const rows = code.split(/\r?\n/)
+  const matches = matchRows(rows)
+
+  console.log('matches', matches)
+
+  return matches
+}
+
+export interface SyntaxError {
+  row: number
+  col: number
+  message: string
+}
+
+export const getSyntaxErrors = (matches: Match[]) => matches.reduce((errors: SyntaxError[], match, row) => {
+  if (match.matched) return errors
+
+  const error: SyntaxError = {
+    row: row + 1,
+    col: (match.matchResult as any).getRightmostFailurePosition() + 1,
+    message: match.message ?? ''
+  }
+  return errors.concat(error)
+}, [])

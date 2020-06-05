@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { toAST } from 'ohm-fork/extras'
-import { cpusimGrammar } from '../parser'
+import { parseCode, getSyntaxErrors, SyntaxError } from '../parser'
 
 type cpuState = {
   code: string // TODO: move to a different slice
+  syntaxErrors: SyntaxError[] // TODO: move to a different slice
   codeRowIndex: number // TODO: move to a different slice
   instructions: string[] // TODO: move to a different slice
   r0: number
@@ -18,6 +18,7 @@ ADD
 
 const initialState: cpuState = {
   code: initialCode,
+  syntaxErrors: [],
   codeRowIndex: 0,
   instructions: initialCode.split(/\r?\n/).filter(i => i !== ''),
   r0: 0,
@@ -39,12 +40,8 @@ const cpuSlice = createSlice({
 
     setCode(state, action: PayloadAction<string>) {
       state.code = action.payload
-
-      const match = cpusimGrammar.match(state.code)
-      console.log('grammar match succeded', match.succeeded())
-      console.log('grammar match message', match.shortMessage)
-      console.log('grammar match failures', (match as any).getRightmostFailures())
-      console.log('ast', toAST(match))
+      const matches = parseCode(state.code)
+      state.syntaxErrors = getSyntaxErrors(matches)
     },
 
     loadInstructions(state) {

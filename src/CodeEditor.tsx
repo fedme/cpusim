@@ -6,7 +6,7 @@ import useResizeObserver from 'use-resize-observer'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from './store/rootReducer'
 import { setCode } from './store/cpuSlice'
-import { configureMonacoEditor } from './monacoEditorSettings'
+import { configureMonacoEditor, MONACO_INSTANCE, getMonacoMarkers } from './monacoEditor'
 
 monaco
   .init()
@@ -20,13 +20,17 @@ export const CodeEditor = () => {
   const { width = 1 } = useResizeObserver({ ref: containerRef })
   const dispatch = useDispatch()
 
-  const { code } = useSelector((state: RootState) => state.cpu)
+  const { code, syntaxErrors } = useSelector((state: RootState) => state.cpu)
   const onCodeChange = (newValue: string) => dispatch(setCode(newValue))
   const [onCodeChangeDebounced] = useDebouncedCallback(onCodeChange, 500)
 
   const onEditorDidMount = (getEditorValue: () => string, editorInstance: editor.IStandaloneCodeEditor) => {
     editorRef.current = editorInstance
     editorInstance.onDidChangeModelContent(_ => onCodeChangeDebounced(getEditorValue()))
+  }
+
+  if (MONACO_INSTANCE && editorRef.current) {
+    MONACO_INSTANCE.editor.setModelMarkers(editorRef.current.getModel()!, 'owner', getMonacoMarkers(syntaxErrors))
   }
 
   return (
