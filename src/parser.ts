@@ -1,6 +1,7 @@
 import { grammar, Grammar, MatchResult } from 'ohm-fork'
 import { toAST } from 'ohm-fork/extras'
 
+// TODO: digit+ should not allow space between digits
 const cpusimGrammar: Grammar = grammar(`CpuSim {
     Instruction = 
         | Nop 

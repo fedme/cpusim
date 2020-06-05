@@ -26,6 +26,7 @@ export const CodeEditor = () => {
 
   const onEditorDidMount = (getEditorValue: () => string, editorInstance: editor.IStandaloneCodeEditor) => {
     editorRef.current = editorInstance
+    // TODO: this fires twice at every change for some reason
     editorInstance.onDidChangeModelContent(_ => onCodeChangeDebounced(getEditorValue()))
   }
 
