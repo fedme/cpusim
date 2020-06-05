@@ -5,7 +5,7 @@ import { Simulator } from './Simulator'
 
 const App = () => (
   <AppLayout>
-    <div className="flex justify-between max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="flex justify-between max-w-8xl mx-auto pl-4 sm:pl-6 lg:pl-8">
 
       <div className="w-2/3 mr-2 pt-4 h-96">
         <Simulator />
