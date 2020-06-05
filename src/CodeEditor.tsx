@@ -2,15 +2,12 @@ import React, {
   useRef, useEffect, useState, useCallback
 } from 'react'
 import Editor, { monaco } from '@monaco-editor/react'
-import { editor } from 'monaco-editor'
 import { useDebouncedCallback } from 'use-debounce'
 import useResizeObserver from 'use-resize-observer'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from './store/rootReducer'
 import { setCode, initialCode } from './store/cpuSlice'
 import { configureMonacoEditor, getMonacoMarkers, MonacoEditor } from './monacoEditor'
-
-// TODO: configureMonacoEditor() and adding markers generates a Monaco warning about web workers. To be investigated...
 
 export const CodeEditor = () => {
   // Set up Monaco
@@ -27,7 +24,7 @@ export const CodeEditor = () => {
   }, [])
 
   const containerRef = useRef(null)
-  const editorRef = useRef<editor.IStandaloneCodeEditor>()
+  const editorRef = useRef<MonacoEditor>()
   const { width = 1 } = useResizeObserver({ ref: containerRef })
   const dispatch = useDispatch()
   const { syntaxErrors } = useSelector((state: RootState) => state.cpu)
@@ -36,9 +33,9 @@ export const CodeEditor = () => {
   const [onCodeChangeDebounced] = useDebouncedCallback(onCodeChange, 500)
 
   const onEditorDidMount = useCallback(
-    (getEditorValue: () => string, editorInstance: editor.IStandaloneCodeEditor) => {
+    (getEditorValue: () => string, editorInstance: MonacoEditor) => {
       editorRef.current = editorInstance
-      editorInstance.onDidChangeModelContent(_ => onCodeChangeDebounced(getEditorValue()))
+      editorInstance.onDidChangeModelContent((_: any) => onCodeChangeDebounced(getEditorValue()))
     },
     [onCodeChangeDebounced]
   )

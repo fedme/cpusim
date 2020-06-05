@@ -1,9 +1,7 @@
 
-import * as monacoEditor from 'monaco-editor/esm/vs/editor/editor.api'
-import { editor, MarkerSeverity } from 'monaco-editor'
 import { SyntaxError } from './parser'
 
-export type MonacoEditor = typeof monacoEditor
+export type MonacoEditor = any
 
 export function configureMonacoEditor(monacoInstance: MonacoEditor) {
   // Register a new language
@@ -36,13 +34,29 @@ export function configureMonacoEditor(monacoInstance: MonacoEditor) {
   })
 }
 
-export const getMonacoMarkers = (syntaxErrors: SyntaxError[]) => syntaxErrors.reduce((errors: editor.IMarkerData[], error) => errors.concat(
+export enum MarkerSeverity {
+  Hint = 1,
+  Info = 2,
+  Warning = 4,
+  Error = 8
+}
+
+export interface IMarkerData {
+  severity: MarkerSeverity;
+  message: string;
+  startLineNumber: number;
+  startColumn: number;
+  endLineNumber: number;
+  endColumn: number;
+}
+
+export const getMonacoMarkers = (syntaxErrors: SyntaxError[]) => syntaxErrors.reduce((errors: IMarkerData[], error) => errors.concat(
   {
     startLineNumber: error.row,
     startColumn: error.col,
     endLineNumber: error.row,
     endColumn: error.col + 1,
     message: error.message,
-    severity: MarkerSeverity.Error
+    severity: 8
   }
 ), [])

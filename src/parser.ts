@@ -130,6 +130,7 @@ export const parseCode = (code: string) => {
   const rows = code.split(/\r?\n/)
   const matches = matchRows(rows)
 
+  // eslint-disable-next-line no-console
   console.log('matches', matches)
 
   return matches
