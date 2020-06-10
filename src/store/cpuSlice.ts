@@ -14,10 +14,7 @@ type cpuState = {
   a: number
 }
 
-export const initialCode = `SET R0 1
-SET R1 2
-ADD
-`
+export const initialCode = 'SET R0 123'
 
 const initialState: cpuState = {
   code: initialCode,

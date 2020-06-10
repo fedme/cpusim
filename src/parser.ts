@@ -1,5 +1,6 @@
 import { grammar, Grammar, MatchResult } from 'ohm-fork'
 import { toAST } from 'ohm-fork/extras'
+import { parseInstructions } from './instructionParser'
 
 // TODO: digit+ should not allow space between digits
 const cpusimGrammar: Grammar = grammar(`CpuSim {
@@ -108,11 +109,21 @@ const cpusimGrammar: Grammar = grammar(`CpuSim {
   }  
 `)
 
+// https://github.com/harc/ohm/blob/master/doc/extras.md#configuration-using-a-mapping
+const astMappings = {
+  MovRegister: { 0: 0 },
+  Mov: { type: 0, 1: 1 },
+  SetRegister: { 0: 0 },
+  LodSimpleRegister: { 0: 0 },
+  LodComplexRegister: { 0: 0 },
+  Jml: { type: 0, 1: 1 }
+}
+
 interface Match {
   matched: boolean
   message?: string
   matchResult: MatchResult
-  ast: {}
+  ast: any
 }
 
 const matchRows = (rows: string[]) => rows.reduce((matches: Match[], row) => {
@@ -121,7 +132,7 @@ const matchRows = (rows: string[]) => rows.reduce((matches: Match[], row) => {
     matched: matchResult.succeeded(),
     message: matchResult.shortMessage?.split(': ')[1],
     matchResult,
-    ast: matchResult.succeeded() ? toAST(matchResult) : {}
+    ast: matchResult.succeeded() ? toAST(matchResult, astMappings) : {}
   }
   return matches.concat(match)
 }, [])
@@ -129,9 +140,11 @@ const matchRows = (rows: string[]) => rows.reduce((matches: Match[], row) => {
 export const parseCode = (code: string) => {
   const rows = code.split(/\r?\n/)
   const matches = matchRows(rows)
+  const instructions = parseInstructions(matches.map(m => m.ast))
 
-  // eslint-disable-next-line no-console
+  console.log()
   console.log('matches', matches)
+  console.log('instructions', instructions)
 
   return matches
 }
