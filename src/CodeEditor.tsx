@@ -6,8 +6,10 @@ import { useDebouncedCallback } from 'use-debounce'
 import useResizeObserver from 'use-resize-observer'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from './store/rootReducer'
-import { setCode, initialCode } from './store/cpuSlice'
+import { setCode, setData, initialCode } from './store/cpuSlice'
 import { configureMonacoEditor, getMonacoMarkers, MonacoEditor } from './monacoEditor'
+
+const CODE_EDITOR_MAX_LINES = 99
 
 export const CodeEditor = () => {
   // Set up Monaco
@@ -28,42 +30,65 @@ export const CodeEditor = () => {
   const dataEditorRef = useRef<MonacoEditor>()
   const { width = 1 } = useResizeObserver({ ref: containerRef })
   const dispatch = useDispatch()
-  const { syntaxErrors } = useSelector((state: RootState) => state.cpu)
+  const { syntaxErrors, dataSyntaxErrors } = useSelector((state: RootState) => state.cpu)
 
   const onCodeChange = useCallback((newValue: string) => dispatch(setCode(newValue)), [dispatch])
   const [onCodeChangeDebounced] = useDebouncedCallback(onCodeChange, 500)
 
-  const onCodeEditorDidMount = useCallback(
-    (getEditorValue: () => string, editorInstance: MonacoEditor) => {
-      codeEditorRef.current = editorInstance
-      editorInstance.onDidChangeModelContent((_: any) => {
-        // Limit code to 99 lines
-        const lineCount = editorInstance.getModel().getLineCount()
-        if (lineCount > 99) {
-          const content = editorInstance.getModel().getValueInRange({
-            startLineNumber: 1,
-            endLineNumber: 99
-          })
-          editorInstance.getModel().setValue(content)
-        } else {
-          onCodeChangeDebounced(getEditorValue())
-        }
-      })
+  const onDataChange = useCallback((newValue: string) => dispatch(setData(newValue)), [dispatch])
+  const [onDataChangeDebounced] = useDebouncedCallback(onDataChange, 500)
+
+
+  // CODE Editor
+
+  const onCodeEditorModelDidChange = useCallback(
+    (editor: any) => {
+      const lineCount = editor.getModel().getLineCount()
+      // Limit code to CODE_EDITOR_MAX_LINES lines
+      if (lineCount > CODE_EDITOR_MAX_LINES) {
+        const content = editor.getModel().getValueInRange({
+          startLineNumber: 1,
+          endLineNumber: CODE_EDITOR_MAX_LINES
+        })
+        editor.getModel().setValue(content)
+      }
+      onCodeChangeDebounced(editor.getModel().getValue())
     },
     [onCodeChangeDebounced]
   )
 
-  const onDataEditorDidMount = useCallback(
-    (getEditorValue: () => string, editorInstance: MonacoEditor) => {
-      dataEditorRef.current = editorInstance
-      // editorInstance.onDidChangeModelContent((_: any) => onCodeChangeDebounced(getEditorValue()))
+  const onCodeEditorDidMount = useCallback(
+    (_, editor: MonacoEditor) => {
+      codeEditorRef.current = editor
+      editor.onDidChangeModelContent((_b: any) => onCodeEditorModelDidChange(editor))
     },
-    []
+    [onCodeEditorModelDidChange]
   )
 
-  // Add markers on syntax errors
   if (monacoInstance && codeEditorRef.current) {
     monacoInstance.editor.setModelMarkers(codeEditorRef.current.getModel()!, 'owner', getMonacoMarkers(syntaxErrors))
+  }
+
+
+  // DATA Editor
+
+  const onDataEditorModelDidChange = useCallback(
+    (editor: any) => {
+      onDataChangeDebounced(editor.getModel().getValue())
+    },
+    [onDataChangeDebounced]
+  )
+
+  const onDataEditorDidMount = useCallback(
+    (getEditorValue: () => string, editor: MonacoEditor) => {
+      dataEditorRef.current = editor
+      editor.onDidChangeModelContent((_b: any) => onDataEditorModelDidChange(editor))
+    },
+    [onDataEditorModelDidChange]
+  )
+
+  if (monacoInstance && dataEditorRef.current) {
+    monacoInstance.editor.setModelMarkers(dataEditorRef.current.getModel()!, 'owner', getMonacoMarkers(dataSyntaxErrors))
   }
 
   return (
@@ -98,7 +123,7 @@ export const CodeEditor = () => {
             editorDidMount={onDataEditorDidMount}
             options={{
               minimap: { enabled: false },
-              lineNumbers: (originalNumber: number) => originalNumber + 99
+              lineNumbers: (originalNumber: number) => originalNumber + CODE_EDITOR_MAX_LINES
             }}
           />
 

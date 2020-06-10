@@ -1,11 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { parseCode, getSyntaxErrors, SyntaxError } from '../parser'
 
+// TODO: split into multiple slices
 type cpuState = {
-  code: string // TODO: move to a different slice
-  syntaxErrors: SyntaxError[] // TODO: move to a different slice
-  codeRowIndex: number // TODO: move to a different slice
-  instructions: string[] // TODO: move to a different slice
+  code: string
+  data: string
+  syntaxErrors: SyntaxError[]
+  dataSyntaxErrors: SyntaxError[]
+  codeRowIndex: number
+  instructions: string[]
   r0: number
   r1: number
   a: number
@@ -18,7 +21,9 @@ ADD
 
 const initialState: cpuState = {
   code: initialCode,
+  data: '',
   syntaxErrors: [],
+  dataSyntaxErrors: [],
   codeRowIndex: 0,
   instructions: initialCode.split(/\r?\n/).filter(i => i !== ''),
   r0: 0,
@@ -42,6 +47,12 @@ const cpuSlice = createSlice({
       state.code = action.payload
       const matches = parseCode(state.code)
       state.syntaxErrors = getSyntaxErrors(matches)
+    },
+
+    setData(state, action: PayloadAction<string>) {
+      state.data = action.payload
+      const matches = parseCode(state.data)
+      state.dataSyntaxErrors = getSyntaxErrors(matches)
     },
 
     loadInstructions(state) {
@@ -70,6 +81,7 @@ const cpuSlice = createSlice({
 export const {
   reset,
   setCode,
+  setData,
   loadInstructions,
   incrementCodeRowIndex,
   setR0,
