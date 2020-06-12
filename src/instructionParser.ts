@@ -1,5 +1,5 @@
 /* eslint-disable radix */
-enum InstructionType {
+export enum InstructionType {
   Nop = 'NOP',
   Hlt = 'HLT',
   Add = 'ADD',
@@ -13,33 +13,61 @@ enum InstructionType {
   LodComplexSP = 'LOD_COMPLEX_SP',
   StoSimple = 'STO_SIMPLE',
   StoComplexIX = 'STO_COMPLEX_IX',
-  StoComplexSP = 'STO_COMPLEX_SP'
+  StoComplexSP = 'STO_COMPLEX_SP',
+  Jmp = 'JMP',
+  Jmz = 'JMZ',
+  Jml = 'JML',
+  Jmg = 'JMG',
+  Psh = 'PSH',
+  Pop = 'POP',
+  Cal = 'CAL',
+  Ret = 'RET'
 }
 
-interface Instruction {
+export interface Instruction {
   type: InstructionType
 }
 
-interface MovInstruction extends Instruction {
+export interface MovInstruction extends Instruction {
   register: 'R0' | 'R1' | 'IX'
 }
 
-interface SetInstruction extends Instruction {
+export interface SetInstruction extends Instruction {
   register: 'R0' | 'R1' | 'IX' | 'SP'
   data: number
 }
 
-interface LodSimpleInstruction extends Instruction {
+export interface LodSimpleInstruction extends Instruction {
   address: number
   register: 'R0' | 'R1' | 'IX' | 'SP'
 }
 
-interface LodComplexInstruction extends Instruction {
+export interface LodComplexInstruction extends Instruction {
   address: number
   register: 'R0' | 'R1'
 }
 
-interface StoInstruction extends Instruction {
+export interface StoInstruction extends Instruction {
+  address: number
+}
+
+export interface JmpInstruction extends Instruction {
+  address: number
+}
+
+export interface JmzInstruction extends Instruction {
+  address: number
+}
+
+export interface JmlInstruction extends Instruction {
+  address: number
+}
+
+export interface JmgInstruction extends Instruction {
+  address: number
+}
+
+export interface CalInstruction extends Instruction {
   address: number
 }
 
@@ -127,6 +155,51 @@ const parseInstruction = (tree: any) => {
     case 'STOCOMPLEXSP': {
       const address = parseInt(tree[0].join('')) // TODO: collect parsing error
       instruction = { type: InstructionType.StoComplexSP, address } as StoInstruction
+      break
+    }
+
+    case 'JMP': {
+      const address = parseInt(tree[1].join('')) // TODO: collect parsing error
+      instruction = { type: InstructionType.Jmp, address } as JmpInstruction
+      break
+    }
+
+    case 'JMZ': {
+      const address = parseInt(tree[1].join('')) // TODO: collect parsing error
+      instruction = { type: InstructionType.Jmz, address } as JmzInstruction
+      break
+    }
+
+    case 'JML': {
+      const address = parseInt(tree[1].join('')) // TODO: collect parsing error
+      instruction = { type: InstructionType.Jml, address } as JmlInstruction
+      break
+    }
+
+    case 'JMG': {
+      const address = parseInt(tree[1].join('')) // TODO: collect parsing error
+      instruction = { type: InstructionType.Jmg, address } as JmgInstruction
+      break
+    }
+
+    case 'PSH': {
+      instruction = { type: InstructionType.Psh }
+      break
+    }
+
+    case 'POP': {
+      instruction = { type: InstructionType.Pop }
+      break
+    }
+
+    case 'CAL': {
+      const address = parseInt(tree[1].join('')) // TODO: collect parsing error
+      instruction = { type: InstructionType.Cal, address } as CalInstruction
+      break
+    }
+
+    case 'RET': {
+      instruction = { type: InstructionType.Ret }
       break
     }
 

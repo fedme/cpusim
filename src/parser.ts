@@ -1,6 +1,5 @@
 import { grammar, Grammar, MatchResult } from 'ohm-fork'
 import { toAST } from 'ohm-fork/extras'
-import { parseInstructions } from './instructionParser'
 
 // TODO: digit+ should not allow space between digits
 const cpusimGrammar: Grammar = grammar(`CpuSim {
@@ -124,7 +123,11 @@ const astMappings = {
   StoSimple: { 0: 0 },
   StoComplexIX: { 0: 0 },
   StoComplexSP: { 0: 0 },
-  Jml: { type: 0, 1: 1 }
+  Jmp: { type: 0, 1: 1 },
+  Jmz: { type: 0, 1: 1 },
+  Jml: { type: 0, 1: 1 },
+  Jmg: { type: 0, 1: 1 },
+  Cal: { type: 0, 1: 1 }
 }
 
 interface Match {
@@ -148,12 +151,6 @@ const matchRows = (rows: string[]) => rows.reduce((matches: Match[], row) => {
 export const parseCode = (code: string) => {
   const rows = code.split(/\r?\n/)
   const matches = matchRows(rows)
-  const instructions = parseInstructions(matches.map(m => m.ast))
-
-  console.log()
-  console.log('matches', matches)
-  console.log('instructions', instructions)
-
   return matches
 }
 

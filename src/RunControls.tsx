@@ -2,8 +2,7 @@
 /* eslint-disable react/button-has-type */
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { executeNextInstruction } from './codeParser'
-import { reset, loadInstructions } from './store/cpuSlice'
+import { reset } from './store/cpuSlice'
 
 export const RunControls = () => {
   const dispatch = useDispatch()
@@ -22,11 +21,8 @@ export const RunControls = () => {
       window.clearInterval(intervalId)
     }
 
-    // execute code
-    dispatch(loadInstructions())
-
     const instructionInterval = window.setInterval(() => {
-      const terminated = executeNextInstruction()
+      const terminated = false // TODO get from state
 
       if (terminated && intervalId != null) {
         window.clearInterval(intervalId)

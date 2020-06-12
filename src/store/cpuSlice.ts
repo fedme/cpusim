@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { parseCode, getSyntaxErrors, SyntaxError } from '../parser'
+import { Instruction, parseInstructions } from '../instructionParser'
 
 // TODO: split into multiple slices
 type cpuState = {
@@ -8,21 +9,23 @@ type cpuState = {
   syntaxErrors: SyntaxError[]
   dataSyntaxErrors: SyntaxError[]
   codeRowIndex: number
-  instructions: string[]
+  instructions: Instruction[]
   r0: number
   r1: number
   a: number
 }
 
-export const initialCode = 'SET R0 123'
+export const initialCode = ''
+
+export const initialData = ''
 
 const initialState: cpuState = {
   code: initialCode,
-  data: '',
+  data: initialData,
   syntaxErrors: [],
   dataSyntaxErrors: [],
   codeRowIndex: 0,
-  instructions: initialCode.split(/\r?\n/).filter(i => i !== ''),
+  instructions: [],
   r0: 0,
   r1: 0,
   a: 0
@@ -43,17 +46,16 @@ const cpuSlice = createSlice({
     setCode(state, action: PayloadAction<string>) {
       state.code = action.payload
       const matches = parseCode(state.code)
+      const instructions = parseInstructions(matches.map(m => m.ast))
+
       state.syntaxErrors = getSyntaxErrors(matches)
+      state.instructions = instructions
     },
 
     setData(state, action: PayloadAction<string>) {
       state.data = action.payload
       const matches = parseCode(state.data)
       state.dataSyntaxErrors = getSyntaxErrors(matches)
-    },
-
-    loadInstructions(state) {
-      state.instructions = state.code.split(/\r?\n/).filter(i => i !== '')
     },
 
     incrementCodeRowIndex(state) {
@@ -79,7 +81,6 @@ export const {
   reset,
   setCode,
   setData,
-  loadInstructions,
   incrementCodeRowIndex,
   setR0,
   setR1,

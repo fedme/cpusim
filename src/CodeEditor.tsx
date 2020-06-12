@@ -6,7 +6,9 @@ import { useDebouncedCallback } from 'use-debounce'
 import useResizeObserver from 'use-resize-observer'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from './store/rootReducer'
-import { setCode, setData, initialCode } from './store/cpuSlice'
+import {
+  setCode, setData, initialCode, initialData
+} from './store/cpuSlice'
 import { configureMonacoEditor, getMonacoMarkers, MonacoEditor } from './monacoEditor'
 
 const CODE_EDITOR_MAX_LINES = 99
@@ -119,7 +121,7 @@ export const CodeEditor = () => {
             height="15vh"
             language="cpusim"
             theme="cpusimTheme"
-            value="2345"
+            value={initialData}
             editorDidMount={onDataEditorDidMount}
             options={{
               minimap: { enabled: false },
