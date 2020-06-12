@@ -8,7 +8,9 @@ enum InstructionType {
   Div = 'DIV',
   Mov = 'MOV',
   Set = 'SET',
-  Lod = 'LOD'
+  LodSimple = 'LOD_SIMPLE',
+  LodComplexIX = 'LOD_COMPLEX_IX',
+  LodComplexSP = 'LOD_COMPLEX_SP'
 }
 
 interface Instruction {
@@ -24,11 +26,21 @@ interface SetInstruction extends Instruction {
   data: number
 }
 
+interface LodSimpleInstruction extends Instruction {
+  address: number
+  register: 'R0' | 'R1' | 'IX' | 'SP'
+}
+
+interface LodComplexInstruction extends Instruction {
+  address: number
+  register: 'R0' | 'R1'
+}
+
 const parseInstruction = (tree: any) => {
   let instruction: Instruction = { type: InstructionType.Nop }
 
-  if (tree == null || tree === '') {
-    return instruction
+  if (tree?.type == null || tree === '') {
+    return instruction // TODO: collect parsing error
   }
 
   switch ((tree.type as string).toUpperCase()) {
@@ -68,9 +80,26 @@ const parseInstruction = (tree: any) => {
     }
 
     case 'SET': {
-      console.log('SET', tree)
-      const data = parseInt(tree[2].join())
+      const data = parseInt(tree[2].join('')) // TODO: collect parsing error
       instruction = { type: InstructionType.Set, register: tree[1][0], data } as SetInstruction
+      break
+    }
+
+    case 'LODSIMPLE': {
+      const address = parseInt(tree[1].join('')) // TODO: collect parsing error
+      instruction = { type: InstructionType.LodSimple, register: tree[0][0], address } as LodSimpleInstruction
+      break
+    }
+
+    case 'LODCOMPLEXIX': {
+      const address = parseInt(tree[1].join('')) // TODO: collect parsing error
+      instruction = { type: InstructionType.LodComplexIX, register: tree[0][0], address } as LodComplexInstruction
+      break
+    }
+
+    case 'LODCOMPLEXSP': {
+      const address = parseInt(tree[1].join('')) // TODO: collect parsing error
+      instruction = { type: InstructionType.LodComplexSP, register: tree[0][0], address } as LodComplexInstruction
       break
     }
 
