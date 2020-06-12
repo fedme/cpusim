@@ -10,7 +10,10 @@ enum InstructionType {
   Set = 'SET',
   LodSimple = 'LOD_SIMPLE',
   LodComplexIX = 'LOD_COMPLEX_IX',
-  LodComplexSP = 'LOD_COMPLEX_SP'
+  LodComplexSP = 'LOD_COMPLEX_SP',
+  StoSimple = 'STO_SIMPLE',
+  StoComplexIX = 'STO_COMPLEX_IX',
+  StoComplexSP = 'STO_COMPLEX_SP'
 }
 
 interface Instruction {
@@ -36,11 +39,17 @@ interface LodComplexInstruction extends Instruction {
   register: 'R0' | 'R1'
 }
 
+interface StoInstruction extends Instruction {
+  address: number
+}
+
 const parseInstruction = (tree: any) => {
   let instruction: Instruction = { type: InstructionType.Nop }
 
   if (tree?.type == null || tree === '') {
-    return instruction // TODO: collect parsing error
+    return instruction
+    // TODO: collect parsing error (requires the function to take whole match as argument and not just
+    // tree so that we can get the line number)
   }
 
   switch ((tree.type as string).toUpperCase()) {
@@ -103,8 +112,26 @@ const parseInstruction = (tree: any) => {
       break
     }
 
+    case 'STOSIMPLE': {
+      const address = parseInt(tree[0].join('')) // TODO: collect parsing error
+      instruction = { type: InstructionType.StoSimple, address } as StoInstruction
+      break
+    }
+
+    case 'STOCOMPLEXIX': {
+      const address = parseInt(tree[0].join('')) // TODO: collect parsing error
+      instruction = { type: InstructionType.StoComplexIX, address } as StoInstruction
+      break
+    }
+
+    case 'STOCOMPLEXSP': {
+      const address = parseInt(tree[0].join('')) // TODO: collect parsing error
+      instruction = { type: InstructionType.StoComplexSP, address } as StoInstruction
+      break
+    }
+
     default: {
-      console.error('Unrecognized instruction type')
+      console.error('Unrecognized instruction type') // TODO collect parsing error
     }
   }
 

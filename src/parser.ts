@@ -83,11 +83,17 @@ const cpusimGrammar: Grammar = grammar(`CpuSim {
     LodBody = LodComplexIX | LodComplexSP | LodSimple
         
     Lod = "LOD" LodBody
+
+
+    StoSimple = Address
     
+    StoComplexIX = IXAddress
     
-    StoAddress = IXAddress | SPAddress | Address
+    StoComplexSP = SPAddress
     
-    Sto = "STO" StoAddress
+    StoBody = StoComplexIX | StoComplexSP | StoSimple
+        
+    Sto = "STO" StoBody
     
     
     Jmp = "JMP" Address
@@ -105,7 +111,6 @@ const cpusimGrammar: Grammar = grammar(`CpuSim {
     Cal = "CAL" Address
     
     Ret = "RET"
-  
   }  
 `)
 
@@ -116,6 +121,9 @@ const astMappings = {
   SetRegister: { 0: 0 },
   LodSimpleRegister: { 0: 0 },
   LodComplexRegister: { 0: 0 },
+  StoSimple: { 0: 0 },
+  StoComplexIX: { 0: 0 },
+  StoComplexSP: { 0: 0 },
   Jml: { type: 0, 1: 1 }
 }
 
