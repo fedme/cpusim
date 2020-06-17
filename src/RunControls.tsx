@@ -1,45 +1,62 @@
 /* eslint-disable radix */
 /* eslint-disable react/button-has-type */
 import React, { useState, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
-import { reset } from './store/cpuSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { useInterval } from './hooks/useInterval'
+import { reset, executeNextInstruction, setIsRunning } from './store/cpuSlice'
+import { RootState } from './store/rootReducer'
 
 export const RunControls = () => {
   const dispatch = useDispatch()
-  const [intervalId, setIntervalId] = useState<number | null>(null)
+  const { pc, instructions, isRunning } = useSelector((state: RootState) => state.cpu)
+  const [count, setCount] = useState(0)
+  const [delay, setDelay] = useState<number | null>(null)
 
-  useEffect(() => () => {
-    if (intervalId != null) {
-      window.clearInterval(intervalId)
-    }
-  }, [intervalId])
+  useInterval(() => { // Your custom logic here
+    setCount(count + 1)
+  }, delay)
 
-  const run = () => {
-    // cleanup
-    dispatch(reset())
-    if (intervalId != null) {
-      window.clearInterval(intervalId)
-    }
-
-    const instructionInterval = window.setInterval(() => {
-      const terminated = false // TODO get from state
-
-      if (terminated && intervalId != null) {
-        window.clearInterval(intervalId)
+  useEffect(() => {
+    if (isRunning) {
+      if (pc < instructions.length) {
+        dispatch(executeNextInstruction())
+      } else {
+        dispatch(setIsRunning(false))
       }
-    }, 1000)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [count])
 
-    setIntervalId(instructionInterval)
+  function run() {
+    dispatch(setIsRunning(true))
+    setDelay(1000)
+  }
+
+  function stop() {
+    dispatch(reset())
+    dispatch(setIsRunning(false))
+    setDelay(null)
   }
 
   return (
     <div className="flex items-baseline">
+      {!isRunning && (
       <button
         className="px-3 py-2 rounded-md text-sm font-medium text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700"
         onClick={run}
       >
         Run
       </button>
+      )}
+
+      {isRunning && (
+      <button
+        className="px-3 py-2 rounded-md text-sm font-medium text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700"
+        onClick={stop}
+      >
+        Stop
+      </button>
+      )}
     </div>
   )
 }
