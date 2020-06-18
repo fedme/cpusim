@@ -3,7 +3,7 @@ import {
   parseCode, getSyntaxErrors, SyntaxError
 } from '../parser'
 import {
-  Instruction, parseInstructions, parseData, InstructionType, SetInstruction, MovInstruction, JmpInstruction, JmzInstruction, JmlInstruction, JmgInstruction, LodSimpleInstruction, LodComplexInstruction
+  Instruction, parseInstructions, parseData, InstructionType, SetInstruction, MovInstruction, JmpInstruction, JmzInstruction, JmlInstruction, JmgInstruction, LodSimpleInstruction, LodComplexInstruction, StoInstruction
 } from '../instructionParser'
 
 // eslint-disable-next-line import/no-cycle
@@ -197,6 +197,28 @@ const cpuSlice = createSlice({
       }
     },
 
+    sto(state, action: PayloadAction<StoInstruction>) {
+      let address = action.payload.address - MEMORY_CODE_MAX_SIZE
+
+      if (action.payload.type === InstructionType.StoComplexIX) {
+        address = state.ix + action.payload.address - MEMORY_CODE_MAX_SIZE
+      }
+
+      if (action.payload.type === InstructionType.StoComplexSP) {
+        address = state.sp + action.payload.address - MEMORY_CODE_MAX_SIZE
+      }
+
+      if (address > state.dataList.length) {
+        for (let i = 0; i < address - state.dataList.length; i += 1) {
+          state.dataList.push(null)
+        }
+      }
+
+      state.dataList[address] = state.a
+
+      state.data = state.dataList.join('\n')
+    },
+
     jmp(state, action: PayloadAction<JmpInstruction>) {
       state.pc = action.payload.address
     },
@@ -217,6 +239,28 @@ const cpuSlice = createSlice({
       if (state.a > 0) {
         state.pc = action.payload.address
       }
+    },
+
+    psh(state) {
+      const address = state.sp - MEMORY_CODE_MAX_SIZE
+
+      if (address > state.dataList.length) {
+        for (let i = 0; i < address - state.dataList.length; i += 1) {
+          state.dataList.push(null)
+        }
+      }
+
+      state.dataList[address] = state.a
+      state.data = state.dataList.join('\n')
+
+      state.sp -= 1
+    },
+
+    pop(state) {
+      state.sp += 1
+      const address = state.sp - MEMORY_CODE_MAX_SIZE
+
+      state.a = state.dataList[address]! // TODO: throw if null / not present
     }
   }
 })
@@ -236,10 +280,13 @@ export const {
   set,
   lodSimple,
   lodComplex,
+  sto,
   jmp,
   jmz,
   jml,
-  jmg
+  jmg,
+  psh,
+  pop
 } = cpuSlice.actions
 
 export default cpuSlice.reducer
@@ -285,6 +332,18 @@ export const executeNextInstruction = (): AppThunk => (dispatch, getState) => {
       dispatch(lodComplex(instruction as LodComplexInstruction))
       break
     }
+    case InstructionType.StoSimple: {
+      dispatch(sto(instruction as StoInstruction))
+      break
+    }
+    case InstructionType.StoComplexIX: {
+      dispatch(sto(instruction as StoInstruction))
+      break
+    }
+    case InstructionType.StoComplexSP: {
+      dispatch(sto(instruction as StoInstruction))
+      break
+    }
     case InstructionType.Jmp: {
       dispatch(jmp(instruction as JmpInstruction))
       break
@@ -299,6 +358,14 @@ export const executeNextInstruction = (): AppThunk => (dispatch, getState) => {
     }
     case InstructionType.Jmg: {
       dispatch(jmp(instruction as JmgInstruction))
+      break
+    }
+    case InstructionType.Psh: {
+      dispatch(psh())
+      break
+    }
+    case InstructionType.Pop: {
+      dispatch(pop())
       break
     }
   }

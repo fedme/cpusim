@@ -1,7 +1,7 @@
 import React, {
   useRef, useEffect, useState, useCallback
 } from 'react'
-import Editor, { monaco } from '@monaco-editor/react'
+import Editor, { monaco, ControlledEditor } from '@monaco-editor/react'
 import { useDebouncedCallback } from 'use-debounce'
 import useResizeObserver from 'use-resize-observer'
 import { useSelector, useDispatch } from 'react-redux'
@@ -32,7 +32,7 @@ export const CodeEditor = () => {
   const dataEditorRef = useRef<MonacoEditor>()
   const { width = 1 } = useResizeObserver({ ref: containerRef })
   const dispatch = useDispatch()
-  const { syntaxErrors, dataSyntaxErrors } = useSelector((state: RootState) => state.cpu)
+  const { syntaxErrors, data, dataSyntaxErrors } = useSelector((state: RootState) => state.cpu)
 
   const onCodeChange = useCallback((newValue: string) => dispatch(setCode(newValue)), [dispatch])
   const [onCodeChangeDebounced] = useDebouncedCallback(onCodeChange, 500)
@@ -75,6 +75,9 @@ export const CodeEditor = () => {
   // DATA Editor
 
   const onDataEditorModelDidChange = useCallback(
+
+    // TODO: use onChange on the controlled editor instead. This is invoked twice.
+
     (editor: any) => {
       onDataChangeDebounced(editor.getModel().getValue())
     },
@@ -116,12 +119,12 @@ export const CodeEditor = () => {
 
           <h3 className="bg-blue-400 px-4 my-2 text-white font-semibold">Data section</h3>
 
-          <Editor
+          <ControlledEditor
             width={width}
             height="15vh"
             language="cpusim"
             theme="cpusimTheme"
-            value={initialData}
+            value={data}
             editorDidMount={onDataEditorDidMount}
             options={{
               minimap: { enabled: false },
