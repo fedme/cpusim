@@ -10,9 +10,13 @@ import { RootState } from './store/rootReducer'
 
 export const RunControls = () => {
   const dispatch = useDispatch()
-  const { pc, instructions, isRunning } = useSelector((state: RootState) => state.cpu)
+  const {
+    pc, instructions, isRunning, syntaxErrors, dataSyntaxErrors
+  } = useSelector((state: RootState) => state.cpu)
   const [ticks, setTicks] = useState(0)
   const [delay, setDelay] = useState<number | null>(null)
+
+  const areErrorsPresent = syntaxErrors.length > 0 || dataSyntaxErrors.length > 0
 
   useInterval(() => {
     setTicks(ticks + 1)
@@ -44,7 +48,16 @@ export const RunControls = () => {
 
   return (
     <div className="flex items-baseline">
-      {!isRunning && (
+
+      {areErrorsPresent && (
+        <span
+          className="px-3 py-2 rounded-md text-sm font-medium text-white bg-red-500 focus:outline-none focus:text-white focus:bg-gray-700"
+        >
+          Please fix the errors in your code
+        </span>
+      )}
+
+      {!areErrorsPresent && !isRunning && (
       <button
         className="px-3 py-2 rounded-md text-sm font-medium text-white bg-green-500 focus:outline-none focus:text-white focus:bg-gray-700"
         onClick={run}
@@ -53,7 +66,7 @@ export const RunControls = () => {
       </button>
       )}
 
-      {isRunning && (
+      {!areErrorsPresent && isRunning && (
       <button
         className="px-3 py-2 rounded-md text-sm font-medium text-white bg-red-500 focus:outline-none focus:text-white focus:bg-gray-700"
         onClick={stop}
