@@ -3,7 +3,9 @@ import {
   parseCode, getSyntaxErrors, SyntaxError
 } from '../parser'
 import {
-  Instruction, parseInstructions, parseData, InstructionType, SetInstruction, MovInstruction, JmpInstruction, JmzInstruction, JmlInstruction, JmgInstruction, LodSimpleInstruction, LodComplexInstruction, StoInstruction, CalInstruction
+  Instruction, parseInstructions, parseData, InstructionType, SetInstruction, MovInstruction, JmpInstruction,
+  JmzInstruction, JmlInstruction, JmgInstruction, LodSimpleInstruction, LodComplexInstruction, StoInstruction,
+  CalInstruction
 } from '../instructionParser'
 
 // eslint-disable-next-line import/no-cycle
