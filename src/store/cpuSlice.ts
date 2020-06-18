@@ -3,7 +3,7 @@ import {
   parseCode, getSyntaxErrors, SyntaxError
 } from '../parser'
 import {
-  Instruction, parseInstructions, parseData, InstructionType, SetInstruction, MovInstruction, JmpInstruction, JmzInstruction, JmlInstruction, JmgInstruction, LodSimpleInstruction, LodComplexInstruction, StoInstruction
+  Instruction, parseInstructions, parseData, InstructionType, SetInstruction, MovInstruction, JmpInstruction, JmzInstruction, JmlInstruction, JmgInstruction, LodSimpleInstruction, LodComplexInstruction, StoInstruction, CalInstruction
 } from '../instructionParser'
 
 // eslint-disable-next-line import/no-cycle
@@ -261,6 +261,29 @@ const cpuSlice = createSlice({
       const address = state.sp - MEMORY_CODE_MAX_SIZE
 
       state.a = state.dataList[address]! // TODO: throw if null / not present
+    },
+
+    cal(state, action: PayloadAction<CalInstruction>) {
+      const address = state.sp - MEMORY_CODE_MAX_SIZE
+
+      if (address > state.dataList.length) {
+        for (let i = 0; i < address - state.dataList.length; i += 1) {
+          state.dataList.push(null)
+        }
+      }
+
+      state.dataList[address] = state.pc
+      state.data = state.dataList.join('\n')
+
+      state.sp -= 1
+      state.pc = action.payload.address - 1 // editor lines are 1-based, but state is 0-based
+    },
+
+    ret(state) {
+      state.sp += 1
+      const address = state.sp - MEMORY_CODE_MAX_SIZE
+
+      state.pc = state.dataList[address]! // TODO: throw if null / not present
     }
   }
 })
@@ -286,7 +309,9 @@ export const {
   jml,
   jmg,
   psh,
-  pop
+  pop,
+  cal,
+  ret
 } = cpuSlice.actions
 
 export default cpuSlice.reducer
@@ -366,6 +391,14 @@ export const executeNextInstruction = (): AppThunk => (dispatch, getState) => {
     }
     case InstructionType.Pop: {
       dispatch(pop())
+      break
+    }
+    case InstructionType.Cal: {
+      dispatch(cal(instruction as CalInstruction))
+      break
+    }
+    case InstructionType.Ret: {
+      dispatch(ret())
       break
     }
   }

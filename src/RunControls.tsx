@@ -46,7 +46,7 @@ export const RunControls = () => {
     <div className="flex items-baseline">
       {!isRunning && (
       <button
-        className="px-3 py-2 rounded-md text-sm font-medium text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700"
+        className="px-3 py-2 rounded-md text-sm font-medium text-white bg-green-500 focus:outline-none focus:text-white focus:bg-gray-700"
         onClick={run}
       >
         Run
@@ -55,7 +55,7 @@ export const RunControls = () => {
 
       {isRunning && (
       <button
-        className="px-3 py-2 rounded-md text-sm font-medium text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700"
+        className="px-3 py-2 rounded-md text-sm font-medium text-white bg-red-500 focus:outline-none focus:text-white focus:bg-gray-700"
         onClick={stop}
       >
         Stop
