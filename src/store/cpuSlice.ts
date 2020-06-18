@@ -1,11 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { parseCode, getSyntaxErrors, SyntaxError } from '../parser'
 import {
-  Instruction, parseInstructions, InstructionType, SetInstruction, MovInstruction, JmpInstruction, JmzInstruction, JmlInstruction, JmgInstruction
+  parseCode, getSyntaxErrors, SyntaxError
+} from '../parser'
+import {
+  Instruction, parseInstructions, parseData, InstructionType, SetInstruction, MovInstruction, JmpInstruction, JmzInstruction, JmlInstruction, JmgInstruction, LodSimpleInstruction
 } from '../instructionParser'
 
 // eslint-disable-next-line import/no-cycle
 import { AppThunk } from './store'
+
+export const MEMORY_CODE_MAX_SIZE = 100
 
 // TODO: split into multiple slices
 type cpuState = {
@@ -15,6 +19,7 @@ type cpuState = {
   syntaxErrors: SyntaxError[]
   dataSyntaxErrors: SyntaxError[]
   instructions: Instruction[]
+  dataList: Array<number|null>
   pc: number
   r0: number
   r1: number
@@ -34,6 +39,7 @@ const initialState: cpuState = {
   syntaxErrors: [],
   dataSyntaxErrors: [],
   instructions: [],
+  dataList: [],
   pc: 0,
   r0: 0,
   r1: 0,
@@ -59,20 +65,23 @@ const cpuSlice = createSlice({
     setCode(state, action: PayloadAction<string>) {
       state.code = action.payload
       const matches = parseCode(state.code)
-      const instructions = parseInstructions(matches.map(m => m.ast))
-
       state.syntaxErrors = getSyntaxErrors(matches)
-      state.instructions = instructions
+      state.instructions = parseInstructions(matches.map(m => m.ast))
     },
 
     setData(state, action: PayloadAction<string>) {
       state.data = action.payload
       const matches = parseCode(state.data)
       state.dataSyntaxErrors = getSyntaxErrors(matches)
+      state.dataList = parseData(matches.map(m => m.ast))
     },
 
     setIsRunning(state, action: PayloadAction<boolean>) {
       state.isRunning = action.payload
+    },
+
+    resetPc(state) {
+      state.pc = initialState.pc
     },
 
     incrementPc(state) {
@@ -136,6 +145,34 @@ const cpuSlice = createSlice({
       }
     },
 
+    lodSimple(state, action: PayloadAction<LodSimpleInstruction>) {
+      // TODO: throw if data is not in memory
+      const data = state.dataList[action.payload.address - MEMORY_CODE_MAX_SIZE]
+
+      if (data == null) {
+        throw Error('data is not in memory')
+      }
+
+      switch (action.payload.register) {
+        case 'R0': {
+          state.r0 = data
+          break
+        }
+        case 'R1': {
+          state.r1 = data
+          break
+        }
+        case 'IX': {
+          state.ix = data
+          break
+        }
+        case 'SP': {
+          state.sp = data
+          break
+        }
+      }
+    },
+
     jmp(state, action: PayloadAction<JmpInstruction>) {
       state.pc = action.payload.address
     },
@@ -166,12 +203,14 @@ export const {
   setData,
   setIsRunning,
   incrementPc,
+  resetPc,
   add,
   sub,
   mul,
   div,
   mov,
   set,
+  lodSimple,
   jmp,
   jmz,
   jml,
@@ -207,6 +246,10 @@ export const executeNextInstruction = (): AppThunk => (dispatch, getState) => {
     }
     case InstructionType.Set: {
       dispatch(set(instruction as SetInstruction))
+      break
+    }
+    case InstructionType.LodSimple: {
+      dispatch(lodSimple(instruction as LodSimpleInstruction))
       break
     }
     case InstructionType.Jmp: {

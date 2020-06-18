@@ -7,11 +7,11 @@ import useResizeObserver from 'use-resize-observer'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from './store/rootReducer'
 import {
-  setCode, setData, initialCode, initialData
+  setCode, setData, initialCode, initialData, MEMORY_CODE_MAX_SIZE
 } from './store/cpuSlice'
 import { configureMonacoEditor, getMonacoMarkers, MonacoEditor } from './monacoEditor'
 
-const CODE_EDITOR_MAX_LINES = 99
+const CODE_EDITOR_MAX_LINES = MEMORY_CODE_MAX_SIZE - 1
 
 export const CodeEditor = () => {
   // Set up Monaco

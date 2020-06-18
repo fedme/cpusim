@@ -3,19 +3,22 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useInterval } from './hooks/useInterval'
-import { reset, executeNextInstruction, setIsRunning } from './store/cpuSlice'
+import {
+  reset, executeNextInstruction, setIsRunning
+} from './store/cpuSlice'
 import { RootState } from './store/rootReducer'
 
 export const RunControls = () => {
   const dispatch = useDispatch()
   const { pc, instructions, isRunning } = useSelector((state: RootState) => state.cpu)
-  const [count, setCount] = useState(0)
+  const [ticks, setTicks] = useState(0)
   const [delay, setDelay] = useState<number | null>(null)
 
-  useInterval(() => { // Your custom logic here
-    setCount(count + 1)
+  useInterval(() => {
+    setTicks(ticks + 1)
   }, delay)
 
+  // Effect running at every interval tick
   useEffect(() => {
     if (isRunning) {
       if (pc < instructions.length) {
@@ -25,9 +28,10 @@ export const RunControls = () => {
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [count])
+  }, [ticks])
 
   function run() {
+    dispatch(reset())
     dispatch(setIsRunning(true))
     setDelay(1000)
   }

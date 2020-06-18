@@ -127,7 +127,8 @@ const astMappings = {
   Jmz: { type: 0, 1: 1 },
   Jml: { type: 0, 1: 1 },
   Jmg: { type: 0, 1: 1 },
-  Cal: { type: 0, 1: 1 }
+  Cal: { type: 0, 1: 1 },
+  Integer: { 0: 0 }
 }
 
 interface Match {

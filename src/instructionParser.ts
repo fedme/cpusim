@@ -215,3 +215,16 @@ export const parseInstructions = (trees: any[]) => trees.reduce((instructions: I
   const instruction = parseInstruction(tree)
   return instructions.concat(instruction)
 }, [])
+
+export const parseData = (trees: any[]) => trees.reduce((dataList: Array<number | null>, tree) => {
+  let data = null
+
+  if (tree?.type != null && tree !== '' && (tree.type as string).toUpperCase() === 'INTEGER') {
+    data = parseInt(tree[0].join(''))
+  } else {
+    // TODO: collect parsing error (requires the function to take whole match as argument and not just
+    // tree so that we can get the line number)
+  }
+
+  return dataList.concat(data)
+}, [])
