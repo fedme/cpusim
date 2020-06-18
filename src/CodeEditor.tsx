@@ -113,7 +113,8 @@ export const CodeEditor = () => {
             value={initialCode}
             editorDidMount={onCodeEditorDidMount}
             options={{
-              minimap: { enabled: false }
+              minimap: { enabled: false },
+              lineNumbers: (originalNumber: number) => (originalNumber === 1 ? '0' : originalNumber - 1)
             }}
           />
 

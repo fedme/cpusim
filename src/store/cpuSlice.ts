@@ -278,7 +278,7 @@ const cpuSlice = createSlice({
       state.data = state.dataList.join('\n')
 
       state.sp -= 1
-      state.pc = action.payload.address - 1 // editor lines are 1-based, but state is 0-based
+      state.pc = action.payload.address
     },
 
     ret(state) {
