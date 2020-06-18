@@ -72,6 +72,9 @@ export interface CalInstruction extends Instruction {
 }
 
 const parseInstruction = (tree: any) => {
+  console.log('parseInstruction tree', tree)
+
+
   let instruction: Instruction = { type: InstructionType.Nop }
 
   if (tree?.type == null || tree === '') {
@@ -117,7 +120,7 @@ const parseInstruction = (tree: any) => {
     }
 
     case 'SET': {
-      const data = parseInt(tree[2].join('')) // TODO: collect parsing error
+      const data = parseInt(tree[2][0].join('')) // TODO: collect parsing error
       instruction = { type: InstructionType.Set, register: tree[1][0], data } as SetInstruction
       break
     }

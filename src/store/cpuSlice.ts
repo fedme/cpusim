@@ -3,7 +3,7 @@ import {
   parseCode, getSyntaxErrors, SyntaxError
 } from '../parser'
 import {
-  Instruction, parseInstructions, parseData, InstructionType, SetInstruction, MovInstruction, JmpInstruction, JmzInstruction, JmlInstruction, JmgInstruction, LodSimpleInstruction
+  Instruction, parseInstructions, parseData, InstructionType, SetInstruction, MovInstruction, JmpInstruction, JmzInstruction, JmlInstruction, JmgInstruction, LodSimpleInstruction, LodComplexInstruction
 } from '../instructionParser'
 
 // eslint-disable-next-line import/no-cycle
@@ -173,6 +173,30 @@ const cpuSlice = createSlice({
       }
     },
 
+    lodComplex(state, action: PayloadAction<LodComplexInstruction>) {
+      // TODO: throw if data is not in memory
+      const dataAddress = action.payload.type === InstructionType.LodComplexIX
+        ? state.ix + action.payload.address
+        : state.sp + action.payload.address
+
+      const data = state.dataList[dataAddress - MEMORY_CODE_MAX_SIZE]
+
+      if (data == null) {
+        throw Error('data is not in memory')
+      }
+
+      switch (action.payload.register) {
+        case 'R0': {
+          state.r0 = data
+          break
+        }
+        case 'R1': {
+          state.r1 = data
+          break
+        }
+      }
+    },
+
     jmp(state, action: PayloadAction<JmpInstruction>) {
       state.pc = action.payload.address
     },
@@ -211,6 +235,7 @@ export const {
   mov,
   set,
   lodSimple,
+  lodComplex,
   jmp,
   jmz,
   jml,
@@ -250,6 +275,14 @@ export const executeNextInstruction = (): AppThunk => (dispatch, getState) => {
     }
     case InstructionType.LodSimple: {
       dispatch(lodSimple(instruction as LodSimpleInstruction))
+      break
+    }
+    case InstructionType.LodComplexIX: {
+      dispatch(lodComplex(instruction as LodComplexInstruction))
+      break
+    }
+    case InstructionType.LodComplexSP: {
+      dispatch(lodComplex(instruction as LodComplexInstruction))
       break
     }
     case InstructionType.Jmp: {
