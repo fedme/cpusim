@@ -25,7 +25,11 @@ const cpusimGrammar: Grammar = grammar(`CpuSim {
         | Integer
         | end
         
-    Integer = digit+
+    PositiveInteger = digit+
+
+    NegativeInteger = "-"digit+
+    
+    Integer = NegativeInteger | PositiveInteger
     
     Address = digit+
     
@@ -128,7 +132,8 @@ const astMappings = {
   Jml: { type: 0, 1: 1 },
   Jmg: { type: 0, 1: 1 },
   Cal: { type: 0, 1: 1 },
-  Integer: { 0: 0 }
+  PositiveInteger: { 0: 0 },
+  NegativeInteger: { 0: 0, 1: 1 }
 }
 
 interface Match {

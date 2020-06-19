@@ -117,7 +117,23 @@ const parseInstruction = (tree: any) => {
     }
 
     case 'SET': {
-      const data = parseInt(tree[2][0].join('')) // TODO: collect parsing error
+      let data = 0
+
+      switch ((tree[2].type as string).toUpperCase()) {
+        case 'POSITIVEINTEGER': {
+          data = parseInt(tree[2][0].join(''))
+          break
+        }
+        case 'NEGATIVEINTEGER': {
+          data = parseInt(tree[2][1].join('')) * -1
+          break
+        }
+        default: {
+          // TODO: collect parsing error (requires the function to take whole match as argument and not just
+          // tree so that we can get the line number)
+        }
+      }
+
       instruction = { type: InstructionType.Set, register: tree[1][0], data } as SetInstruction
       break
     }
@@ -219,11 +235,21 @@ export const parseInstructions = (trees: any[]) => trees.reduce((instructions: I
 export const parseData = (trees: any[]) => trees.reduce((dataList: Array<number | null>, tree) => {
   let data = null
 
-  if (tree?.type != null && tree !== '' && (tree.type as string).toUpperCase() === 'INTEGER') {
-    data = parseInt(tree[0].join(''))
-  } else {
-    // TODO: collect parsing error (requires the function to take whole match as argument and not just
-    // tree so that we can get the line number)
+  if (tree?.type != null && tree !== '') {
+    switch ((tree.type as string).toUpperCase()) {
+      case 'POSITIVEINTEGER': {
+        data = parseInt(tree[0].join(''))
+        break
+      }
+      case 'NEGATIVEINTEGER': {
+        data = parseInt(tree[1].join('')) * -1
+        break
+      }
+      default: {
+        // TODO: collect parsing error (requires the function to take whole match as argument and not just
+        // tree so that we can get the line number)
+      }
+    }
   }
 
   return dataList.concat(data)
