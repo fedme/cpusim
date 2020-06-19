@@ -72,9 +72,6 @@ export interface CalInstruction extends Instruction {
 }
 
 const parseInstruction = (tree: any) => {
-  console.log('parseInstruction tree', tree)
-
-
   let instruction: Instruction = { type: InstructionType.Nop }
 
   if (tree?.type == null || tree === '') {
@@ -207,7 +204,7 @@ const parseInstruction = (tree: any) => {
     }
 
     default: {
-      console.error('Unrecognized instruction type') // TODO collect parsing error
+      throw new Error('Unrecognized instruction type') // TODO collect parsing error
     }
   }
 
