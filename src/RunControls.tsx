@@ -2,7 +2,7 @@
 /* eslint-disable react/button-has-type */
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useInterval } from './hooks/useInterval'
+import { useInterval } from './utils/useInterval'
 import {
   reset, executeNextInstruction, setIsRunning
 } from './store/cpuSlice'

@@ -10,6 +10,7 @@ import {
 
 // eslint-disable-next-line import/no-cycle
 import { AppThunk } from './store'
+import { sleep } from '../utils/sleep'
 
 export const MEMORY_CODE_MAX_SIZE = 100
 
@@ -90,8 +91,11 @@ const cpuSlice = createSlice({
       state.pc += 1
     },
 
-
     // Instructions
+
+    hlt(state) {
+      state.isRunning = false
+    },
 
     add(state) {
       state.a = state.r0 + state.r1
@@ -106,7 +110,7 @@ const cpuSlice = createSlice({
     },
 
     div(state) {
-      state.a = state.r0 / state.r1
+      state.a = Math.trunc(state.r0 / state.r1)
     },
 
     mov(state, action: PayloadAction<MovInstruction>) {
@@ -297,6 +301,7 @@ export const {
   setIsRunning,
   incrementPc,
   resetPc,
+  hlt,
   add,
   sub,
   mul,
@@ -318,11 +323,19 @@ export const {
 
 export default cpuSlice.reducer
 
-export const executeNextInstruction = (): AppThunk => (dispatch, getState) => {
+export const executeNextInstruction = (): AppThunk => async (dispatch, getState) => {
   const { cpu } = getState()
   const instruction = cpu.instructions[cpu.pc] // TODO: throw if PC is > instructions.lenght
 
+  dispatch(incrementPc())
+
+  await sleep(200)
+
   switch (instruction.type) {
+    case InstructionType.Hlt: {
+      dispatch(hlt())
+      break
+    }
     case InstructionType.Add: {
       dispatch(add())
       break
@@ -404,6 +417,4 @@ export const executeNextInstruction = (): AppThunk => (dispatch, getState) => {
       break
     }
   }
-
-  dispatch(incrementPc())
 }
