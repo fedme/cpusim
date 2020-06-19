@@ -22,6 +22,12 @@ export const RunControls = () => {
     setTicks(ticks + 1)
   }, delay)
 
+  useEffect(() => {
+    if (!isRunning) {
+      setDelay(null)
+    }
+  }, [isRunning])
+
   // Effect running at every interval tick
   useEffect(() => {
     if (isRunning) {
@@ -43,7 +49,7 @@ export const RunControls = () => {
   function stop() {
     dispatch(reset())
     dispatch(setIsRunning(false))
-    setDelay(null)
+    setTicks(0)
   }
 
   return (

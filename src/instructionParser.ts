@@ -72,7 +72,7 @@ export interface CalInstruction extends Instruction {
 }
 
 const parseInstruction = (tree: any) => {
-  let instruction: Instruction = { type: InstructionType.Nop }
+  let instruction: Instruction = { type: InstructionType.Hlt }
 
   if (tree?.type == null || tree === '') {
     return instruction
