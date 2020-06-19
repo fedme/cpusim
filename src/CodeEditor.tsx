@@ -31,7 +31,7 @@ export const CodeEditor = () => {
   const { width = 1 } = useResizeObserver({ ref: containerRef })
   const dispatch = useDispatch()
   const {
-    syntaxErrors, data, dataSyntaxErrors, pc, isRunning
+    syntaxErrors, data, dataSyntaxErrors, pc, sp, isRunning
   } = useSelector((state: RootState) => state.cpu)
 
   const onCodeChange = useCallback((newValue: string) => dispatch(setCode(newValue)), [dispatch])
@@ -39,6 +39,9 @@ export const CodeEditor = () => {
 
   const onDataChange = useCallback((newValue: string) => dispatch(setData(newValue)), [dispatch])
   const [onDataChangeDebounced] = useDebouncedCallback(onDataChange, 500)
+
+  const codeEditorDecorations = useRef<string[]>([])
+  const dataEditorDecorations = useRef<string[]>([])
 
 
   // CODE Editor
@@ -70,18 +73,26 @@ export const CodeEditor = () => {
   if (monacoInstance && codeEditorRef.current) {
     monacoInstance.editor.setModelMarkers(codeEditorRef.current.getModel()!, 'owner', getMonacoMarkers(syntaxErrors))
 
-    // if (isRunning) {
-    //   codeEditorRef.current.deltaDecorations([], [{
-    //     range: {
-    //       startLineNumber: pc + 1, endLineNumber: pc + 1, startColumn: 1, endColumn: 100
-    //     },
-    //     options: {
-    //       isWholeLine: true,
-    //       className: 'bg-blue-100',
-    //       glyphMarginClassName: 'bg-red-400'
-    //     }
-    //   }])
-    // }
+    if (isRunning) {
+      const newDecorations = codeEditorRef.current.deltaDecorations(codeEditorDecorations.current, [{
+        range: {
+          startLineNumber: pc + 1, endLineNumber: pc + 1, startColumn: 1, endColumn: 100
+        },
+        options: {
+          isWholeLine: true,
+          className: 'bg-blue-100',
+          glyphMarginClassName: 'pc-pointer',
+          stickiness: 1
+        }
+      }])
+
+      codeEditorDecorations.current = newDecorations
+    }
+
+    if (!isRunning) {
+      const newDecorations = codeEditorRef.current.deltaDecorations(codeEditorDecorations.current, [])
+      codeEditorDecorations.current = newDecorations
+    }
   }
 
 
@@ -107,6 +118,27 @@ export const CodeEditor = () => {
 
   if (monacoInstance && dataEditorRef.current) {
     monacoInstance.editor.setModelMarkers(dataEditorRef.current.getModel()!, 'owner', getMonacoMarkers(dataSyntaxErrors))
+
+    if (isRunning) {
+      const newDecorations = dataEditorRef.current.deltaDecorations(dataEditorDecorations.current, [{
+        range: {
+          startLineNumber: sp - MEMORY_CODE_MAX_SIZE + 1, endLineNumber: sp - MEMORY_CODE_MAX_SIZE + 1, startColumn: 1, endColumn: 100
+        },
+        options: {
+          isWholeLine: true,
+          className: 'bg-blue-100',
+          glyphMarginClassName: 'sp-pointer',
+          stickiness: 1
+        }
+      }])
+
+      dataEditorDecorations.current = newDecorations
+    }
+
+    if (!isRunning) {
+      const newDecorations = dataEditorRef.current.deltaDecorations(dataEditorDecorations.current, [])
+      dataEditorDecorations.current = newDecorations
+    }
   }
 
   return (
@@ -143,7 +175,8 @@ export const CodeEditor = () => {
             editorDidMount={onDataEditorDidMount}
             options={{
               minimap: { enabled: false },
-              lineNumbers: (originalNumber: number) => originalNumber + MEMORY_CODE_MAX_SIZE - 1
+              lineNumbers: (originalNumber: number) => originalNumber + MEMORY_CODE_MAX_SIZE - 1,
+              glyphMargin: true
             }}
           />
 

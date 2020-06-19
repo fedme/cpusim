@@ -48,7 +48,7 @@ const initialState: cpuState = {
   r1: 0,
   a: 0,
   ix: 0,
-  sp: 0
+  sp: 100
 }
 
 const cpuSlice = createSlice({
