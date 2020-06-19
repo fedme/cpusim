@@ -7,11 +7,9 @@ import useResizeObserver from 'use-resize-observer'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from './store/rootReducer'
 import {
-  setCode, setData, initialCode, initialData, MEMORY_CODE_MAX_SIZE
+  setCode, setData, initialCode, MEMORY_CODE_MAX_SIZE
 } from './store/cpuSlice'
 import { configureMonacoEditor, getMonacoMarkers, MonacoEditor } from './monacoEditor'
-
-const CODE_EDITOR_MAX_LINES = MEMORY_CODE_MAX_SIZE - 1
 
 export const CodeEditor = () => {
   // Set up Monaco
@@ -47,10 +45,10 @@ export const CodeEditor = () => {
     (editor: any) => {
       const lineCount = editor.getModel().getLineCount()
       // Limit code to CODE_EDITOR_MAX_LINES lines
-      if (lineCount > CODE_EDITOR_MAX_LINES) {
+      if (lineCount > MEMORY_CODE_MAX_SIZE) {
         const content = editor.getModel().getValueInRange({
           startLineNumber: 1,
-          endLineNumber: CODE_EDITOR_MAX_LINES
+          endLineNumber: MEMORY_CODE_MAX_SIZE
         })
         editor.getModel().setValue(content)
       }
@@ -129,7 +127,7 @@ export const CodeEditor = () => {
             editorDidMount={onDataEditorDidMount}
             options={{
               minimap: { enabled: false },
-              lineNumbers: (originalNumber: number) => originalNumber + CODE_EDITOR_MAX_LINES
+              lineNumbers: (originalNumber: number) => originalNumber + MEMORY_CODE_MAX_SIZE - 1
             }}
           />
 
