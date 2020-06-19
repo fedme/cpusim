@@ -39,10 +39,10 @@ enum CompletionItemInsertTextRule {
 
 
 export function configureMonacoEditor(monacoInstance: MonacoEditor) {
-  // Register a new language
-  monacoInstance.languages.register({ id: 'cpusim' })
-  // Register a tokens provider for the language
-  monacoInstance.languages.setMonarchTokensProvider('cpusim', {
+  monacoInstance.languages.register({ id: 'cpusimCode' })
+  monacoInstance.languages.register({ id: 'cpusimData' })
+
+  monacoInstance.languages.setMonarchTokensProvider('cpusimCode', {
     tokenizer: {
       root: [
         [/^(NOP|HLT|ADD|SUB|MUL|DIV|MOV|SET|LOD|STO|JMP|JMZ|JML|JMG|PSH|POP|CAL|RET)/, 'instruction'],
@@ -53,7 +53,15 @@ export function configureMonacoEditor(monacoInstance: MonacoEditor) {
       ]
     }
   })
-  // Define a new theme that contains only rules that match this language
+
+  monacoInstance.languages.setMonarchTokensProvider('cpusimData', {
+    tokenizer: {
+      root: [
+        [/-?[0-9]\d*/, 'integer']
+      ]
+    }
+  })
+
   monacoInstance.editor.defineTheme('cpusimTheme', {
     base: 'vs',
     inherit: true,
@@ -68,8 +76,7 @@ export function configureMonacoEditor(monacoInstance: MonacoEditor) {
     }
   })
 
-  // Register a completion item provider for the new language
-  monacoInstance.languages.registerCompletionItemProvider('cpusim', {
+  monacoInstance.languages.registerCompletionItemProvider('cpusimCode', {
     provideCompletionItems: () => {
       const suggestions = [
         {

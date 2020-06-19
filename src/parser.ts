@@ -2,7 +2,7 @@ import { grammar, Grammar, MatchResult } from 'ohm-fork'
 import { toAST } from 'ohm-fork/extras'
 
 // TODO: digit+ should not allow space between digits
-const cpusimGrammar: Grammar = grammar(`CpuSim {
+const codeGrammar: Grammar = grammar(`CpuSimCode {
     Instruction = 
         | Nop 
         | Hlt 
@@ -22,7 +22,6 @@ const cpusimGrammar: Grammar = grammar(`CpuSim {
         | Pop
         | Cal
         | Ret
-        | Integer
         | end
         
     PositiveInteger = digit+
@@ -117,6 +116,19 @@ const cpusimGrammar: Grammar = grammar(`CpuSim {
   }  
 `)
 
+const dataGrammar: Grammar = grammar(`CpuSimData {
+  Instruction = 
+      | Integer
+      | end
+      
+  PositiveInteger = digit+
+
+  NegativeInteger = "-"digit+
+  
+  Integer = NegativeInteger | PositiveInteger
+}  
+`)
+
 // https://github.com/harc/ohm/blob/master/doc/extras.md#configuration-using-a-mapping
 const astMappings = {
   MovRegister: { 0: 0 },
@@ -143,8 +155,8 @@ interface Match {
   ast: any
 }
 
-const matchRows = (rows: string[]) => rows.reduce((matches: Match[], row) => {
-  const matchResult = cpusimGrammar.match(row)
+const matchRows = (rows: string[], type: 'code' | 'data' = 'code') => rows.reduce((matches: Match[], row) => {
+  const matchResult = type === 'code' ? codeGrammar.match(row) : dataGrammar.match(row)
   const match: Match = {
     matched: matchResult.succeeded(),
     message: matchResult.shortMessage?.split(': ')[1],
@@ -154,9 +166,9 @@ const matchRows = (rows: string[]) => rows.reduce((matches: Match[], row) => {
   return matches.concat(match)
 }, [])
 
-export const parseCode = (code: string) => {
-  const rows = code.split(/\r?\n/)
-  const matches = matchRows(rows)
+export const parseCode = (text: string, type: 'code' | 'data' = 'code') => {
+  const rows = text.split(/\r?\n/)
+  const matches = matchRows(rows, type)
   return matches
 }
 

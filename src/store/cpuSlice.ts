@@ -74,7 +74,7 @@ const cpuSlice = createSlice({
 
     setData(state, action: PayloadAction<string>) {
       state.data = action.payload
-      const matches = parseCode(state.data)
+      const matches = parseCode(state.data, 'data')
       state.dataSyntaxErrors = getSyntaxErrors(matches)
       state.dataList = parseData(matches.map(m => m.ast))
     },

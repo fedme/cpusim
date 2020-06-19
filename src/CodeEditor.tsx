@@ -106,7 +106,7 @@ export const CodeEditor = () => {
           <Editor
             width={width}
             height="50vh"
-            language="cpusim"
+            language="cpusimCode"
             theme="cpusimTheme"
             value={initialCode}
             editorDidMount={onCodeEditorDidMount}
@@ -121,7 +121,7 @@ export const CodeEditor = () => {
           <ControlledEditor
             width={width}
             height="15vh"
-            language="cpusim"
+            language="cpusimData"
             theme="cpusimTheme"
             value={data}
             editorDidMount={onDataEditorDidMount}
