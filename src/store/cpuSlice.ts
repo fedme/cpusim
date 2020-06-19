@@ -350,6 +350,9 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
     }
     case InstructionType.Div: {
       dispatch(div())
+      if (cpu.r1 === 0) {
+        dispatch(hlt())
+      }
       break
     }
     case InstructionType.Mov: {
