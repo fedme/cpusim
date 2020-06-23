@@ -119,13 +119,13 @@ const parseInstruction = (tree: any) => {
     case 'SET': {
       let data = 0
 
-      switch ((tree[2].type as string).toUpperCase()) {
+      switch ((tree[3].type as string).toUpperCase()) {
         case 'POSITIVEINTEGER': {
-          data = parseInt(tree[2][0].join(''))
+          data = parseInt(tree[3][0].join(''))
           break
         }
         case 'NEGATIVEINTEGER': {
-          data = parseInt(tree[2][1].join('')) * -1
+          data = parseInt(tree[3][1].join('')) * -1
           break
         }
         default: {
