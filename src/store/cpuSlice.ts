@@ -148,6 +148,10 @@ const cpuSlice = createSlice({
           state.sp = action.payload.data
           break
         }
+        case 'A': {
+          state.a = action.payload.data
+          break
+        }
       }
     },
 

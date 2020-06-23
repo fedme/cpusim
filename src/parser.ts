@@ -62,6 +62,7 @@ const codeGrammar: Grammar = grammar(`CpuSimCode {
         | "R1" 
         | "IX"
         | "SP"
+        | "A"
     
     Set = "SET" SetRegister "#"Integer
     
