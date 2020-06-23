@@ -4,7 +4,7 @@ import {
 } from '../parser'
 import {
   Instruction, parseInstructions, parseData, InstructionType, SetInstruction, MovInstruction, JmpInstruction,
-  JmzInstruction, JmlInstruction, JmgInstruction, LodSimpleInstruction, LodComplexInstruction, StoInstruction,
+  JmzInstruction, JmlInstruction, JmgInstruction, LodInstruction, StoInstruction,
   CalInstruction
 } from '../instructionParser'
 
@@ -155,41 +155,22 @@ const cpuSlice = createSlice({
       }
     },
 
-    lodSimple(state, action: PayloadAction<LodSimpleInstruction>) {
-      // TODO: throw if data is not in memory
-      const data = state.dataList[action.payload.address - MEMORY_CODE_MAX_SIZE]
+    lod(state, action: PayloadAction<LodInstruction>) {
+      let address = action.payload.address - MEMORY_CODE_MAX_SIZE
 
-      if (data == null) {
-        throw Error('data is not in memory')
+      if (action.payload.type === InstructionType.LodComplexIX) {
+        address = state.ix + action.payload.address - MEMORY_CODE_MAX_SIZE
       }
 
-      switch (action.payload.register) {
-        case 'R0': {
-          state.r0 = data
-          break
-        }
-        case 'R1': {
-          state.r1 = data
-          break
-        }
-        case 'IX': {
-          state.ix = data
-          break
-        }
-        case 'SP': {
-          state.sp = data
-          break
-        }
+      if (action.payload.type === InstructionType.LodComplexSP) {
+        address = state.sp + action.payload.address - MEMORY_CODE_MAX_SIZE
       }
-    },
 
-    lodComplex(state, action: PayloadAction<LodComplexInstruction>) {
       // TODO: throw if data is not in memory
-      const dataAddress = action.payload.type === InstructionType.LodComplexIX
-        ? state.ix + action.payload.address
-        : state.sp + action.payload.address
+      const data = state.dataList[address]
 
-      const data = state.dataList[dataAddress - MEMORY_CODE_MAX_SIZE]
+      console.log('lod', action.payload, address, data)
+
 
       if (data == null) {
         throw Error('data is not in memory')
@@ -312,8 +293,7 @@ export const {
   div,
   mov,
   set,
-  lodSimple,
-  lodComplex,
+  lod,
   sto,
   jmp,
   jmz,
@@ -368,15 +348,15 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
       break
     }
     case InstructionType.LodSimple: {
-      dispatch(lodSimple(instruction as LodSimpleInstruction))
+      dispatch(lod(instruction as LodInstruction))
       break
     }
     case InstructionType.LodComplexIX: {
-      dispatch(lodComplex(instruction as LodComplexInstruction))
+      dispatch(lod(instruction as LodInstruction))
       break
     }
     case InstructionType.LodComplexSP: {
-      dispatch(lodComplex(instruction as LodComplexInstruction))
+      dispatch(lod(instruction as LodInstruction))
       break
     }
     case InstructionType.StoSimple: {

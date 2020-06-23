@@ -37,12 +37,7 @@ export interface SetInstruction extends Instruction {
   data: number
 }
 
-export interface LodSimpleInstruction extends Instruction {
-  address: number
-  register: 'R0' | 'R1' | 'IX' | 'SP'
-}
-
-export interface LodComplexInstruction extends Instruction {
+export interface LodInstruction extends Instruction {
   address: number
   register: 'R0' | 'R1'
 }
@@ -139,20 +134,22 @@ const parseInstruction = (tree: any) => {
     }
 
     case 'LODSIMPLE': {
+      console.log('LODSIMPLE', tree)
+
       const address = parseInt(tree[1].join('')) // TODO: collect parsing error
-      instruction = { type: InstructionType.LodSimple, register: tree[0][0], address } as LodSimpleInstruction
+      instruction = { type: InstructionType.LodSimple, register: tree[0][0], address } as LodInstruction
       break
     }
 
     case 'LODCOMPLEXIX': {
       const address = parseInt(tree[1].join('')) // TODO: collect parsing error
-      instruction = { type: InstructionType.LodComplexIX, register: tree[0][0], address } as LodComplexInstruction
+      instruction = { type: InstructionType.LodComplexIX, register: tree[0][0], address } as LodInstruction
       break
     }
 
     case 'LODCOMPLEXSP': {
       const address = parseInt(tree[1].join('')) // TODO: collect parsing error
-      instruction = { type: InstructionType.LodComplexSP, register: tree[0][0], address } as LodComplexInstruction
+      instruction = { type: InstructionType.LodComplexSP, register: tree[0][0], address } as LodInstruction
       break
     }
 

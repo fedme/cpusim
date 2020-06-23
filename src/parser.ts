@@ -67,21 +67,15 @@ const codeGrammar: Grammar = grammar(`CpuSimCode {
     Set = "SET" SetRegister "#"Integer
     
     
-    LodSimpleRegister = 
-        "R0" 
-        | "R1" 
-        | "IX"
-        | "SP"
-    
-    LodComplexRegister = 
+    LodRegister = 
         "R0" 
         | "R1"
         
-    LodSimple = LodSimpleRegister Address
+    LodSimple = LodRegister Address
     
-    LodComplexIX = LodComplexRegister IXAddress
+    LodComplexIX = LodRegister IXAddress
     
-    LodComplexSP = LodComplexRegister SPAddress
+    LodComplexSP = LodRegister SPAddress
     
     LodBody = LodComplexIX | LodComplexSP | LodSimple
         
@@ -135,8 +129,7 @@ const astMappings = {
   MovRegister: { 0: 0 },
   Mov: { type: 0, 1: 1 },
   SetRegister: { 0: 0 },
-  LodSimpleRegister: { 0: 0 },
-  LodComplexRegister: { 0: 0 },
+  LodRegister: { 0: 0 },
   StoSimple: { 0: 0 },
   StoComplexIX: { 0: 0 },
   StoComplexSP: { 0: 0 },
