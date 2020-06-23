@@ -392,15 +392,15 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
       break
     }
     case InstructionType.Jmz: {
-      dispatch(jmp(instruction as JmzInstruction))
+      dispatch(jmz(instruction as JmzInstruction))
       break
     }
     case InstructionType.Jml: {
-      dispatch(jmp(instruction as JmlInstruction))
+      dispatch(jml(instruction as JmlInstruction))
       break
     }
     case InstructionType.Jmg: {
-      dispatch(jmp(instruction as JmgInstruction))
+      dispatch(jmg(instruction as JmgInstruction))
       break
     }
     case InstructionType.Psh: {
