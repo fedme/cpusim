@@ -9,7 +9,9 @@ const codeGrammar: Grammar = grammar(`CpuSimCode {
         | Add 
         | Sub 
         | Mul 
-        | Div 
+        | Div
+        | Inc
+        | Dec
         | Mov
         | Set
         | Lod
@@ -47,7 +49,11 @@ const codeGrammar: Grammar = grammar(`CpuSimCode {
     Mul = "MUL"
     
     Div = "DIV"
-    
+
+    Inc = "INC IX"
+
+    Dec = "DEC IX"
+  
     
     MovRegister = 
         "R0" 

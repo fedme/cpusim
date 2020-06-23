@@ -6,6 +6,8 @@ export enum InstructionType {
   Sub = 'SUB',
   Mul = 'MUL',
   Div = 'DIV',
+  Inc = 'INC',
+  Dec = 'DEC',
   Mov = 'MOV',
   Set = 'SET',
   LodSimple = 'LOD_SIMPLE',
@@ -103,6 +105,16 @@ const parseInstruction = (tree: any) => {
 
     case 'DIV': {
       instruction = { type: InstructionType.Div }
+      break
+    }
+
+    case 'INC': {
+      instruction = { type: InstructionType.Inc }
+      break
+    }
+
+    case 'DEC': {
+      instruction = { type: InstructionType.Dec }
       break
     }
 

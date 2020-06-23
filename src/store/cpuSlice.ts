@@ -113,6 +113,14 @@ const cpuSlice = createSlice({
       state.a = Math.trunc(state.r0 / state.r1)
     },
 
+    inc(state) {
+      state.ix += 1
+    },
+
+    dec(state) {
+      state.ix -= 1
+    },
+
     mov(state, action: PayloadAction<MovInstruction>) {
       switch (action.payload.register) {
         case 'R0': {
@@ -291,6 +299,8 @@ export const {
   sub,
   mul,
   div,
+  inc,
+  dec,
   mov,
   set,
   lod,
@@ -337,6 +347,14 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
       if (cpu.r1 === 0) {
         dispatch(hlt())
       }
+      break
+    }
+    case InstructionType.Inc: {
+      dispatch(inc())
+      break
+    }
+    case InstructionType.Dec: {
+      dispatch(dec())
       break
     }
     case InstructionType.Mov: {

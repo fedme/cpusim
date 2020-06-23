@@ -130,6 +130,16 @@ export function configureMonacoEditor(monacoInstance: MonacoEditor) {
           insertText: 'DIV'
         },
         {
+          label: 'INC',
+          kind: CompletionItemKind.Keyword,
+          insertText: 'INC IX'
+        },
+        {
+          label: 'DEC',
+          kind: CompletionItemKind.Keyword,
+          insertText: 'DEC IX'
+        },
+        {
           label: 'MOV',
           kind: CompletionItemKind.Snippet,
           // eslint-disable-next-line no-template-curly-in-string
