@@ -160,7 +160,8 @@ export const CodeEditor = () => {
             options={{
               minimap: { enabled: false },
               lineNumbers: (originalNumber: number) => (originalNumber === 1 ? '0' : originalNumber - 1),
-              glyphMargin: true
+              glyphMargin: true,
+              contextmenu: false
             }}
           />
 
@@ -176,7 +177,8 @@ export const CodeEditor = () => {
             options={{
               minimap: { enabled: false },
               lineNumbers: (originalNumber: number) => originalNumber + MEMORY_CODE_MAX_SIZE - 1,
-              glyphMargin: true
+              glyphMargin: true,
+              contextmenu: false
             }}
           />
 
