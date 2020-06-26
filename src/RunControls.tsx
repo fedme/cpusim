@@ -43,7 +43,16 @@ export const RunControls = () => {
   function run() {
     dispatch(reset())
     dispatch(setIsRunning(true))
-    setDelay(1000)
+
+    // Execute first instruction
+    if (pc < instructions.length) {
+      dispatch(executeNextInstruction())
+    } else {
+      dispatch(setIsRunning(false))
+    }
+
+    // Start timer that executes next instructions
+    setDelay(3000)
   }
 
   function stop() {

@@ -31,7 +31,7 @@ export const CodeEditor = () => {
   const { width = 1 } = useResizeObserver({ ref: containerRef })
   const dispatch = useDispatch()
   const {
-    syntaxErrors, data, dataSyntaxErrors, pc, sp, isRunning
+    syntaxErrors, data, dataSyntaxErrors, sp, isRunning, lightCodeRow
   } = useSelector((state: RootState) => state.cpu)
 
   const onCodeChange = useCallback((newValue: string) => dispatch(setCode(newValue)), [dispatch])
@@ -73,10 +73,10 @@ export const CodeEditor = () => {
   if (monacoInstance && codeEditorRef.current) {
     monacoInstance.editor.setModelMarkers(codeEditorRef.current.getModel()!, 'owner', getMonacoMarkers(syntaxErrors))
 
-    if (isRunning) {
+    if (isRunning && lightCodeRow != null) {
       const newDecorations = codeEditorRef.current.deltaDecorations(codeEditorDecorations.current, [{
         range: {
-          startLineNumber: pc + 1, endLineNumber: pc + 1, startColumn: 1, endColumn: 100
+          startLineNumber: lightCodeRow + 1, endLineNumber: lightCodeRow + 1, startColumn: 1, endColumn: 100
         },
         options: {
           isWholeLine: true,
@@ -160,7 +160,7 @@ export const CodeEditor = () => {
             options={{
               minimap: { enabled: false },
               lineNumbers: (originalNumber: number) => (originalNumber === 1 ? '0' : originalNumber - 1),
-              glyphMargin: true,
+              glyphMargin: false,
               contextmenu: false
             }}
           />
@@ -177,7 +177,7 @@ export const CodeEditor = () => {
             options={{
               minimap: { enabled: false },
               lineNumbers: (originalNumber: number) => originalNumber + MEMORY_CODE_MAX_SIZE - 1,
-              glyphMargin: true,
+              glyphMargin: false,
               contextmenu: false
             }}
           />

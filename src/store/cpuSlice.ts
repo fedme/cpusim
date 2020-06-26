@@ -29,6 +29,14 @@ type cpuState = {
   a: number
   ix: number
   sp: number
+  lightAddressBus: boolean
+  lightDataBus: boolean
+  lightPc: boolean
+  lightIr: boolean
+  lightMar: boolean
+  lightMdr: boolean
+  lightDecoder: boolean
+  lightCodeRow: number | null
 }
 
 export const initialCode = ''
@@ -48,7 +56,15 @@ const initialState: cpuState = {
   r1: 0,
   a: 0,
   ix: 0,
-  sp: 100
+  sp: 100,
+  lightAddressBus: false,
+  lightDataBus: false,
+  lightPc: false,
+  lightIr: false,
+  lightMar: false,
+  lightMdr: false,
+  lightDecoder: false,
+  lightCodeRow: null
 }
 
 const cpuSlice = createSlice({
@@ -63,6 +79,14 @@ const cpuSlice = createSlice({
       state.a = initialState.a
       state.ix = initialState.ix
       state.sp = initialState.sp
+      state.lightAddressBus = initialState.lightAddressBus
+      state.lightDataBus = initialState.lightDataBus
+      state.lightPc = initialState.lightPc
+      state.lightIr = initialState.lightIr
+      state.lightMar = initialState.lightMar
+      state.lightMdr = initialState.lightMdr
+      state.lightDecoder = initialState.lightDecoder
+      state.lightCodeRow = initialState.lightCodeRow
     },
 
     setCode(state, action: PayloadAction<string>) {
@@ -283,6 +307,31 @@ const cpuSlice = createSlice({
       const address = state.sp - MEMORY_CODE_MAX_SIZE
 
       state.pc = state.dataList[address]! // TODO: throw if null / not present
+    },
+
+    setLightsFetchStart(state, action: PayloadAction<boolean>) {
+      state.lightAddressBus = action.payload
+      state.lightPc = action.payload
+      state.lightMar = action.payload
+    },
+
+    setLightCodeRow(state, action: PayloadAction<number | null>) {
+      state.lightCodeRow = action.payload
+    },
+
+    setLightsFetchEnd(state, action: PayloadAction<boolean>) {
+      state.lightDataBus = action.payload
+      state.lightIr = action.payload
+      state.lightMdr = action.payload
+    },
+
+    setLightPc(state, action: PayloadAction<boolean>) {
+      state.lightPc = action.payload
+    },
+
+    setLightsExecuteStart(state, action: PayloadAction<boolean>) {
+      state.lightIr = action.payload
+      state.lightDecoder = action.payload
     }
   }
 })
@@ -312,7 +361,12 @@ export const {
   psh,
   pop,
   cal,
-  ret
+  ret,
+  setLightsFetchStart,
+  setLightCodeRow,
+  setLightsFetchEnd,
+  setLightPc,
+  setLightsExecuteStart
 } = cpuSlice.actions
 
 export default cpuSlice.reducer
@@ -321,9 +375,31 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
   const { cpu } = getState()
   const instruction = cpu.instructions[cpu.pc] // TODO: throw if PC is > instructions.lenght
 
+  dispatch(setLightsFetchStart(true))
+
+  await sleep(500)
+
+  dispatch(setLightsFetchStart(false))
+  dispatch(setLightCodeRow(cpu.pc))
+
+  await sleep(500)
+
+  dispatch(setLightsFetchEnd(true))
+
+  await sleep(500)
+
+  dispatch(setLightsFetchEnd(false))
+  dispatch(setLightPc(true))
   dispatch(incrementPc())
 
-  await sleep(200)
+  await sleep(500)
+
+  dispatch(setLightPc(false))
+  dispatch(setLightsExecuteStart(true))
+
+  await sleep(500)
+
+  dispatch(setLightsExecuteStart(false))
 
   switch (instruction.type) {
     case InstructionType.Hlt: {

@@ -4,7 +4,7 @@ import { RootState } from './store/rootReducer'
 
 export const Simulator = () => {
   const {
-    pc, r0, r1, a, ix, sp
+    pc, r0, r1, a, ix, sp, lightAddressBus, lightPc, lightMar, lightIr, lightMdr, lightDataBus, lightDecoder
   } = useSelector((state: RootState) => state.cpu)
 
   return (
@@ -25,7 +25,7 @@ export const Simulator = () => {
         >R0
         </text>
         <text
-          fontSize="11px"
+          fontSize="12px"
           x="17.11" y="832.52"
         >{r0}
         </text>
@@ -42,7 +42,7 @@ export const Simulator = () => {
         >R1
         </text>
         <text
-          fontSize="11px"
+          fontSize="12px"
           x="17.11" y="832.52"
         >{r1}
         </text>
@@ -58,14 +58,14 @@ export const Simulator = () => {
         >A
         </text>
         <text
-          fontSize="11px"
+          fontSize="12px"
           x="20.88" y="832.52"
         >{a}
         </text>
       </g>
       <g id="pc" transform="matrix(1, 0, 0, 1, 239.528, -714.330933)">
         <rect
-          fill="#d2d6dc" y="813.543"
+          fill={lightPc ? 'red' : '#d2d6dc'} y="813.543"
           width="51.0236" height="28.3465"
           x="0"
         />
@@ -74,14 +74,14 @@ export const Simulator = () => {
         >PC
         </text>
         <text
-          fontSize="11px"
+          fontSize="12px"
           x="17.11" y="832.52"
         >{pc}
         </text>
       </g>
       <g id="ir" transform="matrix(1, 0, 0, 1, 425.196991, -634.960999)">
         <rect
-          fill="#d2d6dc" x="0"
+          fill={lightIr ? 'red' : '#d2d6dc'} x="0"
           y="813.543" width="51.0236"
           height="28.3465"
         />
@@ -110,7 +110,7 @@ export const Simulator = () => {
       </g>
       <g id="mdr" transform="matrix(1, 0, 0, 1, 544.252441, -727.979736)">
         <rect
-          fill="#d2d6dc" x="0"
+          fill={lightMdr ? 'red' : '#d2d6dc'} x="0"
           y="813.543" width="51.0236"
           height="28.3465"
         />
@@ -121,7 +121,7 @@ export const Simulator = () => {
       </g>
       <g id="mar" transform="matrix(1, 0, 0, 1, 544.25238, -760.326233)">
         <rect
-          fill="#d2d6dc" x="0"
+          fill={lightMar ? 'red' : '#d2d6dc'} x="0"
           y="813.543" width="51.0236"
           height="28.3465"
         />
@@ -141,7 +141,7 @@ export const Simulator = () => {
         >IX
         </text>
         <text
-          fontSize="11px"
+          fontSize="12px"
           x="19.34" y="832.52"
         >{ix}
         </text>
@@ -157,7 +157,7 @@ export const Simulator = () => {
         >SP
         </text>
         <text
-          fontSize="11px"
+          fontSize="12px"
           x="17.7" y="832.52"
         >{sp}
         </text>
@@ -165,7 +165,7 @@ export const Simulator = () => {
 
       <g id="decoder" transform="matrix(0, -1, 1, 0, -456.377991, 229.910004)">
         <path
-          fill="#d2d6dc" d="M0 841.89 L76.54 841.89 L68.88 756.85 L7.65 756.85 L0 841.89 Z"
+          fill={lightDecoder ? 'red' : '#d2d6dc'} d="M0 841.89 L76.54 841.89 L68.88 756.85 L7.65 756.85 L0 841.89 Z"
         />
         <text
           fontSize="11px" x="13.044"
@@ -198,12 +198,13 @@ export const Simulator = () => {
         x2="90.70870208740234" y2="48.38448357905189"
       />
       <line
-        stroke="gray" strokeWidth="2"
+        stroke={lightAddressBus ? 'red' : 'gray'} strokeWidth="2"
         id="address_bus" x1="130.681"
         y1="66.817" x2="544.252"
         y2="66.817"
       />
       <text
+        fill={lightAddressBus ? 'red' : 'gray'}
         fontSize="12px" x="348.408"
         y="81" id="address_bus_label"
       >BUS INDIRIZZI
@@ -220,7 +221,8 @@ export const Simulator = () => {
         transform="matrix(-1, 0, 0, -1, 160.15799, 171.126007)"
       />
       <line
-        stroke="gray" strokeWidth="2"
+        id="pc-address-bus-line"
+        stroke={lightPc ? 'red' : 'gray'} strokeWidth="2"
         x1="265.0400390625" y1="66.81669616699219"
         x2="265.0400390625" y2="98.81159973144531"
       />
@@ -235,7 +237,8 @@ export const Simulator = () => {
         x2="265.0400390625" y2="179.0229949951172"
       />
       <line
-        stroke="gray" strokeWidth="2"
+        id="decoder-ir-line"
+        stroke={lightDecoder ? 'red' : 'gray'} strokeWidth="2"
         x1="425.1969909667969" y1="190.77310668311887"
         x2="385.51202392578125" y2="190.77310668311887"
       />
@@ -256,13 +259,14 @@ export const Simulator = () => {
         x2="200" y2="249.65157360801194"
       />
       <line
-        stroke="gray" strokeWidth="2"
+        stroke={lightDataBus ? 'red' : 'gray'} strokeWidth="2"
         id="data_bus" x1="127.559"
         y1="249.652" x2="526.648"
         y2="249.652"
       />
       <text
         fontSize="12px" id="data_bus_label"
+        fill={lightDataBus ? 'red' : 'gray'}
         x="348.408" y="263"
       >BUS DATI
       </text>
@@ -297,12 +301,14 @@ export const Simulator = () => {
         x2="526.6477151441957" y2="98.81159973144531"
       />
       <line
-        stroke="gray" strokeWidth="2"
+        className="data-bus" stroke={lightDataBus ? 'red' : 'gray'}
+        strokeWidth="2"
         x1="526.648" y1="98.812"
         x2="526.648" y2="249.652"
       />
       <line
-        stroke="gray" strokeWidth="2"
+        id="ir-data-bus-line"
+        stroke={lightIr && lightDataBus ? 'red' : 'gray'} strokeWidth="2"
         x1="476.2205924987793" y1="190.77310180664062"
         x2="526.647705078125" y2="190.77310180664068"
       />
