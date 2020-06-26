@@ -45,7 +45,7 @@ export const RunControls = () => {
     dispatch(setIsRunning(true))
 
     // Execute first instruction
-    if (pc < instructions.length) {
+    if (instructions.length > 1) {
       dispatch(executeNextInstruction())
     } else {
       dispatch(setIsRunning(false))
