@@ -45,7 +45,7 @@ export function configureMonacoEditor(monacoInstance: MonacoEditor) {
   monacoInstance.languages.setMonarchTokensProvider('cpusimCode', {
     tokenizer: {
       root: [
-        [/^(NOP|HLT|ADD|SUB|MUL|DIV|MOV|SET|LOD|STO|JMP|JMZ|JML|JMG|PSH|POP|CAL|RET)/, 'instruction'],
+        [/^(NOP|HLT|ADD|SUB|MUL|DIV|INC|DEC|MOV|SET|LOD|STO|JMP|JMZ|JML|JMG|PSH|POP|CAL|RET)/, 'instruction'],
         [/R0|R1|IX|SP/, 'register'],
         [/[0-9]\d*/, 'address'],
         [/@[0-9]\d*/, 'ixAddress'],
