@@ -8,6 +8,10 @@ import {
 } from './store/cpuSlice'
 import { RootState } from './store/rootReducer'
 
+const FASTER_SPEED = 500
+const SLOWER_SPEED = 5000
+const SPEED_STEP = 500
+
 export const RunControls = () => {
   const dispatch = useDispatch()
   const {
@@ -23,18 +27,13 @@ export const RunControls = () => {
     setTicks(ticks + 1)
   }, delay)
 
-  useEffect(() => {
-    if (!isRunning) {
-      setDelay(null)
-    }
-  }, [isRunning])
-
   // Effect running at every interval tick
   useEffect(() => {
     if (isRunning) {
       if (pc < instructions.length) {
         dispatch(executeNextInstruction())
       } else {
+        setDelay(null)
         dispatch(setIsRunning(false))
       }
     }
@@ -49,6 +48,7 @@ export const RunControls = () => {
     if (instructions.length > 1) {
       dispatch(executeNextInstruction())
     } else {
+      setDelay(null)
       dispatch(setIsRunning(false))
     }
 
@@ -57,14 +57,15 @@ export const RunControls = () => {
   }
 
   function stop() {
-    dispatch(reset())
+    setDelay(null)
     dispatch(setIsRunning(false))
+    dispatch(reset())
     setTicks(0)
   }
 
   function onSpeedChange(e: React.ChangeEvent<HTMLInputElement>) {
     const speed = e.target.value as unknown as number
-    dispatch(setExecutionSpeed(speed * -1))
+    dispatch(setExecutionSpeed(FASTER_SPEED + SLOWER_SPEED - (speed * SPEED_STEP)))
   }
 
   return (
@@ -79,31 +80,36 @@ export const RunControls = () => {
       )}
 
       {!areErrorsPresent && !isRunning && (
-        <>
+        <div className="flex items-center">
+          <div className="text-sm font-medium text-white pr-4">Speed: </div>
           <input
-            className="mr-4"
+            className="block mr-4"
             type="range" name="speed"
-            value={executionSpeed * -1}
-            min="-5000" max="500"
-            step="500"
+            value={Math.floor((FASTER_SPEED + SLOWER_SPEED - executionSpeed) / SPEED_STEP)}
+            min="1" max="10"
+            step="1"
             onChange={onSpeedChange}
           />
-          <button
-            className="px-3 py-2 rounded-md text-sm font-medium text-white bg-green-500 focus:outline-none focus:text-white focus:bg-gray-700"
-            onClick={run}
-          >
-            Run
-          </button>
-        </>
+          <div>
+            <button
+              className="px-3 py-2 rounded-md text-sm font-medium text-white bg-green-500 focus:outline-none focus:text-white focus:bg-gray-700"
+              onClick={run}
+            >
+              Run
+            </button>
+          </div>
+        </div>
       )}
 
       {!areErrorsPresent && isRunning && (
-      <button
-        className="px-3 py-2 rounded-md text-sm font-medium text-white bg-red-500 focus:outline-none focus:text-white focus:bg-gray-700"
-        onClick={stop}
-      >
-        Stop
-      </button>
+        <>
+          <button
+            className="px-3 py-2 rounded-md text-sm font-medium text-white bg-red-500 focus:outline-none focus:text-white focus:bg-gray-700"
+            onClick={stop}
+          >
+            Stop
+          </button>
+        </>
       )}
     </div>
   )

@@ -267,7 +267,7 @@ export const Simulator = () => {
       <text
         fontSize="12px" id="data_bus_label"
         fill={lightDataBus ? 'red' : 'gray'}
-        x="348.408" y="263"
+        x="362.408" y="263"
       >BUS DATI
       </text>
       <line

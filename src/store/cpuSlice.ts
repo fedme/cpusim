@@ -207,9 +207,6 @@ const cpuSlice = createSlice({
       // TODO: throw if data is not in memory
       const data = state.dataList[address]
 
-      console.log('lod', action.payload, address, data)
-
-
       if (data == null) {
         throw Error('data is not in memory')
       }
