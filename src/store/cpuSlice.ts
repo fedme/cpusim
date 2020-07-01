@@ -46,7 +46,7 @@ export const initialData = ''
 
 const initialState: cpuState = {
   isRunning: false,
-  executionSpeed: 3000,
+  executionSpeed: 2500,
   code: initialCode,
   data: initialData,
   syntaxErrors: [],
@@ -379,7 +379,7 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
   const { cpu } = getState()
   const instruction = cpu.instructions[cpu.pc] // TODO: throw if PC is > instructions.lenght
 
-  const animationInterval = Math.floor(cpu.executionSpeed / 7)
+  const animationInterval = Math.floor(cpu.executionSpeed / 10) - 150
 
   dispatch(setLightsFetchStart(true))
 

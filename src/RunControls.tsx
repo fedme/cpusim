@@ -73,15 +73,15 @@ export const RunControls = () => {
 
       {areErrorsPresent && (
         <span
-          className="text-sm font-medium text-white text-red-400"
+          className="text-sm font-medium text-red-400"
         >
-          Please fix the errors in your code
+          Risolvi gli errori del codice per eseguire il programma
         </span>
       )}
 
       {!areErrorsPresent && !isRunning && (
         <div className="flex items-center">
-          <div className="text-sm font-medium text-white pr-4">Speed: </div>
+          <div className="text-sm font-medium text-white pr-4">Velocit&agrave;: </div>
           <input
             className="block mr-4"
             type="range" name="speed"
@@ -95,7 +95,7 @@ export const RunControls = () => {
               className="px-3 py-2 rounded-md text-sm font-medium text-white bg-green-500 focus:outline-none focus:text-white focus:bg-gray-700"
               onClick={run}
             >
-              Run
+              Esegui programma
             </button>
           </div>
         </div>

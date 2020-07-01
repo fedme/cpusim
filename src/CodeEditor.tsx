@@ -146,9 +146,9 @@ export const CodeEditor = () => {
       { monacoInstance && (
         <>
 
-          <h3 className="bg-gray-300 px-4 mb-2 text-xl">Memory</h3>
+          <h3 className="bg-gray-300 px-4 mb-2 text-xl">Memoria</h3>
 
-          <h3 className="bg-gray-200 px-4 my-2">Code section</h3>
+          <h3 className="bg-gray-200 px-4 my-2">Sezione codice</h3>
 
           <Editor
             width={width}
@@ -165,7 +165,7 @@ export const CodeEditor = () => {
             }}
           />
 
-          <h3 className="bg-gray-200 px-4 my-2">Data section</h3>
+          <h3 className="bg-gray-200 px-4 my-2">Sezione dati</h3>
 
           <ControlledEditor
             width={width}

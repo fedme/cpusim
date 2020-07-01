@@ -15,7 +15,7 @@ export const Navigation = () => {
 
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <span className="text-white font-bold">CPU Simulator</span>
+              <span className="text-white font-bold">Simulatore CPU</span>
             </div>
 
             <DesktopMenu />
