@@ -385,6 +385,10 @@ const cpuSlice = createSlice({
       state.lightDataBus = action.payload
     },
 
+    setLightDecoder(state, action: PayloadAction<boolean>) {
+      state.lightDecoder = action.payload
+    },
+
     setLightRegister(state, action: PayloadAction<RegisterLight>) {
       switch (action.payload.register) {
         case 'R0': {
@@ -456,6 +460,7 @@ export const {
   setLightIx,
   setLightSp,
   setLightDataBus,
+  setLightDecoder,
   setLightRegister
 } = cpuSlice.actions
 
@@ -638,7 +643,22 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
     }
 
     case InstructionType.Set: {
-      dispatch(set(instruction as SetInstruction))
+      const setInstruction = instruction as SetInstruction
+
+      dispatch(setLightDecoder(true))
+      dispatch(setLightDataBus(true))
+
+      await sleep(animationInterval)
+
+      dispatch(setLightDecoder(false))
+      dispatch(setLightRegister({ register: setInstruction.register, light: true }))
+      dispatch(set(setInstruction))
+
+      await sleep(animationInterval)
+
+      dispatch(setLightDataBus(false))
+      dispatch(setLightRegister({ register: setInstruction.register, light: false }))
+
       break
     }
 
