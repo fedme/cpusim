@@ -4,9 +4,10 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useInterval } from './utils/useInterval'
 import {
-  reset, executeNextInstruction, setIsRunning, setExecutionSpeed
+  reset, setIsRunning, setExecutionSpeed
 } from './store/cpuSlice'
 import { RootState } from './store/rootReducer'
+import { executeNextInstruction } from './store/executeInstruction'
 
 const FASTER_SPEED = 500
 const SLOWER_SPEED = 5000
