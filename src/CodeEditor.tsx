@@ -31,7 +31,7 @@ export const CodeEditor = () => {
   const { width = 1 } = useResizeObserver({ ref: containerRef })
   const dispatch = useDispatch()
   const {
-    syntaxErrors, data, dataSyntaxErrors, sp, isRunning, lightCodeRow
+    syntaxErrors, data, dataSyntaxErrors, isRunning, lightCodeRow, lightDataRow
   } = useSelector((state: RootState) => state.cpu)
 
   const onCodeChange = useCallback((newValue: string) => dispatch(setCode(newValue)), [dispatch])
@@ -119,10 +119,10 @@ export const CodeEditor = () => {
   if (monacoInstance && dataEditorRef.current) {
     monacoInstance.editor.setModelMarkers(dataEditorRef.current.getModel()!, 'owner', getMonacoMarkers(dataSyntaxErrors))
 
-    if (isRunning) {
+    if (isRunning && lightDataRow != null) {
       const newDecorations = dataEditorRef.current.deltaDecorations(dataEditorDecorations.current, [{
         range: {
-          startLineNumber: sp - MEMORY_CODE_MAX_SIZE + 1, endLineNumber: sp - MEMORY_CODE_MAX_SIZE + 1, startColumn: 1, endColumn: 100
+          startLineNumber: lightDataRow - MEMORY_CODE_MAX_SIZE + 1, endLineNumber: lightDataRow - MEMORY_CODE_MAX_SIZE + 1, startColumn: 1, endColumn: 100
         },
         options: {
           isWholeLine: true,

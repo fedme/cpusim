@@ -40,6 +40,7 @@ type cpuState = {
   lightMdr: boolean
   lightDecoder: boolean
   lightCodeRow: number | null
+  lightDataRow: number | null
   lightR0: boolean
   lightR1: boolean
   lightAlu: boolean
@@ -75,6 +76,7 @@ const initialState: cpuState = {
   lightMdr: false,
   lightDecoder: false,
   lightCodeRow: null,
+  lightDataRow: null,
   lightR0: false,
   lightR1: false,
   lightAlu: false,
@@ -103,6 +105,7 @@ const cpuSlice = createSlice({
       state.lightMdr = initialState.lightMdr
       state.lightDecoder = initialState.lightDecoder
       state.lightCodeRow = initialState.lightCodeRow
+      state.lightDataRow = initialState.lightDataRow
       state.lightR0 = initialState.lightR0
       state.lightR1 = initialState.lightR1
       state.lightAlu = initialState.lightAlu
@@ -342,6 +345,10 @@ const cpuSlice = createSlice({
       state.lightCodeRow = action.payload
     },
 
+    setLightDataRow(state, action: PayloadAction<number | null>) {
+      state.lightDataRow = action.payload
+    },
+
     setLightsFetchEnd(state, action: PayloadAction<boolean>) {
       state.lightDataBus = action.payload
       state.lightIr = action.payload
@@ -381,6 +388,10 @@ const cpuSlice = createSlice({
       state.lightSp = action.payload
     },
 
+    setLightAddressBus(state, action: PayloadAction<boolean>) {
+      state.lightAddressBus = action.payload
+    },
+
     setLightDataBus(state, action: PayloadAction<boolean>) {
       state.lightDataBus = action.payload
     },
@@ -412,7 +423,16 @@ const cpuSlice = createSlice({
           break
         }
       }
+    },
+
+    setLightMar(state, action: PayloadAction<boolean>) {
+      state.lightMar = action.payload
+    },
+
+    setLightMdr(state, action: PayloadAction<boolean>) {
+      state.lightMdr = action.payload
     }
+
   }
 })
 
@@ -450,6 +470,7 @@ export const {
   ret,
   setLightsFetchStart,
   setLightCodeRow,
+  setLightDataRow,
   setLightsFetchEnd,
   setLightPc,
   setLightsExecuteStart,
@@ -459,9 +480,12 @@ export const {
   setLightA,
   setLightIx,
   setLightSp,
+  setLightAddressBus,
   setLightDataBus,
   setLightDecoder,
-  setLightRegister
+  setLightRegister,
+  setLightMar,
+  setLightMdr
 } = cpuSlice.actions
 
 export default cpuSlice.reducer
@@ -663,7 +687,33 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
     }
 
     case InstructionType.LodSimple: {
-      dispatch(lod(instruction as LodInstruction))
+      const lodInstruction = instruction as LodInstruction
+
+      dispatch(setLightDecoder(true))
+      dispatch(setLightAddressBus(true))
+      dispatch(setLightMar(true))
+
+      await sleep(animationInterval)
+
+      dispatch(setLightDecoder(false))
+      dispatch(setLightAddressBus(false))
+      dispatch(setLightMar(false))
+      dispatch(setLightDataRow(lodInstruction.address))
+
+      await sleep(animationInterval)
+
+      dispatch(setLightDataRow(null))
+      dispatch(setLightMdr(true))
+      dispatch(setLightDataBus(true))
+      dispatch(setLightRegister({ register: lodInstruction.register, light: true }))
+      dispatch(lod(lodInstruction))
+
+      await sleep(animationInterval)
+
+      dispatch(setLightMdr(false))
+      dispatch(setLightDataBus(false))
+      dispatch(setLightRegister({ register: lodInstruction.register, light: false }))
+
       break
     }
 
