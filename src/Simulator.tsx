@@ -4,7 +4,7 @@ import { RootState } from './store/rootReducer'
 
 export const Simulator = () => {
   const {
-    pc, r0, r1, a, ix, sp, lightAddressBus, lightPc, lightMar, lightIr, lightMdr, lightDataBus, lightDecoder, lightR0, lightR1, lightAlu, lightA
+    pc, r0, r1, a, ix, sp, lightAddressBus, lightPc, lightMar, lightIr, lightMdr, lightDataBus, lightDecoder, lightR0, lightR1, lightAlu, lightA, lightIx, lightSp
   } = useSelector((state: RootState) => state.cpu)
 
   return (
@@ -132,7 +132,7 @@ export const Simulator = () => {
       </g>
       <g id="ix" transform="matrix(1, 0, 0, 1, 18.4252, -776.997009)">
         <rect
-          fill="#d2d6dc" x="0"
+          fill={lightIx ? 'red' : '#d2d6dc'} x="0"
           y="813.543" width="51.0236"
           height="28.3465"
         />
@@ -148,7 +148,7 @@ export const Simulator = () => {
       </g>
       <g id="sp" transform="matrix(1, 0, 0, 1, 158.740005, -714.330994)">
         <rect
-          fill="#d2d6dc" y="813.543"
+          fill={lightSp ? 'red' : '#d2d6dc'} y="813.543"
           width="51.0236" height="28.3465"
           x="0"
         />

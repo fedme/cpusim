@@ -42,6 +42,8 @@ type cpuState = {
   lightR1: boolean
   lightAlu: boolean
   lightA: boolean
+  lightIx: boolean
+  lightSp: boolean
 }
 
 export const initialCode = ''
@@ -74,7 +76,9 @@ const initialState: cpuState = {
   lightR0: false,
   lightR1: false,
   lightAlu: false,
-  lightA: false
+  lightA: false,
+  lightIx: false,
+  lightSp: false
 }
 
 const cpuSlice = createSlice({
@@ -101,6 +105,8 @@ const cpuSlice = createSlice({
       state.lightR1 = initialState.lightR1
       state.lightAlu = initialState.lightAlu
       state.lightA = initialState.lightA
+      state.lightIx = initialState.lightIx
+      state.lightSp = initialState.lightSp
     },
 
     setExecutionSpeed(state, action: PayloadAction<number>) {
@@ -363,6 +369,14 @@ const cpuSlice = createSlice({
 
     setLightA(state, action: PayloadAction<boolean>) {
       state.lightA = action.payload
+    },
+
+    setLightIx(state, action: PayloadAction<boolean>) {
+      state.lightIx = action.payload
+    },
+
+    setLightSp(state, action: PayloadAction<boolean>) {
+      state.lightSp = action.payload
     }
   }
 })
@@ -402,7 +416,9 @@ export const {
   setLightR0,
   setLightR1,
   setLightAlu,
-  setLightA
+  setLightA,
+  setLightIx,
+  setLightSp
 } = cpuSlice.actions
 
 export default cpuSlice.reducer
@@ -537,13 +553,23 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
     }
 
     case InstructionType.Inc: {
+      dispatch(setLightIx(true))
       dispatch(inc())
+
+      await sleep(animationInterval)
+      dispatch(setLightIx(false))
+
       break
     }
 
 
     case InstructionType.Dec: {
+      dispatch(setLightIx(true))
       dispatch(dec())
+
+      await sleep(animationInterval)
+      dispatch(setLightIx(false))
+
       break
     }
 
