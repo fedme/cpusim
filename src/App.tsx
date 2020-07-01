@@ -1,6 +1,6 @@
 import React from 'react'
 import { AppLayout } from './layout/AppLayout'
-import { CodeEditor } from './CodeEditor'
+import { Memory } from './Memory'
 import { Simulator } from './Simulator'
 
 const App = () => (
@@ -12,7 +12,7 @@ const App = () => (
       </div>
 
       <div className="w-2/5 h-full border-4 mt-6">
-        <CodeEditor />
+        <Memory />
       </div>
 
     </div>

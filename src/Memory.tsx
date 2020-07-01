@@ -11,7 +11,7 @@ import {
 } from './store/cpuSlice'
 import { configureMonacoEditor, getMonacoMarkers, MonacoEditor } from './monacoEditor'
 
-export const CodeEditor = () => {
+export const Memory = () => {
   // Set up Monaco
   const [monacoInstance, setMonacoInstance] = useState<MonacoEditor>()
   useEffect(() => {
