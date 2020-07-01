@@ -4,7 +4,8 @@ import { RootState } from './store/rootReducer'
 
 export const Simulator = () => {
   const {
-    pc, r0, r1, a, ix, sp, lightAddressBus, lightPc, lightMar, lightIr, lightMdr, lightDataBus, lightDecoder, lightR0, lightR1, lightAlu, lightA, lightIx, lightSp
+    pc, r0, r1, a, ix, sp, lightAddressBus, lightPc, lightMar, lightIr, lightMdr,
+    lightDataBus, lightDecoder, lightR0, lightR1, lightAlu, lightA, lightIx, lightSp
   } = useSelector((state: RootState) => state.cpu)
 
   return (
@@ -271,27 +272,32 @@ export const Simulator = () => {
       >BUS DATI
       </text>
       <line
-        stroke="gray" strokeWidth="2"
+        className="a_data_bus"
+        stroke={lightA && lightDataBus ? 'red' : 'gray'} strokeWidth="2"
         x1="43.939998626708984" y1="539.1580123901367"
         x2="224.59078968811244" y2="539.1580123901367"
       />
       <line
-        stroke="gray" strokeWidth="2"
+        className="a_data_bus"
+        stroke={lightA && lightDataBus ? 'red' : 'gray'} strokeWidth="2"
         x1="224.59078598022464" y1="509.8315124511719"
         x2="224.59078598022464" y2="539.1580200195312"
       />
       <line
-        stroke="gray" strokeWidth="2"
+        className="a_data_bus"
+        stroke={lightA && lightDataBus ? 'red' : 'gray'} strokeWidth="2"
         x1="127.55902099609375" y1="250.39699554443362"
         x2="127.55902099609375" y2="539.1580200195312"
       />
       <line
-        stroke="gray" strokeWidth="2"
+        id="r0_data_bus"
+        stroke={lightR0 && lightDataBus ? 'red' : 'gray'} strokeWidth="2"
         x1="184.25" y1="345.8260192871094"
         x2="184.24999999999997" y2="249.65158081054685"
       />
       <line
-        stroke="gray" strokeWidth="2"
+        id="r1_data_bus"
+        stroke={lightR1 && lightDataBus ? 'red' : 'gray'} strokeWidth="2"
         x1="265.0400390625" y1="345.8260192871094"
         x2="265.0400390625" y2="249.6515808105469"
       />

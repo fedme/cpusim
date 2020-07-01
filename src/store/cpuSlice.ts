@@ -1,4 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import {
+  createSlice, PayloadAction
+} from '@reduxjs/toolkit'
 import {
   parseCode, getSyntaxErrors, SyntaxError
 } from '../parser'
@@ -377,9 +379,43 @@ const cpuSlice = createSlice({
 
     setLightSp(state, action: PayloadAction<boolean>) {
       state.lightSp = action.payload
+    },
+
+    setLightDataBus(state, action: PayloadAction<boolean>) {
+      state.lightDataBus = action.payload
+    },
+
+    setLightRegister(state, action: PayloadAction<RegisterLight>) {
+      switch (action.payload.register) {
+        case 'R0': {
+          state.lightR0 = action.payload.light
+          break
+        }
+        case 'R1': {
+          state.lightR1 = action.payload.light
+          break
+        }
+        case 'A': {
+          state.lightA = action.payload.light
+          break
+        }
+        case 'IX': {
+          state.lightIx = action.payload.light
+          break
+        }
+        case 'SP': {
+          state.lightSp = action.payload.light
+          break
+        }
+      }
     }
   }
 })
+
+interface RegisterLight {
+  register: 'R0' | 'R1' | 'A' | 'SP' | 'IX'
+  light: boolean
+}
 
 export const {
   reset,
@@ -418,7 +454,9 @@ export const {
   setLightAlu,
   setLightA,
   setLightIx,
-  setLightSp
+  setLightSp,
+  setLightDataBus,
+  setLightRegister
 } = cpuSlice.actions
 
 export default cpuSlice.reducer
@@ -478,6 +516,7 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
       dispatch(add())
 
       await sleep(animationInterval)
+
       dispatch(setLightA(false))
 
       break
@@ -500,6 +539,7 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
       dispatch(sub())
 
       await sleep(animationInterval)
+
       dispatch(setLightA(false))
 
       break
@@ -522,6 +562,7 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
       dispatch(mul())
 
       await sleep(animationInterval)
+
       dispatch(setLightA(false))
 
       break
@@ -547,6 +588,7 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
       }
 
       await sleep(animationInterval)
+
       dispatch(setLightA(false))
 
       break
@@ -557,6 +599,7 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
       dispatch(inc())
 
       await sleep(animationInterval)
+
       dispatch(setLightIx(false))
 
       break
@@ -568,13 +611,29 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
       dispatch(dec())
 
       await sleep(animationInterval)
+
       dispatch(setLightIx(false))
 
       break
     }
 
     case InstructionType.Mov: {
-      dispatch(mov(instruction as MovInstruction))
+      const movInstruction = instruction as MovInstruction
+
+      dispatch(setLightA(true))
+      dispatch(setLightDataBus(true))
+
+      await sleep(animationInterval)
+
+      dispatch(setLightA(false))
+      dispatch(setLightRegister({ register: movInstruction.register, light: true }))
+      dispatch(mov(movInstruction))
+
+      await sleep(animationInterval)
+
+      dispatch(setLightRegister({ register: movInstruction.register, light: false }))
+      dispatch(setLightDataBus(false))
+
       break
     }
 
