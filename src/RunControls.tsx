@@ -4,15 +4,16 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useInterval } from './utils/useInterval'
 import {
-  reset, executeNextInstruction, setIsRunning
+  reset, executeNextInstruction, setIsRunning, setExecutionSpeed
 } from './store/cpuSlice'
 import { RootState } from './store/rootReducer'
 
 export const RunControls = () => {
   const dispatch = useDispatch()
   const {
-    pc, instructions, isRunning, syntaxErrors, dataSyntaxErrors
+    pc, instructions, isRunning, syntaxErrors, dataSyntaxErrors, executionSpeed
   } = useSelector((state: RootState) => state.cpu)
+
   const [ticks, setTicks] = useState(0)
   const [delay, setDelay] = useState<number | null>(null)
 
@@ -52,7 +53,7 @@ export const RunControls = () => {
     }
 
     // Start timer that executes next instructions
-    setDelay(3000)
+    setDelay(executionSpeed)
   }
 
   function stop() {
@@ -66,19 +67,29 @@ export const RunControls = () => {
 
       {areErrorsPresent && (
         <span
-          className="px-3 py-2 rounded-md text-sm font-medium text-white bg-red-500 focus:outline-none focus:text-white focus:bg-gray-700"
+          className="text-sm font-medium text-white text-red-400"
         >
           Please fix the errors in your code
         </span>
       )}
 
       {!areErrorsPresent && !isRunning && (
-      <button
-        className="px-3 py-2 rounded-md text-sm font-medium text-white bg-green-500 focus:outline-none focus:text-white focus:bg-gray-700"
-        onClick={run}
-      >
-        Run
-      </button>
+        <>
+          <input
+            className="mr-4"
+            type="range" name="speed"
+            value={executionSpeed}
+            min="500" max="5000"
+            step="500"
+            onChange={e => dispatch(setExecutionSpeed(e.target.value as unknown as number))}
+          />
+          <button
+            className="px-3 py-2 rounded-md text-sm font-medium text-white bg-green-500 focus:outline-none focus:text-white focus:bg-gray-700"
+            onClick={run}
+          >
+            Run
+          </button>
+        </>
       )}
 
       {!areErrorsPresent && isRunning && (

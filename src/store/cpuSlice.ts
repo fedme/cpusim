@@ -17,6 +17,7 @@ export const MEMORY_CODE_MAX_SIZE = 100
 // TODO: split into multiple slices
 type cpuState = {
   isRunning: boolean
+  executionSpeed: number
   code: string
   data: string
   syntaxErrors: SyntaxError[]
@@ -45,6 +46,7 @@ export const initialData = ''
 
 const initialState: cpuState = {
   isRunning: false,
+  executionSpeed: 3000,
   code: initialCode,
   data: initialData,
   syntaxErrors: [],
@@ -87,6 +89,10 @@ const cpuSlice = createSlice({
       state.lightMdr = initialState.lightMdr
       state.lightDecoder = initialState.lightDecoder
       state.lightCodeRow = initialState.lightCodeRow
+    },
+
+    setExecutionSpeed(state, action: PayloadAction<number>) {
+      state.executionSpeed = action.payload
     },
 
     setCode(state, action: PayloadAction<string>) {
@@ -338,6 +344,7 @@ const cpuSlice = createSlice({
 
 export const {
   reset,
+  setExecutionSpeed,
   setCode,
   setData,
   setIsRunning,
@@ -375,29 +382,31 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
   const { cpu } = getState()
   const instruction = cpu.instructions[cpu.pc] // TODO: throw if PC is > instructions.lenght
 
+  const animationInterval = Math.floor(cpu.executionSpeed / 7)
+
   dispatch(setLightsFetchStart(true))
 
-  await sleep(500)
+  await sleep(animationInterval)
 
   dispatch(setLightsFetchStart(false))
   dispatch(setLightCodeRow(cpu.pc))
 
-  await sleep(500)
+  await sleep(animationInterval)
 
   dispatch(setLightsFetchEnd(true))
 
-  await sleep(500)
+  await sleep(animationInterval)
 
   dispatch(setLightsFetchEnd(false))
   dispatch(setLightPc(true))
   dispatch(incrementPc())
 
-  await sleep(500)
+  await sleep(animationInterval)
 
   dispatch(setLightPc(false))
   dispatch(setLightsExecuteStart(true))
 
-  await sleep(500)
+  await sleep(animationInterval)
 
   dispatch(setLightsExecuteStart(false))
 
