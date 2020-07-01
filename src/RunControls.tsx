@@ -62,6 +62,11 @@ export const RunControls = () => {
     setTicks(0)
   }
 
+  function onSpeedChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const speed = e.target.value as unknown as number
+    dispatch(setExecutionSpeed(speed * -1))
+  }
+
   return (
     <div className="flex items-baseline">
 
@@ -78,10 +83,10 @@ export const RunControls = () => {
           <input
             className="mr-4"
             type="range" name="speed"
-            value={executionSpeed}
-            min="500" max="5000"
+            value={executionSpeed * -1}
+            min="-5000" max="500"
             step="500"
-            onChange={e => dispatch(setExecutionSpeed(e.target.value as unknown as number))}
+            onChange={onSpeedChange}
           />
           <button
             className="px-3 py-2 rounded-md text-sm font-medium text-white bg-green-500 focus:outline-none focus:text-white focus:bg-gray-700"
