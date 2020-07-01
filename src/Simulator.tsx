@@ -4,7 +4,7 @@ import { RootState } from './store/rootReducer'
 
 export const Simulator = () => {
   const {
-    pc, r0, r1, a, ix, sp, lightAddressBus, lightPc, lightMar, lightIr, lightMdr, lightDataBus, lightDecoder
+    pc, r0, r1, a, ix, sp, lightAddressBus, lightPc, lightMar, lightIr, lightMdr, lightDataBus, lightDecoder, lightR0, lightR1, lightAlu, lightA
   } = useSelector((state: RootState) => state.cpu)
 
   return (
@@ -16,7 +16,7 @@ export const Simulator = () => {
         id="r0" transform="matrix(1.023563, 0, 0, 1, 158.740005, -467.71701)"
       >
         <rect
-          fill="#d2d6dc" x="0"
+          fill={lightR0 ? 'red' : '#d2d6dc'} x="0"
           y="813.543" width="51.0236"
           height="28.3465"
         />
@@ -34,7 +34,7 @@ export const Simulator = () => {
         id="r1" transform="matrix(1, 0, 0, 1, 239.528, -467.71701)"
       >
         <rect
-          fill="#d2d6dc" y="813.543"
+          fill={lightR1 ? 'red' : '#d2d6dc'} y="813.543"
           width="51.024" height="28.347"
         />
         <text
@@ -49,7 +49,7 @@ export const Simulator = () => {
       </g>
       <g id="a" transform="matrix(1, 0, 0, 1, 199.134003, -332.058014)">
         <rect
-          fill="#d2d6dc" x="0"
+          fill={lightA ? 'red' : '#d2d6dc'} x="0"
           y="813.543" width="51.0236"
           height="28.3465"
         />
@@ -96,11 +96,11 @@ export const Simulator = () => {
       </g>
       <g id="alu" transform="matrix(1, 0, 0, 1, 158.740005, -371.540985)">
         <path
-          fill="#d2d6dc" d="M 41.261 841.891 L 95.492 841.891 L 131.789 754.221 L 77.559 754.221 L 41.261 841.891 Z"
+          fill={lightAlu ? 'red' : '#d2d6dc'} d="M 41.261 841.891 L 95.492 841.891 L 131.789 754.221 L 77.559 754.221 L 41.261 841.891 Z"
           transform="matrix(1, 0.000494, -0.000494, 1, 0.39425, -0.042646)"
         />
         <path
-          fill="#d2d6dc" d="M 0 754.22 L 52.211 754.22 L 87.198 841.89 L 34.987 841.89 L 0 754.22 Z"
+          fill={lightAlu ? 'red' : '#d2d6dc'} d="M 0 754.22 L 52.211 754.22 L 87.198 841.89 L 34.987 841.89 L 0 754.22 Z"
           transform="matrix(-1, 0, 0, -1, 87.197998, 1596.109985)"
         />
         <text

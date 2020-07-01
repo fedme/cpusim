@@ -38,6 +38,10 @@ type cpuState = {
   lightMdr: boolean
   lightDecoder: boolean
   lightCodeRow: number | null
+  lightR0: boolean
+  lightR1: boolean
+  lightAlu: boolean
+  lightA: boolean
 }
 
 export const initialCode = ''
@@ -66,7 +70,11 @@ const initialState: cpuState = {
   lightMar: false,
   lightMdr: false,
   lightDecoder: false,
-  lightCodeRow: null
+  lightCodeRow: null,
+  lightR0: false,
+  lightR1: false,
+  lightAlu: false,
+  lightA: false
 }
 
 const cpuSlice = createSlice({
@@ -89,6 +97,10 @@ const cpuSlice = createSlice({
       state.lightMdr = initialState.lightMdr
       state.lightDecoder = initialState.lightDecoder
       state.lightCodeRow = initialState.lightCodeRow
+      state.lightR0 = initialState.lightR0
+      state.lightR1 = initialState.lightR1
+      state.lightAlu = initialState.lightAlu
+      state.lightA = initialState.lightA
     },
 
     setExecutionSpeed(state, action: PayloadAction<number>) {
@@ -335,6 +347,22 @@ const cpuSlice = createSlice({
     setLightsExecuteStart(state, action: PayloadAction<boolean>) {
       state.lightIr = action.payload
       state.lightDecoder = action.payload
+    },
+
+    setLightR0(state, action: PayloadAction<boolean>) {
+      state.lightR0 = action.payload
+    },
+
+    setLightR1(state, action: PayloadAction<boolean>) {
+      state.lightR1 = action.payload
+    },
+
+    setLightAlu(state, action: PayloadAction<boolean>) {
+      state.lightAlu = action.payload
+    },
+
+    setLightA(state, action: PayloadAction<boolean>) {
+      state.lightA = action.payload
     }
   }
 })
@@ -370,7 +398,11 @@ export const {
   setLightCodeRow,
   setLightsFetchEnd,
   setLightPc,
-  setLightsExecuteStart
+  setLightsExecuteStart,
+  setLightR0,
+  setLightR1,
+  setLightAlu,
+  setLightA
 } = cpuSlice.actions
 
 export default cpuSlice.reducer
@@ -379,7 +411,7 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
   const { cpu } = getState()
   const instruction = cpu.instructions[cpu.pc] // TODO: throw if PC is > instructions.lenght
 
-  const animationInterval = Math.floor(cpu.executionSpeed / 10) - 150
+  const animationInterval = computeAnimationInterval(cpu.executionSpeed)
 
   dispatch(setLightsFetchStart(true))
 
@@ -412,96 +444,191 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
       dispatch(hlt())
       break
     }
+
     case InstructionType.Add: {
+      dispatch(setLightR0(true))
+      dispatch(setLightR1(true))
+
+      await sleep(animationInterval)
+
+      dispatch(setLightR0(false))
+      dispatch(setLightR1(false))
+      dispatch(setLightAlu(true))
+
+      await sleep(animationInterval)
+
+      dispatch(setLightAlu(false))
+      dispatch(setLightA(true))
       dispatch(add())
+
+      await sleep(animationInterval)
+      dispatch(setLightA(false))
+
       break
     }
+
     case InstructionType.Sub: {
+      dispatch(setLightR0(true))
+      dispatch(setLightR1(true))
+
+      await sleep(animationInterval)
+
+      dispatch(setLightR0(false))
+      dispatch(setLightR1(false))
+      dispatch(setLightAlu(true))
+
+      await sleep(animationInterval)
+
+      dispatch(setLightAlu(false))
+      dispatch(setLightA(true))
       dispatch(sub())
+
+      await sleep(animationInterval)
+      dispatch(setLightA(false))
+
       break
     }
+
     case InstructionType.Mul: {
+      dispatch(setLightR0(true))
+      dispatch(setLightR1(true))
+
+      await sleep(animationInterval)
+
+      dispatch(setLightR0(false))
+      dispatch(setLightR1(false))
+      dispatch(setLightAlu(true))
+
+      await sleep(animationInterval)
+
+      dispatch(setLightAlu(false))
+      dispatch(setLightA(true))
       dispatch(mul())
+
+      await sleep(animationInterval)
+      dispatch(setLightA(false))
+
       break
     }
+
     case InstructionType.Div: {
+      dispatch(setLightR0(true))
+      dispatch(setLightR1(true))
+
+      await sleep(animationInterval)
+
+      dispatch(setLightR0(false))
+      dispatch(setLightR1(false))
+      dispatch(setLightAlu(true))
+
+      await sleep(animationInterval)
+
+      dispatch(setLightAlu(false))
+      dispatch(setLightA(true))
       dispatch(div())
       if (cpu.r1 === 0) {
         dispatch(hlt())
       }
+
+      await sleep(animationInterval)
+      dispatch(setLightA(false))
+
       break
     }
+
     case InstructionType.Inc: {
       dispatch(inc())
       break
     }
+
+
     case InstructionType.Dec: {
       dispatch(dec())
       break
     }
+
     case InstructionType.Mov: {
       dispatch(mov(instruction as MovInstruction))
       break
     }
+
     case InstructionType.Set: {
       dispatch(set(instruction as SetInstruction))
       break
     }
+
     case InstructionType.LodSimple: {
       dispatch(lod(instruction as LodInstruction))
       break
     }
+
     case InstructionType.LodComplexIX: {
       dispatch(lod(instruction as LodInstruction))
       break
     }
+
     case InstructionType.LodComplexSP: {
       dispatch(lod(instruction as LodInstruction))
       break
     }
+
     case InstructionType.StoSimple: {
       dispatch(sto(instruction as StoInstruction))
       break
     }
+
     case InstructionType.StoComplexIX: {
       dispatch(sto(instruction as StoInstruction))
       break
     }
+
     case InstructionType.StoComplexSP: {
       dispatch(sto(instruction as StoInstruction))
       break
     }
+
     case InstructionType.Jmp: {
       dispatch(jmp(instruction as JmpInstruction))
       break
     }
+
     case InstructionType.Jmz: {
       dispatch(jmz(instruction as JmzInstruction))
       break
     }
+
     case InstructionType.Jml: {
       dispatch(jml(instruction as JmlInstruction))
       break
     }
+
     case InstructionType.Jmg: {
       dispatch(jmg(instruction as JmgInstruction))
       break
     }
+
     case InstructionType.Psh: {
       dispatch(psh())
       break
     }
+
     case InstructionType.Pop: {
       dispatch(pop())
       break
     }
+
     case InstructionType.Cal: {
       dispatch(cal(instruction as CalInstruction))
       break
     }
+
     case InstructionType.Ret: {
       dispatch(ret())
       break
     }
   }
+}
+
+function computeAnimationInterval(executionSpeed: number) {
+  return Math.floor(executionSpeed / 10) - 150
 }
