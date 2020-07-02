@@ -98,22 +98,11 @@ export const Memory = () => {
 
   // DATA Editor
 
-  const onDataEditorModelDidChange = useCallback(
-
-    // TODO: use onChange on the controlled editor instead. This is invoked twice.
-
-    (editor: any) => {
-      onDataChangeDebounced(editor.getModel().getValue())
-    },
-    [onDataChangeDebounced]
-  )
-
   const onDataEditorDidMount = useCallback(
-    (getEditorValue: () => string, editor: MonacoEditor) => {
+    (_getEditorValue: () => string, editor: MonacoEditor) => {
       dataEditorRef.current = editor
-      editor.onDidChangeModelContent((_b: any) => onDataEditorModelDidChange(editor))
     },
-    [onDataEditorModelDidChange]
+    []
   )
 
   if (monacoInstance && dataEditorRef.current) {
@@ -173,6 +162,7 @@ export const Memory = () => {
             language="cpusimData"
             theme="cpusimTheme"
             value={data}
+            onChange={(_e, value) => value && onDataChangeDebounced(value)}
             editorDidMount={onDataEditorDidMount}
             options={{
               minimap: { enabled: false },
