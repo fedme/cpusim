@@ -5,7 +5,7 @@ import { RootState } from './store/rootReducer'
 export const Simulator = () => {
   const {
     pc, r0, r1, a, ix, sp, lightAddressBus, lightPc, lightMar, lightIr, lightMdr,
-    lightDataBus, lightDecoder, lightR0, lightR1, lightAlu, lightA, lightIx, lightSp
+    lightDataBus, lightDecoder, lightR0, lightR1, lightAlu, lightA, lightIx, lightSp, lightIxAdder
   } = useSelector((state: RootState) => state.cpu)
 
   return (
@@ -174,13 +174,13 @@ export const Simulator = () => {
         >DECODER
         </text>
       </g>
-      <g id="ix_unit" transform="matrix(0, -1, 1, 0, -711.208984, 98.807701)">
+      <g id="ix_adder" transform="matrix(0, -1, 1, 0, -711.208984, 98.807701)">
         <path
-          fill="#d2d6dc" d="M -0.004 801.92 L 26.486 801.92 L 44.236 841.89 L 17.746 841.89 L -0.004 801.92 Z"
+          fill={lightIxAdder ? 'red' : '#d2d6dc'} d="M -0.004 801.92 L 26.486 801.92 L 44.236 841.89 L 17.746 841.89 L -0.004 801.92 Z"
           transform="matrix(-1, 0, 0, -1, 44.232002, 1643.809998)"
         />
         <path
-          fill="#d2d6dc" d="M 17.721 841.89 L 44.211 841.89 L 61.961 801.92 L 35.471 801.92 L 17.721 841.89 Z"
+          fill={lightIxAdder ? 'red' : '#d2d6dc'} d="M 17.721 841.89 L 44.211 841.89 L 61.961 801.92 L 35.471 801.92 L 17.721 841.89 Z"
         />
       </g>
       <line

@@ -3,7 +3,7 @@ import {
   setLightsFetchStart, setLightCodeRow, setLightsFetchEnd, setLightPc, incrementPc, setLightsExecuteStart,
   hlt, setLightR0, setLightR1, setLightAlu, setLightA, add, sub, mul, div, setLightIx, inc, dec, setLightDataBus,
   setLightRegister, mov, setLightDecoder, set, setLightAddressBus, setLightMar, setLightDataRow, setLightMdr, lod,
-  sto, jmp, jmz, jml, jmg, psh, pop, cal, ret
+  sto, jmp, jmz, jml, jmg, psh, pop, cal, ret, setLightIxAdder, setLightSp, setLightSpAdder
 } from './cpuSlice'
 import { sleep } from '../utils/sleep'
 import {
@@ -239,12 +239,78 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
     }
 
     case InstructionType.LodComplexIX: {
-      dispatch(lod(instruction as LodInstruction))
+      const lodInstruction = instruction as LodInstruction
+
+      dispatch(setLightDecoder(true))
+      dispatch(setLightAddressBus(true))
+      dispatch(setLightIx(true))
+      dispatch(setLightIxAdder(true))
+
+      await sleep(animationInterval)
+
+      dispatch(setLightDecoder(false))
+      dispatch(setLightIx(false))
+      dispatch(setLightIxAdder(false))
+      dispatch(setLightMar(true))
+
+      await sleep(animationInterval)
+
+      dispatch(setLightAddressBus(false))
+      dispatch(setLightMar(false))
+      dispatch(setLightDataRow(cpu.ix + lodInstruction.address))
+
+      await sleep(animationInterval)
+
+      dispatch(setLightDataRow(null))
+      dispatch(setLightMdr(true))
+      dispatch(setLightDataBus(true))
+      dispatch(setLightRegister({ register: lodInstruction.register, light: true }))
+      dispatch(lod(lodInstruction))
+
+      await sleep(animationInterval)
+
+      dispatch(setLightMdr(false))
+      dispatch(setLightDataBus(false))
+      dispatch(setLightRegister({ register: lodInstruction.register, light: false }))
+
       break
     }
 
     case InstructionType.LodComplexSP: {
-      dispatch(lod(instruction as LodInstruction))
+      const lodInstruction = instruction as LodInstruction
+
+      dispatch(setLightDecoder(true))
+      dispatch(setLightAddressBus(true))
+      dispatch(setLightSp(true))
+      dispatch(setLightSpAdder(true))
+
+      await sleep(animationInterval)
+
+      dispatch(setLightDecoder(false))
+      dispatch(setLightSp(false))
+      dispatch(setLightSpAdder(false))
+      dispatch(setLightMar(true))
+
+      await sleep(animationInterval)
+
+      dispatch(setLightAddressBus(false))
+      dispatch(setLightMar(false))
+      dispatch(setLightDataRow(cpu.sp + lodInstruction.address))
+
+      await sleep(animationInterval)
+
+      dispatch(setLightDataRow(null))
+      dispatch(setLightMdr(true))
+      dispatch(setLightDataBus(true))
+      dispatch(setLightRegister({ register: lodInstruction.register, light: true }))
+      dispatch(lod(lodInstruction))
+
+      await sleep(animationInterval)
+
+      dispatch(setLightMdr(false))
+      dispatch(setLightDataBus(false))
+      dispatch(setLightRegister({ register: lodInstruction.register, light: false }))
+
       break
     }
 

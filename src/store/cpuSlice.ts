@@ -42,7 +42,9 @@ type cpuState = {
   lightAlu: boolean
   lightA: boolean
   lightIx: boolean
+  lightIxAdder: boolean
   lightSp: boolean
+  lightSpAdder: boolean
 }
 
 export const initialCode = ''
@@ -78,7 +80,9 @@ const initialState: cpuState = {
   lightAlu: false,
   lightA: false,
   lightIx: false,
-  lightSp: false
+  lightIxAdder: false,
+  lightSp: false,
+  lightSpAdder: false
 }
 
 const cpuSlice = createSlice({
@@ -107,7 +111,9 @@ const cpuSlice = createSlice({
       state.lightAlu = initialState.lightAlu
       state.lightA = initialState.lightA
       state.lightIx = initialState.lightIx
+      state.lightIxAdder = initialState.lightIxAdder
       state.lightSp = initialState.lightSp
+      state.lightSpAdder = initialState.lightSpAdder
     },
 
     setExecutionSpeed(state, action: PayloadAction<number>) {
@@ -380,8 +386,16 @@ const cpuSlice = createSlice({
       state.lightIx = action.payload
     },
 
+    setLightIxAdder(state, action: PayloadAction<boolean>) {
+      state.lightIxAdder = action.payload
+    },
+
     setLightSp(state, action: PayloadAction<boolean>) {
       state.lightSp = action.payload
+    },
+
+    setLightSpAdder(state, action: PayloadAction<boolean>) {
+      state.lightSpAdder = action.payload
     },
 
     setLightAddressBus(state, action: PayloadAction<boolean>) {
@@ -475,7 +489,9 @@ export const {
   setLightAlu,
   setLightA,
   setLightIx,
+  setLightIxAdder,
   setLightSp,
+  setLightSpAdder,
   setLightAddressBus,
   setLightDataBus,
   setLightDecoder,
