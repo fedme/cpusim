@@ -80,7 +80,7 @@ export const Memory = () => {
         },
         options: {
           isWholeLine: true,
-          className: 'bg-blue-100',
+          className: 'bg-blue-200',
           glyphMarginClassName: 'pc-pointer',
           stickiness: 1
         }
@@ -89,7 +89,7 @@ export const Memory = () => {
       codeEditorDecorations.current = newDecorations
     }
 
-    if (!isRunning) {
+    if (!isRunning || lightCodeRow == null) {
       const newDecorations = codeEditorRef.current.deltaDecorations(codeEditorDecorations.current, [])
       codeEditorDecorations.current = newDecorations
     }
@@ -126,7 +126,7 @@ export const Memory = () => {
         },
         options: {
           isWholeLine: true,
-          className: 'bg-blue-100',
+          className: 'bg-blue-200',
           glyphMarginClassName: 'sp-pointer',
           stickiness: 1
         }
@@ -135,7 +135,7 @@ export const Memory = () => {
       dataEditorDecorations.current = newDecorations
     }
 
-    if (!isRunning) {
+    if (!isRunning || lightDataRow == null) {
       const newDecorations = dataEditorRef.current.deltaDecorations(dataEditorDecorations.current, [])
       dataEditorDecorations.current = newDecorations
     }
