@@ -21,6 +21,7 @@ export const RunControls = () => {
 
   const [ticks, setTicks] = useState(0)
   const [delay, setDelay] = useState<number | null>(null)
+  const [isPaused, setIsPaused] = useState<boolean>(false)
 
   const areErrorsPresent = syntaxErrors.length > 0 || dataSyntaxErrors.length > 0
 
@@ -57,10 +58,16 @@ export const RunControls = () => {
   }
 
   function stop() {
+    setIsPaused(false)
     setDelay(null)
     dispatch(setIsRunning(false))
     dispatch(reset())
     setTicks(0)
+  }
+
+  function togglePause() {
+    dispatch(setIsRunning(isPaused))
+    setIsPaused(!isPaused)
   }
 
   function onSpeedChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -79,7 +86,7 @@ export const RunControls = () => {
         </span>
       )}
 
-      {!areErrorsPresent && !isRunning && (
+      {!areErrorsPresent && !isRunning && !isPaused && (
         <div className="flex items-center">
           <div className="text-sm font-medium text-white pr-4">Velocit&agrave;: </div>
           <input
@@ -92,7 +99,7 @@ export const RunControls = () => {
           />
           <div>
             <button
-              className="px-3 py-2 rounded-md text-sm font-medium text-white bg-green-500 focus:outline-none focus:text-white focus:bg-gray-700"
+              className="px-3 py-2 rounded text-sm font-medium text-white bg-green-500 focus:outline-none focus:text-white focus:bg-gray-700"
               onClick={run}
             >
               Esegui programma
@@ -101,10 +108,26 @@ export const RunControls = () => {
         </div>
       )}
 
-      {!areErrorsPresent && isRunning && (
+      {!areErrorsPresent && (isRunning || isPaused) && (
         <>
+          {!isPaused && (
           <button
-            className="px-3 py-2 rounded-md text-sm font-medium text-white bg-red-500 focus:outline-none focus:text-white focus:bg-gray-700"
+            className="px-3 py-2 mr-2 rounded text-sm font-medium text-white bg-yellow-400 focus:outline-none focus:text-white focus:bg-gray-700"
+            onClick={togglePause}
+          >
+            Pausa
+          </button>
+          )}
+          {isPaused && (
+          <button
+            className="px-3 py-2 mr-2 rounded text-sm font-medium text-white bg-green-500 focus:outline-none focus:text-white focus:bg-gray-700"
+            onClick={togglePause}
+          >
+            Riprendi
+          </button>
+          )}
+          <button
+            className="px-3 py-2 rounded text-sm font-medium text-white bg-red-500 focus:outline-none focus:text-white focus:bg-gray-700"
             onClick={stop}
           >
             Stop
