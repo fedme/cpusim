@@ -5,7 +5,7 @@ import { RootState } from './store/rootReducer'
 export const Simulator = () => {
   const {
     pc, r0, r1, a, ix, sp, lightAddressBus, lightPc, lightMar, lightIr, lightMdr,
-    lightDataBus, lightDecoder, lightR0, lightR1, lightAlu, lightA, lightIx, lightSp, lightIxAdder
+    lightDataBus, lightDecoder, lightR0, lightR1, lightAlu, lightA, lightIx, lightSp, lightIxAdder, lightSpAdder
   } = useSelector((state: RootState) => state.cpu)
 
   return (
@@ -147,19 +147,27 @@ export const Simulator = () => {
         >{ix}
         </text>
       </g>
+      <g id="sp_adder" transform="translate(217,618) rotate(180)">
+        <g transform="translate(16.0534,0)">
+          <path fill={lightSpAdder ? 'red' : '#d2d6dc'} d="M0 536.42 L24 536.42 L40.07 500.45 L16.08 500.45 L0 536.42 Z" />
+        </g>
+        <g transform="translate(40.0731,0) scale(-1,1)">
+          <path fill={lightSpAdder ? 'red' : '#d2d6dc'} d="M0 536.42 L24 536.42 L40.07 500.45 L16.08 500.45 L0 536.42 Z" />
+        </g>
+      </g>
       <g id="sp" transform="matrix(1, 0, 0, 1, 158.740005, -714.330994)">
         <rect
-          fill={lightSp ? 'red' : '#d2d6dc'} y="813.543"
+          fill={lightSp ? 'red' : '#d2d6dc'} y="851.543"
           width="51.0236" height="28.3465"
-          x="0"
+          x="-27"
         />
         <text
-          x="0.702" y="810.871"
+          x="-26.298" y="847.871"
         >SP
         </text>
         <text
           fontSize="12px"
-          x="17.7" y="832.52"
+          x="-10.3" y="870.52"
         >{sp}
         </text>
       </g>
@@ -212,8 +220,19 @@ export const Simulator = () => {
       </text>
       <line
         stroke="gray" strokeWidth="2"
-        x1="184.25" y1="66.81669616699219"
-        x2="184.25201416015625" y2="98.81160354614258"
+        x1="189" y1="66.81669616699219"
+        x2="189" y2="82"
+      />
+      <line
+        id="sp_sp_adder"
+        stroke="gray" strokeWidth="2"
+        x1="173" y1="117"
+        x2="173" y2="137.5"
+      />
+      <line
+        stroke="gray" strokeWidth="2"
+        x1="204" y1="117"
+        x2="204" y2="180"
       />
       <line
         stroke="gray" strokeWidth="2"
@@ -229,8 +248,8 @@ export const Simulator = () => {
       />
       <line
         stroke="gray" strokeWidth="2"
-        x1="184.25201416015625" y1="127.55853271484375"
-        x2="184.25201416015625" y2="179.02301025390625"
+        x1="158" y1="165"
+        x2="158" y2="179.02301025390625"
       />
       <line
         stroke="gray" strokeWidth="2"
