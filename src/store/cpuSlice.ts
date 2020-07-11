@@ -12,9 +12,14 @@ import {
 
 export const MEMORY_CODE_MAX_SIZE = 100
 
-// TODO: split into multiple slices
+export enum CpuStatus {
+  Idle,
+  Running,
+  Paused
+}
+
 type cpuState = {
-  isRunning: boolean
+  status: CpuStatus
   executionSpeed: number
   code: string
   data: string
@@ -52,7 +57,7 @@ export const initialCode = ''
 export const initialData = ''
 
 const initialState: cpuState = {
-  isRunning: false,
+  status: CpuStatus.Idle,
   executionSpeed: 2500,
   code: initialCode,
   data: initialData,
@@ -134,8 +139,8 @@ const cpuSlice = createSlice({
       state.dataList = parseData(matches.map(m => m.ast))
     },
 
-    setIsRunning(state, action: PayloadAction<boolean>) {
-      state.isRunning = action.payload
+    setStatus(state, action: PayloadAction<CpuStatus>) {
+      state.status = action.payload
     },
 
     resetPc(state) {
@@ -149,7 +154,7 @@ const cpuSlice = createSlice({
     // Instructions
 
     hlt(state) {
-      state.isRunning = false
+      state.status = CpuStatus.Idle
     },
 
     add(state) {
@@ -456,7 +461,7 @@ export const {
   setExecutionSpeed,
   setCode,
   setData,
-  setIsRunning,
+  setStatus,
   incrementPc,
   resetPc,
   hlt,

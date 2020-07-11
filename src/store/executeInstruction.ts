@@ -3,7 +3,7 @@ import {
   setLightsFetchStart, setLightCodeRow, setLightsFetchEnd, setLightPc, incrementPc, setLightsExecuteStart,
   hlt, setLightR0, setLightR1, setLightAlu, setLightA, add, sub, mul, div, setLightIx, inc, dec, setLightDataBus,
   setLightRegister, mov, setLightDecoder, set, setLightAddressBus, setLightMar, setLightDataRow, setLightMdr, lod,
-  sto, jmp, jmz, jml, jmg, psh, pop, cal, ret, setLightIxAdder, setLightSp, setLightSpAdder, setIsRunning
+  sto, jmp, jmz, jml, jmg, psh, pop, cal, ret, setLightIxAdder, setLightSp, setLightSpAdder, setStatus, CpuStatus
 } from './cpuSlice'
 import { sleep } from '../utils/sleep'
 import {
@@ -14,12 +14,12 @@ import {
 export const executeNextInstruction = (): AppThunk => async (dispatch, getState) => {
   const { cpu } = getState()
 
-  if (!cpu.isRunning) {
+  if (cpu.status !== CpuStatus.Running) {
     return
   }
 
   if (cpu.pc > cpu.instructions.length - 1) {
-    dispatch(setIsRunning(false))
+    dispatch(setStatus(CpuStatus.Idle))
     return
   }
 

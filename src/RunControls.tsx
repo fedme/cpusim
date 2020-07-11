@@ -1,9 +1,9 @@
 /* eslint-disable radix */
 /* eslint-disable react/button-has-type */
-import React, { useState } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  reset, setIsRunning, setExecutionSpeed
+  reset, setStatus, setExecutionSpeed, CpuStatus
 } from './store/cpuSlice'
 import { RootState } from './store/rootReducer'
 import { executeNextInstruction } from './store/executeInstruction'
@@ -15,10 +15,8 @@ const SPEED_STEP = 500
 export const RunControls = () => {
   const dispatch = useDispatch()
   const {
-    instructions, isRunning, syntaxErrors, dataSyntaxErrors, executionSpeed
+    instructions, status, syntaxErrors, dataSyntaxErrors, executionSpeed
   } = useSelector((state: RootState) => state.cpu)
-
-  const [isPaused, setIsPaused] = useState<boolean>(false)
 
   const areErrorsPresent = syntaxErrors.length > 0 || dataSyntaxErrors.length > 0
 
@@ -28,24 +26,21 @@ export const RunControls = () => {
     }
 
     dispatch(reset())
-    dispatch(setIsRunning(true))
+    dispatch(setStatus(CpuStatus.Running))
     dispatch(executeNextInstruction())
   }
 
   function stop() {
-    setIsPaused(false)
-    dispatch(setIsRunning(false))
+    dispatch(setStatus(CpuStatus.Idle))
     dispatch(reset())
   }
 
   function pause() {
-    setIsPaused(true)
-    dispatch(setIsRunning(false))
+    dispatch(setStatus(CpuStatus.Paused))
   }
 
   function resume() {
-    setIsPaused(false)
-    dispatch(setIsRunning(true))
+    dispatch(setStatus(CpuStatus.Running))
     dispatch(executeNextInstruction())
   }
 
@@ -65,7 +60,7 @@ export const RunControls = () => {
         </span>
       )}
 
-      {!areErrorsPresent && !isRunning && !isPaused && (
+      {!areErrorsPresent && status === CpuStatus.Idle && (
         <div className="flex items-center">
           <div className="text-sm font-medium text-white pr-4">Velocit&agrave;: </div>
           <input
@@ -87,9 +82,9 @@ export const RunControls = () => {
         </div>
       )}
 
-      {!areErrorsPresent && (isRunning || isPaused) && (
+      {!areErrorsPresent && status !== CpuStatus.Idle && (
         <>
-          {!isPaused && (
+          {status === CpuStatus.Running && (
           <button
             className="px-3 py-2 mr-2 rounded text-sm font-medium text-white bg-yellow-400 focus:outline-none focus:text-white focus:bg-gray-700"
             onClick={pause}
@@ -97,7 +92,7 @@ export const RunControls = () => {
             Pausa
           </button>
           )}
-          {isPaused && (
+          {status === CpuStatus.Paused && (
           <button
             className="px-3 py-2 mr-2 rounded text-sm font-medium text-white bg-green-500 focus:outline-none focus:text-white focus:bg-gray-700"
             onClick={resume}

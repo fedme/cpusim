@@ -7,7 +7,7 @@ import useResizeObserver from 'use-resize-observer'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from './store/rootReducer'
 import {
-  setCode, setData, initialCode, MEMORY_CODE_MAX_SIZE
+  setCode, setData, initialCode, MEMORY_CODE_MAX_SIZE, CpuStatus
 } from './store/cpuSlice'
 import { configureMonacoEditor, getMonacoMarkers, MonacoEditor } from './monacoEditor'
 
@@ -31,7 +31,7 @@ export const Memory = () => {
   const { width = 1 } = useResizeObserver({ ref: containerRef })
   const dispatch = useDispatch()
   const {
-    syntaxErrors, data, dataSyntaxErrors, isRunning, lightCodeRow, lightDataRow
+    syntaxErrors, data, dataSyntaxErrors, status, lightCodeRow, lightDataRow
   } = useSelector((state: RootState) => state.cpu)
 
   const onCodeChange = useCallback((newValue: string) => dispatch(setCode(newValue)), [dispatch])
@@ -73,7 +73,7 @@ export const Memory = () => {
   if (monacoInstance && codeEditorRef.current) {
     monacoInstance.editor.setModelMarkers(codeEditorRef.current.getModel()!, 'owner', getMonacoMarkers(syntaxErrors))
 
-    if (isRunning && lightCodeRow != null) {
+    if (status !== CpuStatus.Idle && lightCodeRow != null) {
       const newDecorations = codeEditorRef.current.deltaDecorations(codeEditorDecorations.current, [{
         range: {
           startLineNumber: lightCodeRow + 1, endLineNumber: lightCodeRow + 1, startColumn: 1, endColumn: 100
@@ -89,7 +89,7 @@ export const Memory = () => {
       codeEditorDecorations.current = newDecorations
     }
 
-    if (!isRunning || lightCodeRow == null) {
+    if (status === CpuStatus.Idle || lightCodeRow == null) {
       const newDecorations = codeEditorRef.current.deltaDecorations(codeEditorDecorations.current, [])
       codeEditorDecorations.current = newDecorations
     }
@@ -108,7 +108,7 @@ export const Memory = () => {
   if (monacoInstance && dataEditorRef.current) {
     monacoInstance.editor.setModelMarkers(dataEditorRef.current.getModel()!, 'owner', getMonacoMarkers(dataSyntaxErrors))
 
-    if (isRunning && lightDataRow != null) {
+    if (status !== CpuStatus.Idle && lightDataRow != null) {
       const newDecorations = dataEditorRef.current.deltaDecorations(dataEditorDecorations.current, [{
         range: {
           startLineNumber: lightDataRow - MEMORY_CODE_MAX_SIZE + 1, endLineNumber: lightDataRow - MEMORY_CODE_MAX_SIZE + 1, startColumn: 1, endColumn: 100
@@ -124,7 +124,7 @@ export const Memory = () => {
       dataEditorDecorations.current = newDecorations
     }
 
-    if (!isRunning || lightDataRow == null) {
+    if (status === CpuStatus.Idle || lightDataRow == null) {
       const newDecorations = dataEditorRef.current.deltaDecorations(dataEditorDecorations.current, [])
       dataEditorDecorations.current = newDecorations
     }
