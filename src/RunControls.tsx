@@ -16,31 +16,12 @@ const SPEED_STEP = 500
 export const RunControls = () => {
   const dispatch = useDispatch()
   const {
-    pc, instructions, isRunning, syntaxErrors, dataSyntaxErrors, executionSpeed
+    instructions, isRunning, syntaxErrors, dataSyntaxErrors, executionSpeed
   } = useSelector((state: RootState) => state.cpu)
 
-  const [ticks, setTicks] = useState(0)
-  const [delay, setDelay] = useState<number | null>(null)
   const [isPaused, setIsPaused] = useState<boolean>(false)
 
   const areErrorsPresent = syntaxErrors.length > 0 || dataSyntaxErrors.length > 0
-
-  useInterval(() => {
-    setTicks(ticks + 1)
-  }, delay)
-
-  // Effect running at every interval tick
-  useEffect(() => {
-    if (isRunning) {
-      if (pc < instructions.length) {
-        dispatch(executeNextInstruction())
-      } else {
-        setDelay(null)
-        dispatch(setIsRunning(false))
-      }
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ticks])
 
   function run() {
     if (instructions.length < 1) {
@@ -49,25 +30,24 @@ export const RunControls = () => {
 
     dispatch(reset())
     dispatch(setIsRunning(true))
-
-    // Execute first instruction
     dispatch(executeNextInstruction())
-
-    // Start timer that executes next instructions
-    setDelay(executionSpeed)
   }
 
   function stop() {
     setIsPaused(false)
-    setDelay(null)
     dispatch(setIsRunning(false))
     dispatch(reset())
-    setTicks(0)
   }
 
-  function togglePause() {
-    dispatch(setIsRunning(isPaused))
-    setIsPaused(!isPaused)
+  function pause() {
+    setIsPaused(true)
+    dispatch(setIsRunning(false))
+  }
+
+  function resume() {
+    setIsPaused(false)
+    dispatch(setIsRunning(true))
+    dispatch(executeNextInstruction())
   }
 
   function onSpeedChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -113,7 +93,7 @@ export const RunControls = () => {
           {!isPaused && (
           <button
             className="px-3 py-2 mr-2 rounded text-sm font-medium text-white bg-yellow-400 focus:outline-none focus:text-white focus:bg-gray-700"
-            onClick={togglePause}
+            onClick={pause}
           >
             Pausa
           </button>
@@ -121,7 +101,7 @@ export const RunControls = () => {
           {isPaused && (
           <button
             className="px-3 py-2 mr-2 rounded text-sm font-medium text-white bg-green-500 focus:outline-none focus:text-white focus:bg-gray-700"
-            onClick={togglePause}
+            onClick={resume}
           >
             Riprendi
           </button>

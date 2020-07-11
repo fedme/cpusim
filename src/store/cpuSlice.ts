@@ -86,7 +86,7 @@ const initialState: cpuState = {
 }
 
 const cpuSlice = createSlice({
-  name: 'user',
+  name: 'cpu',
   initialState,
   reducers: {
 

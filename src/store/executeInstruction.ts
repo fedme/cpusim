@@ -3,7 +3,7 @@ import {
   setLightsFetchStart, setLightCodeRow, setLightsFetchEnd, setLightPc, incrementPc, setLightsExecuteStart,
   hlt, setLightR0, setLightR1, setLightAlu, setLightA, add, sub, mul, div, setLightIx, inc, dec, setLightDataBus,
   setLightRegister, mov, setLightDecoder, set, setLightAddressBus, setLightMar, setLightDataRow, setLightMdr, lod,
-  sto, jmp, jmz, jml, jmg, psh, pop, cal, ret, setLightIxAdder, setLightSp, setLightSpAdder
+  sto, jmp, jmz, jml, jmg, psh, pop, cal, ret, setLightIxAdder, setLightSp, setLightSpAdder, setIsRunning
 } from './cpuSlice'
 import { sleep } from '../utils/sleep'
 import {
@@ -13,7 +13,17 @@ import {
 
 export const executeNextInstruction = (): AppThunk => async (dispatch, getState) => {
   const { cpu } = getState()
-  const instruction = cpu.instructions[cpu.pc] // TODO: throw if PC is > instructions.lenght
+
+  if (!cpu.isRunning) {
+    return
+  }
+
+  if (cpu.pc > cpu.instructions.length - 1) {
+    dispatch(setIsRunning(false))
+    return
+  }
+
+  const instruction = cpu.instructions[cpu.pc]
 
   const animationInterval = computeAnimationInterval(cpu.executionSpeed)
 
@@ -369,6 +379,8 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
       break
     }
   }
+
+  dispatch(executeNextInstruction())
 }
 
 function computeAnimationInterval(executionSpeed: number) {
