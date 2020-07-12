@@ -25,14 +25,14 @@ export const RunControls = () => {
       return
     }
 
-    dispatch(reset())
+    // dispatch(reset())
     dispatch(setStatus(CpuStatus.Running))
     dispatch(executeNextInstruction())
   }
 
   function stop() {
     dispatch(setStatus(CpuStatus.Idle))
-    dispatch(reset())
+    // dispatch(reset())
   }
 
   function pause() {
@@ -64,7 +64,7 @@ export const RunControls = () => {
         <div className="flex items-center">
           <div className="text-sm font-medium text-white pr-4">Velocit&agrave;: </div>
           <input
-            className="block mr-4"
+            className="form-range block mr-4"
             type="range" name="speed"
             value={Math.floor((FASTER_SPEED + SLOWER_SPEED - executionSpeed) / SPEED_STEP)}
             min="1" max="10"
@@ -72,6 +72,12 @@ export const RunControls = () => {
             onChange={onSpeedChange}
           />
           <div>
+            <button
+              className="px-3 py-2 rounded text-sm font-medium text-white bg-yellow-600 mr-4 focus:outline-none focus:text-white focus:bg-gray-700"
+              onClick={() => dispatch(reset())}
+            >
+              Resetta registri
+            </button>
             <button
               className="px-3 py-2 rounded text-sm font-medium text-white bg-green-500 focus:outline-none focus:text-white focus:bg-gray-700"
               onClick={run}
