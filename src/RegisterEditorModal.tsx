@@ -1,3 +1,4 @@
+/* eslint-disable radix */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React from 'react'
@@ -62,7 +63,7 @@ export const RegisterEditorModal = ({ registerUnderEdit, onClose }: RegisterEdit
         <input
           className="form-input"
           type="number" value={registerUnderEditValue}
-          onChange={(e) => dispatch(set({ type: InstructionType.Set, register: registerUnderEdit, data: e.target.value as unknown as number }))}
+          onChange={(e) => dispatch(set({ type: InstructionType.Set, register: registerUnderEdit, data: parseInt(e.target.value) }))}
         />
       </div>
     </>
