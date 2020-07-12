@@ -26,8 +26,9 @@ export const Simulator = () => {
         >R0
         </text>
         <text
+          textAnchor="middle"
           fontSize="12px"
-          x="17.11" y="832.52"
+          x="25" y="832.52"
         >{r0}
         </text>
       </g>
@@ -43,8 +44,9 @@ export const Simulator = () => {
         >R1
         </text>
         <text
+          textAnchor="middle"
           fontSize="12px"
-          x="17.11" y="832.52"
+          x="25" y="832.52"
         >{r1}
         </text>
       </g>
@@ -59,8 +61,9 @@ export const Simulator = () => {
         >A
         </text>
         <text
+          textAnchor="middle"
           fontSize="12px"
-          x="20.88" y="832.52"
+          x="25" y="832.52"
         >{a}
         </text>
       </g>
@@ -75,8 +78,9 @@ export const Simulator = () => {
         >PC
         </text>
         <text
+          textAnchor="middle"
           fontSize="12px"
-          x="17.11" y="832.52"
+          x="25" y="832.52"
         >{pc}
         </text>
       </g>
@@ -142,8 +146,9 @@ export const Simulator = () => {
         >IX
         </text>
         <text
+          textAnchor="middle"
           fontSize="12px"
-          x="19.34" y="832.52"
+          x="25" y="832.52"
         >{ix}
         </text>
       </g>
@@ -166,8 +171,9 @@ export const Simulator = () => {
         >SP
         </text>
         <text
+          textAnchor="middle"
           fontSize="12px"
-          x="-10.3" y="870.52"
+          x="-2.3" y="870.52"
         >{sp}
         </text>
       </g>
@@ -177,7 +183,7 @@ export const Simulator = () => {
           fill={lightDecoder ? 'red' : '#d2d6dc'} d="M0 841.89 L76.54 841.89 L68.88 756.85 L7.65 756.85 L0 841.89 Z"
         />
         <text
-          fontSize="11px" x="13.044"
+          fontSize="11px" x="11"
           y="803.987"
         >DECODER
         </text>
