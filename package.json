@@ -22,6 +22,7 @@
     "redux-thunk": "^2.3.0",
     "typescript": "^3.7.5",
     "use-debounce": "^3.4.2",
+    "use-onclickoutside": "^0.3.1",
     "use-resize-observer": "^6.1.0"
   },
   "scripts": {

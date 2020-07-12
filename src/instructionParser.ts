@@ -35,7 +35,7 @@ export interface MovInstruction extends Instruction {
 }
 
 export interface SetInstruction extends Instruction {
-  register: 'R0' | 'R1' | 'IX' | 'SP' | 'A'
+  register: 'R0' | 'R1' | 'IX' | 'SP' | 'A' | 'PC'
   data: number
 }
 

@@ -220,6 +220,10 @@ const cpuSlice = createSlice({
           state.a = action.payload.data
           break
         }
+        case 'PC': {
+          state.pc = action.payload.data
+          break
+        }
       }
     },
 
@@ -452,7 +456,7 @@ const cpuSlice = createSlice({
 })
 
 interface RegisterLight {
-  register: 'R0' | 'R1' | 'A' | 'SP' | 'IX'
+  register: 'R0' | 'R1' | 'A' | 'SP' | 'IX' | 'PC'
   light: boolean
 }
 
