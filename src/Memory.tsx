@@ -10,6 +10,7 @@ import {
   setCode, setData, MEMORY_CODE_MAX_SIZE, CpuStatus, setInitialCodeAndData
 } from './store/cpuSlice'
 import { configureMonacoEditor, getMonacoMarkers, MonacoEditor } from './monacoEditor'
+import { SaveToFile } from './SaveToFile'
 
 export const Memory = () => {
   const dispatch = useDispatch()
@@ -46,7 +47,6 @@ export const Memory = () => {
 
   const codeEditorDecorations = useRef<string[]>([])
   const dataEditorDecorations = useRef<string[]>([])
-
 
   // CODE Editor
 
@@ -138,7 +138,7 @@ export const Memory = () => {
       { monacoInstance && (
         <>
 
-          <h3 className="bg-gray-300 px-4 mb-2 text-xl">Memoria</h3>
+          <SaveToFile />
 
           <h3 className="bg-gray-200 px-4 my-2">Sezione codice</h3>
 
