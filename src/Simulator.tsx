@@ -28,6 +28,7 @@ export const Simulator = () => {
           onClick={() => setRegisterUnderEdit('R0')}
         >
           <rect
+            className="register"
             fill={lightR0 ? 'red' : '#d2d6dc'} x="0"
             y="813.543" width="51.0236"
             height="28.3465"
@@ -50,6 +51,7 @@ export const Simulator = () => {
           onClick={() => setRegisterUnderEdit('R1')}
         >
           <rect
+            className="register"
             fill={lightR1 ? 'red' : '#d2d6dc'} y="813.543"
             width="51.024" height="28.347"
           />
@@ -70,6 +72,7 @@ export const Simulator = () => {
           onClick={() => setRegisterUnderEdit('A')}
         >
           <rect
+            className="register"
             fill={lightA ? 'red' : '#d2d6dc'} x="0"
             y="813.543" width="51.0236"
             height="28.3465"
@@ -91,6 +94,7 @@ export const Simulator = () => {
           onClick={() => setRegisterUnderEdit('PC')}
         >
           <rect
+            className="register"
             fill={lightPc ? 'red' : '#d2d6dc'} y="813.543"
             width="51.0236" height="28.3465"
             x="0"
@@ -163,6 +167,7 @@ export const Simulator = () => {
           onClick={() => setRegisterUnderEdit('IX')}
         >
           <rect
+            className="register"
             fill={lightIx ? 'red' : '#d2d6dc'} x="0"
             y="813.543" width="51.0236"
             height="28.3465"
@@ -192,6 +197,7 @@ export const Simulator = () => {
           onClick={() => setRegisterUnderEdit('SP')}
         >
           <rect
+            className="register"
             fill={lightSp ? 'red' : '#d2d6dc'} y="851.543"
             width="51.0236" height="28.3465"
             x="-27"

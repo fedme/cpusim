@@ -32368,30 +32368,8 @@ video {
   transition-delay: 1000ms;
 }
 
-.pc-pointer {
-  border: solid black;
-  border-width: 0 3px 3px 0;
-  display: inline-block;
-  padding: 3px;
-  transform: rotate(-45deg);
-  -webkit-transform: rotate(-45deg);
-}
-
-.pc-pointer::before {
-  content: "PC";
-}
-
-.sp-pointer {
-  border: solid black;
-  border-width: 0 3px 3px 0;
-  display: inline-block;
-  padding: 3px;
-  transform: rotate(-45deg);
-  -webkit-transform: rotate(-45deg);
-}
-
-.sp-pointer::before {
-  content: "SP";
+svg .register:hover {
+  fill: #BCDEFA;
 }
 
 @media (min-width: 640px) {
