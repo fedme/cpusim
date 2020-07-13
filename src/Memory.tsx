@@ -1,18 +1,20 @@
 import React, {
   useRef, useEffect, useState, useCallback
 } from 'react'
-import Editor, { monaco, ControlledEditor } from '@monaco-editor/react'
+import { monaco, ControlledEditor } from '@monaco-editor/react'
 import { useDebouncedCallback } from 'use-debounce'
 import useResizeObserver from 'use-resize-observer'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from './store/rootReducer'
 import {
-  setCode, setData, initialCode, MEMORY_CODE_MAX_SIZE, CpuStatus
+  setCode, setData, MEMORY_CODE_MAX_SIZE, CpuStatus, setInitialCodeAndData
 } from './store/cpuSlice'
 import { configureMonacoEditor, getMonacoMarkers, MonacoEditor } from './monacoEditor'
 
 export const Memory = () => {
-  // Set up Monaco
+  const dispatch = useDispatch()
+
+  // set up
   const [monacoInstance, setMonacoInstance] = useState<MonacoEditor>()
   useEffect(() => {
     monaco
@@ -23,21 +25,23 @@ export const Memory = () => {
       })
       // eslint-disable-next-line no-console
       .catch(error => console.error('An error occurred during initialization of Monaco: ', error))
+
+    dispatch(setInitialCodeAndData())
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const containerRef = useRef(null)
   const codeEditorRef = useRef<MonacoEditor>()
   const dataEditorRef = useRef<MonacoEditor>()
   const { width = 1 } = useResizeObserver({ ref: containerRef })
-  const dispatch = useDispatch()
   const {
-    syntaxErrors, data, dataSyntaxErrors, status, lightCodeRow, lightDataRow
+    syntaxErrors, code, data, dataSyntaxErrors, status, lightCodeRow, lightDataRow
   } = useSelector((state: RootState) => state.cpu)
 
-  const onCodeChange = useCallback((newValue: string) => dispatch(setCode(newValue)), [dispatch])
+  const onCodeChange = useCallback((newValue: string|undefined) => dispatch(setCode(newValue)), [dispatch])
   const [onCodeChangeDebounced] = useDebouncedCallback(onCodeChange, 500)
 
-  const onDataChange = useCallback((newValue: string) => dispatch(setData(newValue)), [dispatch])
+  const onDataChange = useCallback((newValue: string|undefined) => dispatch(setData(newValue)), [dispatch])
   const [onDataChangeDebounced] = useDebouncedCallback(onDataChange, 500)
 
   const codeEditorDecorations = useRef<string[]>([])
@@ -57,9 +61,8 @@ export const Memory = () => {
         })
         editor.getModel().setValue(content)
       }
-      onCodeChangeDebounced(editor.getModel().getValue())
     },
-    [onCodeChangeDebounced]
+    []
   )
 
   const onCodeEditorDidMount = useCallback(
@@ -139,12 +142,13 @@ export const Memory = () => {
 
           <h3 className="bg-gray-200 px-4 my-2">Sezione codice</h3>
 
-          <Editor
+          <ControlledEditor
             width={width}
             height="50vh"
             language="cpusimCode"
             theme="cpusimTheme"
-            value={initialCode}
+            value={code}
+            onChange={(_e, value) => onCodeChangeDebounced(value)}
             editorDidMount={onCodeEditorDidMount}
             options={{
               minimap: { enabled: false },
@@ -162,7 +166,7 @@ export const Memory = () => {
             language="cpusimData"
             theme="cpusimTheme"
             value={data}
-            onChange={(_e, value) => value && onDataChangeDebounced(value)}
+            onChange={(_e, value) => onDataChangeDebounced(value)}
             editorDidMount={onDataEditorDidMount}
             options={{
               minimap: { enabled: false },

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import {
   createSlice, PayloadAction
 } from '@reduxjs/toolkit'
@@ -9,6 +10,7 @@ import {
   JmzInstruction, JmlInstruction, JmgInstruction, LodInstruction, StoInstruction,
   CalInstruction
 } from '../instructionParser'
+import { AppThunk } from './store'
 
 export const MEMORY_CODE_MAX_SIZE = 100
 
@@ -52,7 +54,7 @@ type cpuState = {
   lightSpAdder: boolean
 }
 
-export const initialCode = ''
+export const initialCode = 'SET R0 #2\nSET R1 #2\nADD'
 
 export const initialData = ''
 
@@ -125,15 +127,25 @@ const cpuSlice = createSlice({
       state.executionSpeed = action.payload
     },
 
-    setCode(state, action: PayloadAction<string>) {
-      state.code = action.payload
+    setCode(state, action: PayloadAction<string|undefined>) {
+      state.code = action.payload ?? ''
+      if (action.payload && action.payload !== '') {
+        localStorage.setItem('cpusim-code', action.payload)
+      } else {
+        localStorage.removeItem('cpusim-code')
+      }
       const matches = parseCode(state.code)
       state.syntaxErrors = getSyntaxErrors(matches)
       state.instructions = parseInstructions(matches.map(m => m.ast))
     },
 
-    setData(state, action: PayloadAction<string>) {
-      state.data = action.payload
+    setData(state, action: PayloadAction<string|undefined>) {
+      state.data = action.payload ?? ''
+      if (action.payload && action.payload !== '') {
+        localStorage.setItem('cpusim-data', action.payload)
+      } else {
+        localStorage.removeItem('cpusim-data')
+      }
       const matches = parseCode(state.data, 'data')
       state.dataSyntaxErrors = getSyntaxErrors(matches)
       state.dataList = parseData(matches.map(m => m.ast))
@@ -510,3 +522,17 @@ export const {
 } = cpuSlice.actions
 
 export default cpuSlice.reducer
+
+export const setInitialCodeAndData = (): AppThunk => async (dispatch, _getState) => {
+  const savedCode = localStorage.getItem('cpusim-code')
+  if (savedCode != null && savedCode !== '') {
+    dispatch(setCode(savedCode))
+  } else {
+    dispatch(setCode(initialState.code))
+  }
+
+  const savedData = localStorage.getItem('cpusim-data')
+  if (savedData != null && savedData !== '') {
+    dispatch(setData(savedData))
+  }
+}
