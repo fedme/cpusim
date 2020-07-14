@@ -247,7 +247,7 @@ const cpuSlice = createSlice({
       }
 
       if (action.payload.type === InstructionType.LodComplexSP) {
-        address = state.sp + action.payload.address - MEMORY_CODE_MAX_SIZE
+        address = state.sp - action.payload.address - MEMORY_CODE_MAX_SIZE
       }
 
       // TODO: throw if data is not in memory
@@ -277,7 +277,7 @@ const cpuSlice = createSlice({
       }
 
       if (action.payload.type === InstructionType.StoComplexSP) {
-        address = state.sp + action.payload.address - MEMORY_CODE_MAX_SIZE
+        address = state.sp - action.payload.address - MEMORY_CODE_MAX_SIZE
       }
 
       if (address > state.dataList.length) {
@@ -325,11 +325,11 @@ const cpuSlice = createSlice({
       state.dataList[address] = state.a
       state.data = state.dataList.join('\n')
 
-      state.sp -= 1
+      state.sp += 1
     },
 
     pop(state) {
-      state.sp += 1
+      state.sp -= 1
       const address = state.sp - MEMORY_CODE_MAX_SIZE
 
       state.a = state.dataList[address]! // TODO: throw if null / not present
@@ -347,12 +347,12 @@ const cpuSlice = createSlice({
       state.dataList[address] = state.pc
       state.data = state.dataList.join('\n')
 
-      state.sp -= 1
+      state.sp += 1
       state.pc = action.payload.address
     },
 
     ret(state) {
-      state.sp += 1
+      state.sp -= 1
       const address = state.sp - MEMORY_CODE_MAX_SIZE
 
       state.pc = state.dataList[address]! // TODO: throw if null / not present
