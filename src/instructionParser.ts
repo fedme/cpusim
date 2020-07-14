@@ -73,8 +73,6 @@ const parseInstruction = (tree: any) => {
 
   if (tree?.type == null || tree === '') {
     return instruction
-    // TODO: collect parsing error (requires the function to take whole match as argument and not just
-    // tree so that we can get the line number)
   }
 
   switch ((tree.type as string).toUpperCase()) {
@@ -136,8 +134,7 @@ const parseInstruction = (tree: any) => {
           break
         }
         default: {
-          // TODO: collect parsing error (requires the function to take whole match as argument and not just
-          // tree so that we can get the line number)
+          throw new Error('Unrecognized type')
         }
       }
 
@@ -148,61 +145,61 @@ const parseInstruction = (tree: any) => {
     case 'LODSIMPLE': {
       console.log('LODSIMPLE', tree)
 
-      const address = parseInt(tree[1].join('')) // TODO: collect parsing error
+      const address = parseInt(tree[1].join(''))
       instruction = { type: InstructionType.LodSimple, register: tree[0][0], address } as LodInstruction
       break
     }
 
     case 'LODCOMPLEXIX': {
-      const address = parseInt(tree[1].join('')) // TODO: collect parsing error
+      const address = parseInt(tree[1].join(''))
       instruction = { type: InstructionType.LodComplexIX, register: tree[0][0], address } as LodInstruction
       break
     }
 
     case 'LODCOMPLEXSP': {
-      const address = parseInt(tree[1].join('')) // TODO: collect parsing error
+      const address = parseInt(tree[1].join(''))
       instruction = { type: InstructionType.LodComplexSP, register: tree[0][0], address } as LodInstruction
       break
     }
 
     case 'STOSIMPLE': {
-      const address = parseInt(tree[0].join('')) // TODO: collect parsing error
+      const address = parseInt(tree[0].join(''))
       instruction = { type: InstructionType.StoSimple, address } as StoInstruction
       break
     }
 
     case 'STOCOMPLEXIX': {
-      const address = parseInt(tree[0].join('')) // TODO: collect parsing error
+      const address = parseInt(tree[0].join(''))
       instruction = { type: InstructionType.StoComplexIX, address } as StoInstruction
       break
     }
 
     case 'STOCOMPLEXSP': {
-      const address = parseInt(tree[0].join('')) // TODO: collect parsing error
+      const address = parseInt(tree[0].join(''))
       instruction = { type: InstructionType.StoComplexSP, address } as StoInstruction
       break
     }
 
     case 'JMP': {
-      const address = parseInt(tree[1].join('')) // TODO: collect parsing error
+      const address = parseInt(tree[1].join(''))
       instruction = { type: InstructionType.Jmp, address } as JmpInstruction
       break
     }
 
     case 'JMZ': {
-      const address = parseInt(tree[1].join('')) // TODO: collect parsing error
+      const address = parseInt(tree[1].join(''))
       instruction = { type: InstructionType.Jmz, address } as JmzInstruction
       break
     }
 
     case 'JML': {
-      const address = parseInt(tree[1].join('')) // TODO: collect parsing error
+      const address = parseInt(tree[1].join(''))
       instruction = { type: InstructionType.Jml, address } as JmlInstruction
       break
     }
 
     case 'JMG': {
-      const address = parseInt(tree[1].join('')) // TODO: collect parsing error
+      const address = parseInt(tree[1].join(''))
       instruction = { type: InstructionType.Jmg, address } as JmgInstruction
       break
     }
@@ -218,7 +215,7 @@ const parseInstruction = (tree: any) => {
     }
 
     case 'CAL': {
-      const address = parseInt(tree[1].join('')) // TODO: collect parsing error
+      const address = parseInt(tree[1].join(''))
       instruction = { type: InstructionType.Cal, address } as CalInstruction
       break
     }
@@ -229,7 +226,7 @@ const parseInstruction = (tree: any) => {
     }
 
     default: {
-      throw new Error('Unrecognized instruction type') // TODO collect parsing error
+      throw new Error('Unrecognized instruction type')
     }
   }
 
@@ -255,8 +252,7 @@ export const parseData = (trees: any[]) => trees.reduce((dataList: Array<number 
         break
       }
       default: {
-        // TODO: collect parsing error (requires the function to take whole match as argument and not just
-        // tree so that we can get the line number)
+        throw new Error('Unrecognized type')
       }
     }
   }

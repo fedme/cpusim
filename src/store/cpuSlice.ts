@@ -250,7 +250,7 @@ const cpuSlice = createSlice({
         address = state.sp - action.payload.address - MEMORY_CODE_MAX_SIZE
       }
 
-      // TODO: throw if data is not in memory
+      // TODO: return 0 if data is not in memory
       const data = state.dataList[address]
 
       if (data == null) {
@@ -332,7 +332,7 @@ const cpuSlice = createSlice({
       state.sp -= 1
       const address = state.sp - MEMORY_CODE_MAX_SIZE
 
-      state.a = state.dataList[address]! // TODO: throw if null / not present
+      state.a = state.dataList[address]! // TODO: Return 0 if null / not present
     },
 
     cal(state, action: PayloadAction<CalInstruction>) {
@@ -355,7 +355,7 @@ const cpuSlice = createSlice({
       state.sp -= 1
       const address = state.sp - MEMORY_CODE_MAX_SIZE
 
-      state.pc = state.dataList[address]! // TODO: throw if null / not present
+      state.pc = state.dataList[address]! // TODO: Return 0 if null / not present
     },
 
     setLightsFetchStart(state, action: PayloadAction<boolean>) {
