@@ -29,7 +29,7 @@ export const SaveToFile = () => {
 
   return (
     <div className="flex flex-row justify-between items-center bg-gray-300 px-4 mb-2">
-      <h3 className="text-xl">Memoria</h3>
+      <h3 className="text-xl">RAM</h3>
       <div className="flex">
         <label htmlFor="file-upload" className="mr-2 cursor-pointer">
           <GrDocumentUpload />
