@@ -324,6 +324,8 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
       break
     }
 
+    // TODO: finish implementing instructions
+
     case InstructionType.StoSimple: {
       dispatch(sto(instruction as StoInstruction))
       break
