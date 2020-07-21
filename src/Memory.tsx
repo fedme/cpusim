@@ -36,7 +36,7 @@ export const Memory = () => {
   const dataEditorRef = useRef<MonacoEditor>()
   const { width = 1 } = useResizeObserver({ ref: containerRef })
   const {
-    syntaxErrors, code, data, dataSyntaxErrors, status, lightCodeRow, lightDataRow
+    codeErrors: syntaxErrors, codeMemoryRaw: code, dataMemoryRaw: data, dataErrors: dataSyntaxErrors, status, lightCodeRow, lightDataRow
   } = useSelector((state: RootState) => state.cpu)
 
   const onCodeChange = useCallback((newValue: string|undefined) => dispatch(setCode(newValue)), [dispatch])

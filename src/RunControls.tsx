@@ -15,7 +15,7 @@ const SPEED_STEP = 500
 export const RunControls = () => {
   const dispatch = useDispatch()
   const {
-    instructions, status, syntaxErrors, dataSyntaxErrors, executionSpeed
+    codeMemory: instructions, status, codeErrors: syntaxErrors, dataErrors: dataSyntaxErrors, executionSpeed
   } = useSelector((state: RootState) => state.cpu)
 
   const areErrorsPresent = syntaxErrors.length > 0 || dataSyntaxErrors.length > 0
@@ -73,13 +73,13 @@ export const RunControls = () => {
           />
           <div>
             <button
-              className="px-3 py-2 rounded text-sm font-medium text-white bg-yellow-600 mr-4 focus:outline-none focus:text-white focus:bg-gray-700"
+              className="px-3 py-2 rounded text-sm font-medium text-white bg-yellow-600 mr-4 focus:outline-none focus:text-white"
               onClick={() => dispatch(reset())}
             >
               Resetta registri
             </button>
             <button
-              className="px-3 py-2 rounded text-sm font-medium text-white bg-green-500 focus:outline-none focus:text-white focus:bg-gray-700"
+              className="px-3 py-2 rounded text-sm font-medium text-white bg-green-500 focus:outline-none focus:text-white"
               onClick={run}
             >
               Esegui programma
@@ -92,7 +92,7 @@ export const RunControls = () => {
         <>
           {status === CpuStatus.Running && (
           <button
-            className="px-3 py-2 mr-2 rounded text-sm font-medium text-white bg-yellow-400 focus:outline-none focus:text-white focus:bg-gray-700"
+            className="px-3 py-2 mr-2 rounded text-sm font-medium text-white bg-yellow-400 focus:outline-none focus:text-white"
             onClick={pause}
           >
             Pausa
@@ -100,14 +100,14 @@ export const RunControls = () => {
           )}
           {status === CpuStatus.Paused && (
           <button
-            className="px-3 py-2 mr-2 rounded text-sm font-medium text-white bg-green-500 focus:outline-none focus:text-white focus:bg-gray-700"
+            className="px-3 py-2 mr-2 rounded text-sm font-medium text-white bg-green-500 focus:outline-none focus:text-white"
             onClick={resume}
           >
             Riprendi
           </button>
           )}
           <button
-            className="px-3 py-2 rounded text-sm font-medium text-white bg-red-500 focus:outline-none focus:text-white focus:bg-gray-700"
+            className="px-3 py-2 rounded text-sm font-medium text-white bg-red-500 focus:outline-none focus:text-white"
             onClick={stop}
           >
             Stop

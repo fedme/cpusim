@@ -12,7 +12,7 @@ import { setCode } from './store/cpuSlice'
 export const SaveToFile = () => {
   const dispatch = useDispatch()
 
-  const { code } = useSelector((state: RootState) => state.cpu)
+  const { codeMemoryRaw: code } = useSelector((state: RootState) => state.cpu)
 
   function downloadCode() {
     const blob = new Blob([code], { type: 'text/plain;charset=utf-8' })

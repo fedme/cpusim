@@ -23,12 +23,12 @@ export enum CpuStatus {
 type cpuState = {
   status: CpuStatus
   executionSpeed: number
-  code: string
-  data: string
-  syntaxErrors: SyntaxError[]
-  dataSyntaxErrors: SyntaxError[]
-  instructions: Instruction[]
-  dataList: Array<number|null>
+  codeMemoryRaw: string
+  codeMemory: Instruction[]
+  codeErrors: SyntaxError[]
+  dataMemoryRaw: string
+  dataMemory: Array<number|null>
+  dataErrors: SyntaxError[]
   pc: number
   r0: number
   r1: number
@@ -61,12 +61,12 @@ export const initialData = ''
 const initialState: cpuState = {
   status: CpuStatus.Idle,
   executionSpeed: 2500,
-  code: initialCode,
-  data: initialData,
-  syntaxErrors: [],
-  dataSyntaxErrors: [],
-  instructions: [],
-  dataList: [],
+  codeMemoryRaw: initialCode,
+  codeMemory: [],
+  codeErrors: [],
+  dataMemoryRaw: initialData,
+  dataMemory: [],
+  dataErrors: [],
   pc: 0,
   r0: 0,
   r1: 0,
@@ -128,27 +128,27 @@ const cpuSlice = createSlice({
     },
 
     setCode(state, action: PayloadAction<string|undefined>) {
-      state.code = action.payload ?? ''
+      state.codeMemoryRaw = action.payload ?? ''
       if (action.payload && action.payload !== '') {
         localStorage.setItem('cpusim-code', action.payload)
       } else {
         localStorage.removeItem('cpusim-code')
       }
-      const matches = parseCode(state.code)
-      state.syntaxErrors = getSyntaxErrors(matches)
-      state.instructions = parseInstructions(matches.map(m => m.ast))
+      const matches = parseCode(state.codeMemoryRaw)
+      state.codeErrors = getSyntaxErrors(matches)
+      state.codeMemory = parseInstructions(matches.map(m => m.ast))
     },
 
     setData(state, action: PayloadAction<string|undefined>) {
-      state.data = action.payload ?? ''
+      state.dataMemoryRaw = action.payload ?? ''
       if (action.payload && action.payload !== '') {
         localStorage.setItem('cpusim-data', action.payload)
       } else {
         localStorage.removeItem('cpusim-data')
       }
-      const matches = parseCode(state.data, 'data')
-      state.dataSyntaxErrors = getSyntaxErrors(matches)
-      state.dataList = parseData(matches.map(m => m.ast))
+      const matches = parseCode(state.dataMemoryRaw, 'data')
+      state.dataErrors = getSyntaxErrors(matches)
+      state.dataMemory = parseData(matches.map(m => m.ast))
     },
 
     setStatus(state, action: PayloadAction<CpuStatus>) {
@@ -251,7 +251,7 @@ const cpuSlice = createSlice({
       }
 
       // TODO: return 0 if data is not in memory
-      const data = state.dataList[address]
+      const data = state.dataMemory[address]
 
       if (data == null) {
         throw Error('data is not in memory')
@@ -280,15 +280,15 @@ const cpuSlice = createSlice({
         address = state.sp - action.payload.address - MEMORY_CODE_MAX_SIZE
       }
 
-      if (address > state.dataList.length) {
-        for (let i = 0; i < address - state.dataList.length; i += 1) {
-          state.dataList.push(null)
+      if (address > state.dataMemory.length) {
+        for (let i = 0; i < address - state.dataMemory.length; i += 1) {
+          state.dataMemory.push(null)
         }
       }
 
-      state.dataList[address] = state.a
+      state.dataMemory[address] = state.a
 
-      state.data = state.dataList.join('\n')
+      state.dataMemoryRaw = state.dataMemory.join('\n')
     },
 
     jmp(state, action: PayloadAction<JmpInstruction>) {
@@ -316,14 +316,14 @@ const cpuSlice = createSlice({
     psh(state) {
       const address = state.sp - MEMORY_CODE_MAX_SIZE
 
-      if (address > state.dataList.length) {
-        for (let i = 0; i < address - state.dataList.length; i += 1) {
-          state.dataList.push(null)
+      if (address > state.dataMemory.length) {
+        for (let i = 0; i < address - state.dataMemory.length; i += 1) {
+          state.dataMemory.push(null)
         }
       }
 
-      state.dataList[address] = state.a
-      state.data = state.dataList.join('\n')
+      state.dataMemory[address] = state.a
+      state.dataMemoryRaw = state.dataMemory.join('\n')
 
       state.sp += 1
     },
@@ -332,20 +332,20 @@ const cpuSlice = createSlice({
       state.sp -= 1
       const address = state.sp - MEMORY_CODE_MAX_SIZE
 
-      state.a = state.dataList[address]! // TODO: Return 0 if null / not present
+      state.a = state.dataMemory[address]! // TODO: Return 0 if null / not present
     },
 
     cal(state, action: PayloadAction<CalInstruction>) {
       const address = state.sp - MEMORY_CODE_MAX_SIZE
 
-      if (address > state.dataList.length) {
-        for (let i = 0; i < address - state.dataList.length; i += 1) {
-          state.dataList.push(null)
+      if (address > state.dataMemory.length) {
+        for (let i = 0; i < address - state.dataMemory.length; i += 1) {
+          state.dataMemory.push(null)
         }
       }
 
-      state.dataList[address] = state.pc
-      state.data = state.dataList.join('\n')
+      state.dataMemory[address] = state.pc
+      state.dataMemoryRaw = state.dataMemory.join('\n')
 
       state.sp += 1
       state.pc = action.payload.address
@@ -355,7 +355,7 @@ const cpuSlice = createSlice({
       state.sp -= 1
       const address = state.sp - MEMORY_CODE_MAX_SIZE
 
-      state.pc = state.dataList[address]! // TODO: Return 0 if null / not present
+      state.pc = state.dataMemory[address]! // TODO: Return 0 if null / not present
     },
 
     setLightsFetchStart(state, action: PayloadAction<boolean>) {
@@ -528,7 +528,7 @@ export const setInitialCodeAndData = (): AppThunk => async (dispatch, _getState)
   if (savedCode != null && savedCode !== '') {
     dispatch(setCode(savedCode))
   } else {
-    dispatch(setCode(initialState.code))
+    dispatch(setCode(initialState.codeMemoryRaw))
   }
 
   const savedData = localStorage.getItem('cpusim-data')

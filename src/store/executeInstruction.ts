@@ -18,12 +18,12 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
     return
   }
 
-  if (cpu.pc > cpu.instructions.length - 1) {
+  if (cpu.pc > cpu.codeMemory.length - 1) {
     dispatch(setStatus(CpuStatus.Idle))
     return
   }
 
-  const instruction = cpu.instructions[cpu.pc]
+  const instruction = cpu.codeMemory[cpu.pc]
 
   const animationInterval = computeAnimationInterval(cpu.executionSpeed)
 
