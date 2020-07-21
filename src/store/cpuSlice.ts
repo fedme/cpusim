@@ -13,6 +13,64 @@ import {
 import { AppThunk } from './store'
 
 export const MEMORY_CODE_MAX_SIZE = 100
+export const MEMORY_DATA_MAX_SIZE = 400
+export const MEMORY_STACK_MAX_SIZE = 500
+
+function readDataFromMemory(state: cpuState, address: number): number {
+  let data: number | null = 0
+
+  if (address < MEMORY_CODE_MAX_SIZE || address >= MEMORY_CODE_MAX_SIZE + MEMORY_DATA_MAX_SIZE + MEMORY_STACK_MAX_SIZE) {
+    // eslint-disable-next-line no-alert
+    alert(`Impossibile leggere dall'indirizzo ${address}. L'indirizzo non esiste nelle sezioni dati e stack della memoria.`)
+    return data
+  }
+
+  try {
+    if (address < MEMORY_CODE_MAX_SIZE + MEMORY_DATA_MAX_SIZE) {
+      data = state.dataMemory[address - MEMORY_CODE_MAX_SIZE]
+      return data ?? 0
+    }
+
+    data = state.stackMemory[address - (MEMORY_CODE_MAX_SIZE + MEMORY_DATA_MAX_SIZE)]
+    return data ?? 0
+  } catch {
+    return 0
+  }
+}
+
+function writeDataToMemory(state: cpuState, address: number, value: number): void {
+  if (address < MEMORY_CODE_MAX_SIZE || address >= MEMORY_CODE_MAX_SIZE + MEMORY_DATA_MAX_SIZE + MEMORY_STACK_MAX_SIZE) {
+    // eslint-disable-next-line no-alert
+    alert(`Impossibile scrivere all'indirizzo ${address}. L'indirizzo non esiste nelle sezioni dati e stack della memoria.`)
+  }
+
+  // write to data
+  if (address < MEMORY_CODE_MAX_SIZE + MEMORY_DATA_MAX_SIZE) {
+    address -= MEMORY_CODE_MAX_SIZE
+
+    if (address > state.dataMemory.length) {
+      for (let i = 0; i < address - state.dataMemory.length; i += 1) {
+        state.dataMemory.push(null)
+      }
+    }
+
+    state.dataMemory[address] = value
+    state.dataMemoryRaw = state.dataMemory.join('\n')
+  // eslint-disable-next-line @typescript-eslint/brace-style
+  }
+
+  // write to stack
+  else {
+    address -= (MEMORY_CODE_MAX_SIZE + MEMORY_DATA_MAX_SIZE)
+    if (address > state.stackMemory.length) {
+      for (let i = 0; i < address - state.stackMemory.length; i += 1) {
+        state.stackMemory.push(null)
+      }
+    }
+    state.stackMemory[address] = value
+    state.stackMemoryRaw = state.stackMemory.join('\n')
+  }
+}
 
 export enum CpuStatus {
   Idle,
@@ -29,6 +87,9 @@ type cpuState = {
   dataMemoryRaw: string
   dataMemory: Array<number|null>
   dataErrors: SyntaxError[]
+  stackMemoryRaw: string
+  stackMemory: Array<number|null>
+  stackErrors: SyntaxError[]
   pc: number
   r0: number
   r1: number
@@ -44,6 +105,7 @@ type cpuState = {
   lightDecoder: boolean
   lightCodeRow: number | null
   lightDataRow: number | null
+  lightStackRow: number | null
   lightR0: boolean
   lightR1: boolean
   lightAlu: boolean
@@ -67,12 +129,15 @@ const initialState: cpuState = {
   dataMemoryRaw: initialData,
   dataMemory: [],
   dataErrors: [],
+  stackMemoryRaw: '',
+  stackMemory: [],
+  stackErrors: [],
   pc: 0,
   r0: 0,
   r1: 0,
   a: 0,
   ix: 0,
-  sp: 100,
+  sp: MEMORY_CODE_MAX_SIZE + MEMORY_DATA_MAX_SIZE,
   lightAddressBus: false,
   lightDataBus: false,
   lightPc: false,
@@ -82,6 +147,7 @@ const initialState: cpuState = {
   lightDecoder: false,
   lightCodeRow: null,
   lightDataRow: null,
+  lightStackRow: null,
   lightR0: false,
   lightR1: false,
   lightAlu: false,
@@ -149,6 +215,18 @@ const cpuSlice = createSlice({
       const matches = parseCode(state.dataMemoryRaw, 'data')
       state.dataErrors = getSyntaxErrors(matches)
       state.dataMemory = parseData(matches.map(m => m.ast))
+    },
+
+    setStack(state, action: PayloadAction<string|undefined>) {
+      state.stackMemoryRaw = action.payload ?? ''
+      if (action.payload && action.payload !== '') {
+        localStorage.setItem('cpusim-stack', action.payload)
+      } else {
+        localStorage.removeItem('cpusim-stack')
+      }
+      const matches = parseCode(state.stackMemoryRaw, 'stack')
+      state.stackErrors = getSyntaxErrors(matches)
+      state.stackMemory = parseData(matches.map(m => m.ast))
     },
 
     setStatus(state, action: PayloadAction<CpuStatus>) {
@@ -240,22 +318,17 @@ const cpuSlice = createSlice({
     },
 
     lod(state, action: PayloadAction<LodInstruction>) {
-      let address = action.payload.address - MEMORY_CODE_MAX_SIZE
+      let { address } = action.payload
 
       if (action.payload.type === InstructionType.LodComplexIX) {
-        address = state.ix + action.payload.address - MEMORY_CODE_MAX_SIZE
+        address = state.ix + action.payload.address
       }
 
       if (action.payload.type === InstructionType.LodComplexSP) {
-        address = state.sp - action.payload.address - MEMORY_CODE_MAX_SIZE
+        address = state.sp - action.payload.address
       }
 
-      // TODO: return 0 if data is not in memory
-      const data = state.dataMemory[address]
-
-      if (data == null) {
-        throw Error('data is not in memory')
-      }
+      const data = readDataFromMemory(state, address)
 
       switch (action.payload.register) {
         case 'R0': {
@@ -270,25 +343,17 @@ const cpuSlice = createSlice({
     },
 
     sto(state, action: PayloadAction<StoInstruction>) {
-      let address = action.payload.address - MEMORY_CODE_MAX_SIZE
+      let { address } = action.payload
 
       if (action.payload.type === InstructionType.StoComplexIX) {
-        address = state.ix + action.payload.address - MEMORY_CODE_MAX_SIZE
+        address = state.ix + action.payload.address
       }
 
       if (action.payload.type === InstructionType.StoComplexSP) {
-        address = state.sp - action.payload.address - MEMORY_CODE_MAX_SIZE
+        address = state.sp - action.payload.address
       }
 
-      if (address > state.dataMemory.length) {
-        for (let i = 0; i < address - state.dataMemory.length; i += 1) {
-          state.dataMemory.push(null)
-        }
-      }
-
-      state.dataMemory[address] = state.a
-
-      state.dataMemoryRaw = state.dataMemory.join('\n')
+      writeDataToMemory(state, address, state.a)
     },
 
     jmp(state, action: PayloadAction<JmpInstruction>) {
@@ -314,38 +379,20 @@ const cpuSlice = createSlice({
     },
 
     psh(state) {
-      const address = state.sp - MEMORY_CODE_MAX_SIZE
-
-      if (address > state.dataMemory.length) {
-        for (let i = 0; i < address - state.dataMemory.length; i += 1) {
-          state.dataMemory.push(null)
-        }
-      }
-
-      state.dataMemory[address] = state.a
-      state.dataMemoryRaw = state.dataMemory.join('\n')
-
+      const address = state.sp
+      writeDataToMemory(state, address, state.a)
       state.sp += 1
     },
 
     pop(state) {
       state.sp -= 1
-      const address = state.sp - MEMORY_CODE_MAX_SIZE
-
-      state.a = state.dataMemory[address]! // TODO: Return 0 if null / not present
+      const address = state.sp
+      state.a = readDataFromMemory(state, address)
     },
 
     cal(state, action: PayloadAction<CalInstruction>) {
-      const address = state.sp - MEMORY_CODE_MAX_SIZE
-
-      if (address > state.dataMemory.length) {
-        for (let i = 0; i < address - state.dataMemory.length; i += 1) {
-          state.dataMemory.push(null)
-        }
-      }
-
-      state.dataMemory[address] = state.pc
-      state.dataMemoryRaw = state.dataMemory.join('\n')
+      const address = state.sp
+      writeDataToMemory(state, address, state.pc)
 
       state.sp += 1
       state.pc = action.payload.address
@@ -353,9 +400,9 @@ const cpuSlice = createSlice({
 
     ret(state) {
       state.sp -= 1
-      const address = state.sp - MEMORY_CODE_MAX_SIZE
+      const address = state.sp
 
-      state.pc = state.dataMemory[address]! // TODO: Return 0 if null / not present
+      state.pc = readDataFromMemory(state, address)
     },
 
     setLightsFetchStart(state, action: PayloadAction<boolean>) {
@@ -370,6 +417,10 @@ const cpuSlice = createSlice({
 
     setLightDataRow(state, action: PayloadAction<number | null>) {
       state.lightDataRow = action.payload
+    },
+
+    setLightStackRow(state, action: PayloadAction<number | null>) {
+      state.lightStackRow = action.payload
     },
 
     setLightsFetchEnd(state, action: PayloadAction<boolean>) {
@@ -477,6 +528,7 @@ export const {
   setExecutionSpeed,
   setCode,
   setData,
+  setStack,
   setStatus,
   incrementPc,
   resetPc,
@@ -502,6 +554,7 @@ export const {
   setLightsFetchStart,
   setLightCodeRow,
   setLightDataRow,
+  setLightStackRow,
   setLightsFetchEnd,
   setLightPc,
   setLightsExecuteStart,
@@ -534,5 +587,10 @@ export const setInitialCodeAndData = (): AppThunk => async (dispatch, _getState)
   const savedData = localStorage.getItem('cpusim-data')
   if (savedData != null && savedData !== '') {
     dispatch(setData(savedData))
+  }
+
+  const savedStack = localStorage.getItem('cpusim-stack')
+  if (savedStack != null && savedStack !== '') {
+    dispatch(setStack(savedStack))
   }
 }

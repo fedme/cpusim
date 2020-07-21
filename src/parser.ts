@@ -154,7 +154,7 @@ interface Match {
   ast: any
 }
 
-const matchRows = (rows: string[], type: 'code' | 'data' = 'code') => rows.reduce((matches: Match[], row) => {
+const matchRows = (rows: string[], type: 'code' | 'data' | 'stack' = 'code') => rows.reduce((matches: Match[], row) => {
   const matchResult = type === 'code' ? codeGrammar.match(row) : dataGrammar.match(row)
   const match: Match = {
     matched: matchResult.succeeded(),
@@ -165,7 +165,7 @@ const matchRows = (rows: string[], type: 'code' | 'data' = 'code') => rows.reduc
   return matches.concat(match)
 }, [])
 
-export const parseCode = (text: string, type: 'code' | 'data' = 'code') => {
+export const parseCode = (text: string, type: 'code' | 'data' | 'stack' = 'code') => {
   const rows = text.split(/\r?\n/)
   const matches = matchRows(rows, type)
   return matches
