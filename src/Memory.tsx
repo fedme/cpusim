@@ -7,10 +7,11 @@ import useResizeObserver from 'use-resize-observer'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from './store/rootReducer'
 import {
-  setCode, setData, setStack, MEMORY_CODE_MAX_SIZE, CpuStatus, setInitialCodeAndData, MEMORY_DATA_MAX_SIZE
+  setCode, setData, setStack, CpuStatus, setInitialCodeAndData
 } from './store/cpuSlice'
 import { configureMonacoEditor, getMonacoMarkers, MonacoEditor } from './monacoEditor'
 import { SaveToFile } from './SaveToFile'
+import { MEMORY_CODE_MAX_SIZE, MEMORY_DATA_MAX_SIZE, MEMORY_STACK_MAX_SIZE } from './store/memoryManagement'
 
 export const Memory = () => {
   const dispatch = useDispatch()
@@ -159,11 +160,26 @@ export const Memory = () => {
 
   // Stack editor callbacks
 
+  const onStackEditorModelDidChange = useCallback(
+    (editor: any) => {
+      const lineCount = editor.getModel().getLineCount()
+      if (lineCount > MEMORY_STACK_MAX_SIZE) {
+        const content = editor.getModel().getValueInRange({
+          startLineNumber: 1,
+          endLineNumber: MEMORY_STACK_MAX_SIZE
+        })
+        editor.getModel().setValue(content)
+      }
+    },
+    []
+  )
+
   const onStackEditorDidMount = useCallback(
     (_getEditorValue: () => string, editor: MonacoEditor) => {
       stackEditorRef.current = editor
+      editor.onDidChangeModelContent((_b: any) => onStackEditorModelDidChange(editor))
     },
-    []
+    [onStackEditorModelDidChange]
   )
 
   if (monacoInstance && stackEditorRef.current) {
