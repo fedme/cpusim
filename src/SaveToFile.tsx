@@ -3,7 +3,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react'
-import { GrDocumentDownload, GrDocumentUpload } from 'react-icons/gr'
+import { AiFillSave, AiFillFolderOpen } from 'react-icons/ai'
 import { saveAs } from 'file-saver'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from './store/rootReducer'
@@ -32,14 +32,14 @@ export const SaveToFile = () => {
       <h3 className="text-xl">RAM</h3>
       <div className="flex">
         <label htmlFor="file-upload" className="mr-2 cursor-pointer">
-          <GrDocumentUpload />
+          <AiFillFolderOpen />
           <input
             type="file" id="file-upload"
             onChange={(e) => e.target.files && uploadCode(e.target.files[0])}
             style={{ display: 'none' }}
           />
         </label>
-        <a href="#" onClick={downloadCode}><GrDocumentDownload /></a>
+        <a href="#" onClick={downloadCode}><AiFillSave /></a>
       </div>
     </div>
   )
