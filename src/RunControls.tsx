@@ -50,7 +50,7 @@ export const RunControls = () => {
   }
 
   return (
-    <div className="flex items-baseline">
+    <div className="flex items-baseline justify-center">
 
       {areErrorsPresent && (
         <span
@@ -62,9 +62,9 @@ export const RunControls = () => {
 
       {!areErrorsPresent && status === CpuStatus.Idle && (
         <div className="flex items-center">
-          <div className="text-sm font-medium text-white pr-4">Velocit&agrave;: </div>
+          <div className="hidden md:block text-sm font-medium text-white pr-4">Velocit&agrave;: </div>
           <input
-            className="form-range block mr-4"
+            className="hidden md:block form-range mr-4"
             type="range" name="speed"
             value={Math.floor((FASTER_SPEED + SLOWER_SPEED - executionSpeed) / SPEED_STEP)}
             min="1" max="10"

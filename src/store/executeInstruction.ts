@@ -229,7 +229,7 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
       dispatch(setLightDecoder(false))
       dispatch(setLightAddressBus(false))
       dispatch(setLightMar(false))
-      dispatch(setLightDataRow(lodInstruction.address))
+      dispatch(setLightDataRow(lodInstruction.address)) // TODO
 
       await sleep(animationInterval)
 

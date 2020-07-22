@@ -19,7 +19,7 @@ export const Simulator = () => {
       <RegisterEditorModal registerUnderEdit={registerUnderEdit} onClose={() => setRegisterUnderEdit(null)} />
 
       <svg
-        viewBox="0 0 595.276 841.89" width="100%"
+        viewBox="0 0 595.276 550" width="100%"
         xmlns="http://www.w3.org/2000/svg"
       >
         <g
