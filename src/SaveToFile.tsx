@@ -31,15 +31,17 @@ export const SaveToFile = () => {
     <div className="flex flex-row justify-between items-center bg-gray-300 px-4 mb-2">
       <h3 className="text-xl">RAM</h3>
       <div className="flex">
-        <label htmlFor="file-upload" className="mr-2 cursor-pointer">
-          <AiFillFolderOpen />
+        <label htmlFor="file-upload" className="mr-2 cursor-pointer ">
+          <AiFillFolderOpen className="text-gray-600 hover:text-gray-800" />
           <input
             type="file" id="file-upload"
             onChange={(e) => e.target.files && uploadCode(e.target.files[0])}
             style={{ display: 'none' }}
           />
         </label>
-        <a href="#" onClick={downloadCode}><AiFillSave /></a>
+        <a href="#" onClick={downloadCode}>
+          <AiFillSave className="text-gray-600 hover:text-gray-800" />
+        </a>
       </div>
     </div>
   )
