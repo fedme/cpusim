@@ -29,7 +29,7 @@ export const Simulator = () => {
         >
           <rect
             className="register"
-            fill={lightR0 ? 'red' : '#d2d6dc'} x="0"
+            fill={lightR0 ? '#ed1c24' : '#d2d6dc'} x="0"
             y="813.543" width="51.0236"
             height="28.3465"
 
@@ -52,7 +52,7 @@ export const Simulator = () => {
         >
           <rect
             className="register"
-            fill={lightR1 ? 'red' : '#d2d6dc'} y="813.543"
+            fill={lightR1 ? '#ed1c24' : '#d2d6dc'} y="813.543"
             width="51.024" height="28.347"
           />
           <text
@@ -73,7 +73,7 @@ export const Simulator = () => {
         >
           <rect
             className="register"
-            fill={lightA ? 'red' : '#d2d6dc'} x="0"
+            fill={lightA ? '#ed1c24' : '#d2d6dc'} x="0"
             y="813.543" width="51.0236"
             height="28.3465"
           />
@@ -95,7 +95,7 @@ export const Simulator = () => {
         >
           <rect
             className="register"
-            fill={lightPc ? 'red' : '#d2d6dc'} y="813.543"
+            fill={lightPc ? '#ed1c24' : '#d2d6dc'} y="813.543"
             width="51.0236" height="28.3465"
             x="0"
           />
@@ -112,7 +112,7 @@ export const Simulator = () => {
         </g>
         <g id="ir" transform="matrix(1, 0, 0, 1, 425.196991, -634.960999)">
           <rect
-            fill={lightIr ? 'red' : '#d2d6dc'} x="0"
+            fill={lightIr ? '#ed1c24' : '#d2d6dc'} x="0"
             y="813.543" width="51.0236"
             height="28.3465"
           />
@@ -127,11 +127,11 @@ export const Simulator = () => {
         </g>
         <g id="alu" transform="matrix(1, 0, 0, 1, 158.740005, -371.540985)">
           <path
-            fill={lightAlu ? 'red' : '#d2d6dc'} d="M 41.261 841.891 L 95.492 841.891 L 131.789 754.221 L 77.559 754.221 L 41.261 841.891 Z"
+            fill={lightAlu ? '#ed1c24' : '#adacac'} d="M 41.261 841.891 L 95.492 841.891 L 131.789 754.221 L 77.559 754.221 L 41.261 841.891 Z"
             transform="matrix(1, 0.000494, -0.000494, 1, 0.39425, -0.042646)"
           />
           <path
-            fill={lightAlu ? 'red' : '#d2d6dc'} d="M 0 754.22 L 52.211 754.22 L 87.198 841.89 L 34.987 841.89 L 0 754.22 Z"
+            fill={lightAlu ? '#ed1c24' : '#adacac'} d="M 0 754.22 L 52.211 754.22 L 87.198 841.89 L 34.987 841.89 L 0 754.22 Z"
             transform="matrix(-1, 0, 0, -1, 87.197998, 1596.109985)"
           />
           <text
@@ -141,7 +141,7 @@ export const Simulator = () => {
         </g>
         <g id="mdr" transform="matrix(1, 0, 0, 1, 544.252441, -727.979736)">
           <rect
-            fill={lightMdr ? 'red' : '#d2d6dc'} x="0"
+            fill={lightMdr ? '#ed1c24' : '#d2d6dc'} x="0"
             y="813.543" width="51.0236"
             height="28.3465"
           />
@@ -152,7 +152,7 @@ export const Simulator = () => {
         </g>
         <g id="mar" transform="matrix(1, 0, 0, 1, 544.25238, -760.326233)">
           <rect
-            fill={lightMar ? 'red' : '#d2d6dc'} x="0"
+            fill={lightMar ? '#ed1c24' : '#d2d6dc'} x="0"
             y="813.543" width="51.0236"
             height="28.3465"
           />
@@ -168,7 +168,7 @@ export const Simulator = () => {
         >
           <rect
             className="register"
-            fill={lightIx ? 'red' : '#d2d6dc'} x="0"
+            fill={lightIx ? '#ed1c24' : '#d2d6dc'} x="0"
             y="813.543" width="51.0236"
             height="28.3465"
           />
@@ -185,10 +185,10 @@ export const Simulator = () => {
         </g>
         <g id="sp_adder" transform="translate(217,618) rotate(180)">
           <g transform="translate(16.0534,0)">
-            <path fill={lightSpAdder ? 'red' : '#d2d6dc'} d="M0 536.42 L24 536.42 L40.07 500.45 L16.08 500.45 L0 536.42 Z" />
+            <path fill={lightSpAdder ? '#ed1c24' : '#adacac'} d="M0 536.42 L24 536.42 L40.07 500.45 L16.08 500.45 L0 536.42 Z" />
           </g>
           <g transform="translate(40.0731,0) scale(-1,1)">
-            <path fill={lightSpAdder ? 'red' : '#d2d6dc'} d="M0 536.42 L24 536.42 L40.07 500.45 L16.08 500.45 L0 536.42 Z" />
+            <path fill={lightSpAdder ? '#ed1c24' : '#adacac'} d="M0 536.42 L24 536.42 L40.07 500.45 L16.08 500.45 L0 536.42 Z" />
           </g>
         </g>
         <g
@@ -198,7 +198,7 @@ export const Simulator = () => {
         >
           <rect
             className="register"
-            fill={lightSp ? 'red' : '#d2d6dc'} y="851.543"
+            fill={lightSp ? '#ed1c24' : '#d2d6dc'} y="851.543"
             width="51.0236" height="28.3465"
             x="-27"
           />
@@ -216,7 +216,7 @@ export const Simulator = () => {
 
         <g id="decoder" transform="matrix(0, -1, 1, 0, -456.377991, 229.910004)">
           <path
-            fill={lightDecoder ? 'red' : '#d2d6dc'} d="M0 841.89 L76.54 841.89 L68.88 756.85 L7.65 756.85 L0 841.89 Z"
+            fill={lightDecoder ? '#ed1c24' : '#adacac'} d="M0 841.89 L76.54 841.89 L68.88 756.85 L7.65 756.85 L0 841.89 Z"
           />
           <text
             fontSize="11px" x="11"
@@ -226,11 +226,11 @@ export const Simulator = () => {
         </g>
         <g id="ix_adder" transform="matrix(0, -1, 1, 0, -711.208984, 98.807701)">
           <path
-            fill={lightIxAdder ? 'red' : '#d2d6dc'} d="M -0.004 801.92 L 26.486 801.92 L 44.236 841.89 L 17.746 841.89 L -0.004 801.92 Z"
+            fill={lightIxAdder ? '#ed1c24' : '#adacac'} d="M -0.004 801.92 L 26.486 801.92 L 44.236 841.89 L 17.746 841.89 L -0.004 801.92 Z"
             transform="matrix(-1, 0, 0, -1, 44.232002, 1643.809998)"
           />
           <path
-            fill={lightIxAdder ? 'red' : '#d2d6dc'} d="M 17.721 841.89 L 44.211 841.89 L 61.961 801.92 L 35.471 801.92 L 17.721 841.89 Z"
+            fill={lightIxAdder ? '#ed1c24' : '#adacac'} d="M 17.721 841.89 L 44.211 841.89 L 61.961 801.92 L 35.471 801.92 L 17.721 841.89 Z"
           />
         </g>
         <line
@@ -249,13 +249,13 @@ export const Simulator = () => {
           x2="90.70870208740234" y2="48.38448357905189"
         />
         <line
-          stroke={lightAddressBus ? 'red' : 'gray'} strokeWidth="2"
+          stroke={lightAddressBus ? '#ed1c24' : 'gray'} strokeWidth="2"
           id="address_bus" x1="130.681"
           y1="66.817" x2="544.252"
           y2="66.817"
         />
         <text
-          fill={lightAddressBus ? 'red' : 'gray'}
+          fill={lightAddressBus ? '#ed1c24' : 'gray'}
           fontSize="12px" x="348.408"
           y="81" id="address_bus_label"
         >BUS INDIRIZZI
@@ -284,7 +284,7 @@ export const Simulator = () => {
         />
         <line
           id="pc-address-bus-line"
-          stroke={lightPc ? 'red' : 'gray'} strokeWidth="2"
+          stroke={lightPc ? '#ed1c24' : 'gray'} strokeWidth="2"
           x1="265.0400390625" y1="66.81669616699219"
           x2="265.0400390625" y2="98.81159973144531"
         />
@@ -300,7 +300,7 @@ export const Simulator = () => {
         />
         <line
           id="decoder-ir-line"
-          stroke={lightDecoder ? 'red' : 'gray'} strokeWidth="2"
+          stroke={lightDecoder ? '#ed1c24' : 'gray'} strokeWidth="2"
           x1="425.1969909667969" y1="190.77310668311887"
           x2="385.51202392578125" y2="190.77310668311887"
         />
@@ -321,44 +321,44 @@ export const Simulator = () => {
           x2="200" y2="249.65157360801194"
         />
         <line
-          stroke={lightDataBus ? 'red' : 'gray'} strokeWidth="2"
+          stroke={lightDataBus ? '#ed1c24' : 'gray'} strokeWidth="2"
           id="data_bus" x1="127.559"
           y1="249.652" x2="526.648"
           y2="249.652"
         />
         <text
           fontSize="12px" id="data_bus_label"
-          fill={lightDataBus ? 'red' : 'gray'}
+          fill={lightDataBus ? '#ed1c24' : 'gray'}
           x="362.408" y="263"
         >BUS DATI
         </text>
         <line
           className="a_data_bus"
-          stroke={lightA && lightDataBus ? 'red' : 'gray'} strokeWidth="2"
+          stroke={lightA && lightDataBus ? '#ed1c24' : 'gray'} strokeWidth="2"
           x1="43.939998626708984" y1="539.1580123901367"
           x2="224.59078968811244" y2="539.1580123901367"
         />
         <line
           className="a_data_bus"
-          stroke={lightA && lightDataBus ? 'red' : 'gray'} strokeWidth="2"
+          stroke={lightA && lightDataBus ? '#ed1c24' : 'gray'} strokeWidth="2"
           x1="224.59078598022464" y1="509.8315124511719"
           x2="224.59078598022464" y2="539.1580200195312"
         />
         <line
           className="a_data_bus"
-          stroke={lightA && lightDataBus ? 'red' : 'gray'} strokeWidth="2"
+          stroke={lightA && lightDataBus ? '#ed1c24' : 'gray'} strokeWidth="2"
           x1="127.55902099609375" y1="250.39699554443362"
           x2="127.55902099609375" y2="539.1580200195312"
         />
         <line
           id="r0_data_bus"
-          stroke={lightR0 && lightDataBus ? 'red' : 'gray'} strokeWidth="2"
+          stroke={lightR0 && lightDataBus ? '#ed1c24' : 'gray'} strokeWidth="2"
           x1="184.25" y1="345.8260192871094"
           x2="184.24999999999997" y2="249.65158081054685"
         />
         <line
           id="r1_data_bus"
-          stroke={lightR1 && lightDataBus ? 'red' : 'gray'} strokeWidth="2"
+          stroke={lightR1 && lightDataBus ? '#ed1c24' : 'gray'} strokeWidth="2"
           x1="265.0400390625" y1="345.8260192871094"
           x2="265.0400390625" y2="249.6515808105469"
         />
@@ -368,14 +368,14 @@ export const Simulator = () => {
           x2="526.6477151441957" y2="98.81159973144531"
         />
         <line
-          className="data-bus" stroke={lightDataBus ? 'red' : 'gray'}
+          className="data-bus" stroke={lightDataBus ? '#ed1c24' : 'gray'}
           strokeWidth="2"
           x1="526.648" y1="98.812"
           x2="526.648" y2="249.652"
         />
         <line
           id="ir-data-bus-line"
-          stroke={lightIr && lightDataBus ? 'red' : 'gray'} strokeWidth="2"
+          stroke={lightIr && lightDataBus ? '#ed1c24' : 'gray'} strokeWidth="2"
           x1="476.2205924987793" y1="190.77310180664062"
           x2="526.647705078125" y2="190.77310180664068"
         />

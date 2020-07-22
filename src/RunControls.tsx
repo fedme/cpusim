@@ -73,13 +73,13 @@ export const RunControls = () => {
           />
           <div>
             <button
-              className="px-3 py-2 rounded text-sm font-medium text-white bg-yellow-600 mr-4 focus:outline-none focus:text-white"
+              className="px-3 py-2 rounded text-sm font-medium text-white bg-gray-400 hover:bg-gray-500 mr-4 focus:outline-none focus:text-white"
               onClick={() => dispatch(reset())}
             >
               Resetta registri
             </button>
             <button
-              className="px-3 py-2 rounded text-sm font-medium text-white bg-green-500 focus:outline-none focus:text-white"
+              className="px-3 py-2 rounded text-sm font-medium text-white bg-green-400 hover:bg-green-500 focus:outline-none focus:text-white"
               onClick={run}
             >
               Esegui programma
