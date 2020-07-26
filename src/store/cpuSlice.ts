@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/brace-style */
 /* eslint-disable import/no-cycle */
 import {
   createSlice, PayloadAction
@@ -12,7 +13,7 @@ import {
 } from '../instructionParser'
 import { AppThunk } from './store'
 import {
-  MEMORY_CODE_MAX_SIZE, MEMORY_DATA_MAX_SIZE, readDataFromMemory, writeDataToMemory
+  MEMORY_CODE_MAX_SIZE, MEMORY_DATA_MAX_SIZE, readDataFromMemory, writeDataToMemory, MEMORY_STACK_MAX_SIZE
 } from './memoryManagement'
 
 
@@ -355,18 +356,6 @@ const cpuSlice = createSlice({
       state.lightMar = action.payload
     },
 
-    setLightCodeRow(state, action: PayloadAction<number | null>) {
-      state.lightCodeRow = action.payload
-    },
-
-    setLightDataRow(state, action: PayloadAction<number | null>) {
-      state.lightDataRow = action.payload
-    },
-
-    setLightStackRow(state, action: PayloadAction<number | null>) {
-      state.lightStackRow = action.payload
-    },
-
     setLightsFetchEnd(state, action: PayloadAction<boolean>) {
       state.lightDataBus = action.payload
       state.lightIr = action.payload
@@ -457,6 +446,22 @@ const cpuSlice = createSlice({
 
     setLightMdr(state, action: PayloadAction<boolean>) {
       state.lightMdr = action.payload
+    },
+
+    lightRamAddress(state, action: PayloadAction<AddressLight>) {
+      const { address, light } = action.payload
+      if (address < 0 || address >= MEMORY_CODE_MAX_SIZE + MEMORY_DATA_MAX_SIZE + MEMORY_STACK_MAX_SIZE) {
+        // do nothing
+      }
+      else if (address < MEMORY_CODE_MAX_SIZE) {
+        state.lightCodeRow = light ? address : null
+      }
+      else if (address < MEMORY_CODE_MAX_SIZE + MEMORY_DATA_MAX_SIZE) {
+        state.lightDataRow = light ? address - MEMORY_CODE_MAX_SIZE : null
+      }
+      else if (address < MEMORY_CODE_MAX_SIZE + MEMORY_DATA_MAX_SIZE + MEMORY_STACK_MAX_SIZE) {
+        state.lightStackRow = light ? address - (MEMORY_CODE_MAX_SIZE + MEMORY_DATA_MAX_SIZE) - MEMORY_CODE_MAX_SIZE : null
+      }
     }
 
   }
@@ -464,6 +469,11 @@ const cpuSlice = createSlice({
 
 interface RegisterLight {
   register: 'R0' | 'R1' | 'A' | 'SP' | 'IX' | 'PC'
+  light: boolean
+}
+
+interface AddressLight {
+  address: number
   light: boolean
 }
 
@@ -496,9 +506,6 @@ export const {
   cal,
   ret,
   setLightsFetchStart,
-  setLightCodeRow,
-  setLightDataRow,
-  setLightStackRow,
   setLightsFetchEnd,
   setLightPc,
   setLightsExecuteStart,
@@ -515,7 +522,8 @@ export const {
   setLightDecoder,
   setLightRegister,
   setLightMar,
-  setLightMdr
+  setLightMdr,
+  lightRamAddress
 } = cpuSlice.actions
 
 export default cpuSlice.reducer

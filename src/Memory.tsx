@@ -138,7 +138,7 @@ export const Memory = () => {
     if (status !== CpuStatus.Idle && lightDataRow != null) {
       const newDecorations = dataEditorRef.current.deltaDecorations(dataEditorDecorations.current, [{
         range: {
-          startLineNumber: lightDataRow - MEMORY_CODE_MAX_SIZE + 1, endLineNumber: lightDataRow - MEMORY_CODE_MAX_SIZE + 1, startColumn: 1, endColumn: 100
+          startLineNumber: lightDataRow + 1, endLineNumber: lightDataRow + 1, startColumn: 1, endColumn: 100
         },
         options: {
           isWholeLine: true,
@@ -188,8 +188,8 @@ export const Memory = () => {
     if (status !== CpuStatus.Idle && lightStackRow != null) {
       const newDecorations = stackEditorRef.current.deltaDecorations(stackEditorDecorations.current, [{
         range: {
-          startLineNumber: lightStackRow - MEMORY_CODE_MAX_SIZE + 1,
-          endLineNumber: lightStackRow - MEMORY_CODE_MAX_SIZE + 1,
+          startLineNumber: lightStackRow + 1,
+          endLineNumber: lightStackRow + 1,
           startColumn: 1,
           endColumn: 100
         },
