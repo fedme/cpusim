@@ -268,7 +268,7 @@ export const Simulator = () => {
         />
         <text
           fill={lightAddressBus ? '#ed1c24' : 'gray'}
-          fontSize="12px" x="348.408"
+          fontSize="12px" x="354"
           y="81" id="address_bus_label"
         >ADDRESS BUS
         </text>
