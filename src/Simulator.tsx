@@ -191,6 +191,12 @@ export const Simulator = () => {
             <path fill={lightSpAdder ? '#ed1c24' : '#adacac'} d="M0 536.42 L24 536.42 L40.07 500.45 L16.08 500.45 L0 536.42 Z" />
           </g>
         </g>
+        <text
+          id="sp_adder_label"
+          textAnchor="middle"
+          x="189" y="101"
+        >+
+        </text>
         <g
           id="sp" transform="matrix(1, 0, 0, 1, 158.740005, -714.330994)"
           cursor="pointer"
@@ -233,6 +239,12 @@ export const Simulator = () => {
             fill={lightIxAdder ? '#ed1c24' : '#adacac'} d="M 17.721 841.89 L 44.211 841.89 L 61.961 801.92 L 35.471 801.92 L 17.721 841.89 Z"
           />
         </g>
+        <text
+          id="ix_adder_label"
+          textAnchor="middle"
+          x="113" y="73"
+        >+
+        </text>
         <line
           stroke="gray" strokeWidth="2"
           x1="43.94" y1="64.893"
