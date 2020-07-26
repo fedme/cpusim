@@ -258,7 +258,7 @@ export const Simulator = () => {
           fill={lightAddressBus ? '#ed1c24' : 'gray'}
           fontSize="12px" x="348.408"
           y="81" id="address_bus_label"
-        >BUS INDIRIZZI
+        >ADDRESS BUS
         </text>
         <line
           stroke="gray" strokeWidth="2"
@@ -330,7 +330,7 @@ export const Simulator = () => {
           fontSize="12px" id="data_bus_label"
           fill={lightDataBus ? '#ed1c24' : 'gray'}
           x="362.408" y="263"
-        >BUS DATI
+        >DATA BUS
         </text>
         <line
           className="a_data_bus"

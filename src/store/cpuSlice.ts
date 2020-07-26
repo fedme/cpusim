@@ -60,7 +60,7 @@ export type CpuState = {
   lightSpAdder: boolean
 }
 
-export const initialCode = 'SET R0 #2\nSET R1 #2\nADD'
+export const initialCode = 'SET R0 #1\nSET R1 #2\nADD\nSTO 100\nHLT'
 
 export const initialData = ''
 

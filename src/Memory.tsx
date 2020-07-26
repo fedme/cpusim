@@ -217,7 +217,7 @@ export const Memory = () => {
 
           <SaveToFile />
 
-          <h3 className="bg-gray-200 px-4 my-2">Codice</h3>
+          <h3 className="bg-gray-200 px-4 my-2">Code</h3>
 
           <ControlledEditor
             width={width}
@@ -235,7 +235,7 @@ export const Memory = () => {
             }}
           />
 
-          <h3 className="bg-gray-200 px-4 my-2">Dati</h3>
+          <h3 className="bg-gray-200 px-4 my-2">Data</h3>
 
           <ControlledEditor
             width={width}
