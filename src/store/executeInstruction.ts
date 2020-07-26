@@ -1,9 +1,9 @@
 import { AppThunk } from './store'
 import {
-  setLightsFetchStart, setLightsFetchEnd, setLightPc, incrementPc, setLightsExecuteStart,
-  hlt, setLightR0, setLightR1, setLightAlu, setLightA, add, sub, mul, div, setLightIx, inc, dec, setLightDataBus,
-  setLightRegister, mov, setLightDecoder, set, setLightAddressBus, setLightMar, setLightMdr, lod,
-  sto, jmp, jmz, jml, jmg, psh, pop, cal, ret, setLightIxAdder, setLightSp, setLightSpAdder, setStatus, CpuStatus, lightRamAddress
+  setLightsFetchStart, setLightsFetchEnd, lightPc, incrementPc, setLightsExecuteStart,
+  hlt, lightR0, lightR1, lightAlu, lightA, add, sub, mul, div, lightIx, inc, dec, lightDataBus,
+  lightRegister, mov, lightDecoder, set, lightAddressBus, lightMar, lightMdr, lod,
+  sto, jmp, jmz, jml, jmg, psh, pop, cal, ret, lightIxAdder, lightSp, lightSpAdder, setStatus, CpuStatus, lightRamAddress
 } from './cpuSlice'
 import { sleep } from '../utils/sleep'
 import {
@@ -41,12 +41,12 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
   await sleep(animationInterval)
 
   dispatch(setLightsFetchEnd(false))
-  dispatch(setLightPc(true))
+  dispatch(lightPc(true))
   dispatch(incrementPc())
 
   await sleep(animationInterval)
 
-  dispatch(setLightPc(false))
+  dispatch(lightPc(false))
   dispatch(setLightsExecuteStart(true))
 
   await sleep(animationInterval)
@@ -60,88 +60,88 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
     }
 
     case InstructionType.Add: {
-      dispatch(setLightR0(true))
-      dispatch(setLightR1(true))
+      dispatch(lightR0(true))
+      dispatch(lightR1(true))
 
       await sleep(animationInterval)
 
-      dispatch(setLightR0(false))
-      dispatch(setLightR1(false))
-      dispatch(setLightAlu(true))
+      dispatch(lightR0(false))
+      dispatch(lightR1(false))
+      dispatch(lightAlu(true))
 
       await sleep(animationInterval)
 
-      dispatch(setLightAlu(false))
-      dispatch(setLightA(true))
+      dispatch(lightAlu(false))
+      dispatch(lightA(true))
       dispatch(add())
 
       await sleep(animationInterval)
 
-      dispatch(setLightA(false))
+      dispatch(lightA(false))
 
       break
     }
 
     case InstructionType.Sub: {
-      dispatch(setLightR0(true))
-      dispatch(setLightR1(true))
+      dispatch(lightR0(true))
+      dispatch(lightR1(true))
 
       await sleep(animationInterval)
 
-      dispatch(setLightR0(false))
-      dispatch(setLightR1(false))
-      dispatch(setLightAlu(true))
+      dispatch(lightR0(false))
+      dispatch(lightR1(false))
+      dispatch(lightAlu(true))
 
       await sleep(animationInterval)
 
-      dispatch(setLightAlu(false))
-      dispatch(setLightA(true))
+      dispatch(lightAlu(false))
+      dispatch(lightA(true))
       dispatch(sub())
 
       await sleep(animationInterval)
 
-      dispatch(setLightA(false))
+      dispatch(lightA(false))
 
       break
     }
 
     case InstructionType.Mul: {
-      dispatch(setLightR0(true))
-      dispatch(setLightR1(true))
+      dispatch(lightR0(true))
+      dispatch(lightR1(true))
 
       await sleep(animationInterval)
 
-      dispatch(setLightR0(false))
-      dispatch(setLightR1(false))
-      dispatch(setLightAlu(true))
+      dispatch(lightR0(false))
+      dispatch(lightR1(false))
+      dispatch(lightAlu(true))
 
       await sleep(animationInterval)
 
-      dispatch(setLightAlu(false))
-      dispatch(setLightA(true))
+      dispatch(lightAlu(false))
+      dispatch(lightA(true))
       dispatch(mul())
 
       await sleep(animationInterval)
 
-      dispatch(setLightA(false))
+      dispatch(lightA(false))
 
       break
     }
 
     case InstructionType.Div: {
-      dispatch(setLightR0(true))
-      dispatch(setLightR1(true))
+      dispatch(lightR0(true))
+      dispatch(lightR1(true))
 
       await sleep(animationInterval)
 
-      dispatch(setLightR0(false))
-      dispatch(setLightR1(false))
-      dispatch(setLightAlu(true))
+      dispatch(lightR0(false))
+      dispatch(lightR1(false))
+      dispatch(lightAlu(true))
 
       await sleep(animationInterval)
 
-      dispatch(setLightAlu(false))
-      dispatch(setLightA(true))
+      dispatch(lightAlu(false))
+      dispatch(lightA(true))
       dispatch(div())
       if (cpu.r1 === 0) {
         dispatch(hlt())
@@ -149,30 +149,30 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
 
       await sleep(animationInterval)
 
-      dispatch(setLightA(false))
+      dispatch(lightA(false))
 
       break
     }
 
     case InstructionType.Inc: {
-      dispatch(setLightIx(true))
+      dispatch(lightIx(true))
       dispatch(inc())
 
       await sleep(animationInterval)
 
-      dispatch(setLightIx(false))
+      dispatch(lightIx(false))
 
       break
     }
 
 
     case InstructionType.Dec: {
-      dispatch(setLightIx(true))
+      dispatch(lightIx(true))
       dispatch(dec())
 
       await sleep(animationInterval)
 
-      dispatch(setLightIx(false))
+      dispatch(lightIx(false))
 
       break
     }
@@ -180,19 +180,19 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
     case InstructionType.Mov: {
       const movInstruction = instruction as MovInstruction
 
-      dispatch(setLightA(true))
-      dispatch(setLightDataBus(true))
+      dispatch(lightA(true))
+      dispatch(lightDataBus(true))
 
       await sleep(animationInterval)
 
-      dispatch(setLightA(false))
-      dispatch(setLightRegister({ register: movInstruction.register, light: true }))
+      dispatch(lightA(false))
+      dispatch(lightRegister({ register: movInstruction.register, light: true }))
       dispatch(mov(movInstruction))
 
       await sleep(animationInterval)
 
-      dispatch(setLightRegister({ register: movInstruction.register, light: false }))
-      dispatch(setLightDataBus(false))
+      dispatch(lightRegister({ register: movInstruction.register, light: false }))
+      dispatch(lightDataBus(false))
 
       break
     }
@@ -200,19 +200,19 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
     case InstructionType.Set: {
       const setInstruction = instruction as SetInstruction
 
-      dispatch(setLightDecoder(true))
-      dispatch(setLightDataBus(true))
+      dispatch(lightDecoder(true))
+      dispatch(lightDataBus(true))
 
       await sleep(animationInterval)
 
-      dispatch(setLightDecoder(false))
-      dispatch(setLightRegister({ register: setInstruction.register, light: true }))
+      dispatch(lightDecoder(false))
+      dispatch(lightRegister({ register: setInstruction.register, light: true }))
       dispatch(set(setInstruction))
 
       await sleep(animationInterval)
 
-      dispatch(setLightDataBus(false))
-      dispatch(setLightRegister({ register: setInstruction.register, light: false }))
+      dispatch(lightDataBus(false))
+      dispatch(lightRegister({ register: setInstruction.register, light: false }))
 
       break
     }
@@ -220,30 +220,30 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
     case InstructionType.LodSimple: {
       const lodInstruction = instruction as LodInstruction
 
-      dispatch(setLightDecoder(true))
-      dispatch(setLightAddressBus(true))
-      dispatch(setLightMar(true))
+      dispatch(lightDecoder(true))
+      dispatch(lightAddressBus(true))
+      dispatch(lightMar(true))
 
       await sleep(animationInterval)
 
-      dispatch(setLightDecoder(false))
-      dispatch(setLightAddressBus(false))
-      dispatch(setLightMar(false))
+      dispatch(lightDecoder(false))
+      dispatch(lightAddressBus(false))
+      dispatch(lightMar(false))
       dispatch(lightRamAddress({ address: lodInstruction.address, light: true }))
 
       await sleep(animationInterval)
 
       dispatch(lightRamAddress({ address: lodInstruction.address, light: false }))
-      dispatch(setLightMdr(true))
-      dispatch(setLightDataBus(true))
-      dispatch(setLightRegister({ register: lodInstruction.register, light: true }))
+      dispatch(lightMdr(true))
+      dispatch(lightDataBus(true))
+      dispatch(lightRegister({ register: lodInstruction.register, light: true }))
       dispatch(lod(lodInstruction))
 
       await sleep(animationInterval)
 
-      dispatch(setLightMdr(false))
-      dispatch(setLightDataBus(false))
-      dispatch(setLightRegister({ register: lodInstruction.register, light: false }))
+      dispatch(lightMdr(false))
+      dispatch(lightDataBus(false))
+      dispatch(lightRegister({ register: lodInstruction.register, light: false }))
 
       break
     }
@@ -251,37 +251,37 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
     case InstructionType.LodComplexIX: {
       const lodInstruction = instruction as LodInstruction
 
-      dispatch(setLightDecoder(true))
-      dispatch(setLightAddressBus(true))
-      dispatch(setLightIx(true))
-      dispatch(setLightIxAdder(true))
+      dispatch(lightDecoder(true))
+      dispatch(lightAddressBus(true))
+      dispatch(lightIx(true))
+      dispatch(lightIxAdder(true))
 
       await sleep(animationInterval)
 
-      dispatch(setLightDecoder(false))
-      dispatch(setLightIx(false))
-      dispatch(setLightIxAdder(false))
-      dispatch(setLightMar(true))
+      dispatch(lightDecoder(false))
+      dispatch(lightIx(false))
+      dispatch(lightIxAdder(false))
+      dispatch(lightMar(true))
 
       await sleep(animationInterval)
 
-      dispatch(setLightAddressBus(false))
-      dispatch(setLightMar(false))
+      dispatch(lightAddressBus(false))
+      dispatch(lightMar(false))
       dispatch(lightRamAddress({ address: cpu.ix + lodInstruction.address, light: true }))
 
       await sleep(animationInterval)
 
       dispatch(lightRamAddress({ address: cpu.ix + lodInstruction.address, light: false }))
-      dispatch(setLightMdr(true))
-      dispatch(setLightDataBus(true))
-      dispatch(setLightRegister({ register: lodInstruction.register, light: true }))
+      dispatch(lightMdr(true))
+      dispatch(lightDataBus(true))
+      dispatch(lightRegister({ register: lodInstruction.register, light: true }))
       dispatch(lod(lodInstruction))
 
       await sleep(animationInterval)
 
-      dispatch(setLightMdr(false))
-      dispatch(setLightDataBus(false))
-      dispatch(setLightRegister({ register: lodInstruction.register, light: false }))
+      dispatch(lightMdr(false))
+      dispatch(lightDataBus(false))
+      dispatch(lightRegister({ register: lodInstruction.register, light: false }))
 
       break
     }
@@ -289,37 +289,37 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
     case InstructionType.LodComplexSP: {
       const lodInstruction = instruction as LodInstruction
 
-      dispatch(setLightDecoder(true))
-      dispatch(setLightAddressBus(true))
-      dispatch(setLightSp(true))
-      dispatch(setLightSpAdder(true))
+      dispatch(lightDecoder(true))
+      dispatch(lightAddressBus(true))
+      dispatch(lightSp(true))
+      dispatch(lightSpAdder(true))
 
       await sleep(animationInterval)
 
-      dispatch(setLightDecoder(false))
-      dispatch(setLightSp(false))
-      dispatch(setLightSpAdder(false))
-      dispatch(setLightMar(true))
+      dispatch(lightDecoder(false))
+      dispatch(lightSp(false))
+      dispatch(lightSpAdder(false))
+      dispatch(lightMar(true))
 
       await sleep(animationInterval)
 
-      dispatch(setLightAddressBus(false))
-      dispatch(setLightMar(false))
+      dispatch(lightAddressBus(false))
+      dispatch(lightMar(false))
       dispatch(lightRamAddress({ address: cpu.sp - lodInstruction.address, light: true }))
 
       await sleep(animationInterval)
 
       dispatch(lightRamAddress({ address: cpu.sp - lodInstruction.address, light: false }))
-      dispatch(setLightMdr(true))
-      dispatch(setLightDataBus(true))
-      dispatch(setLightRegister({ register: lodInstruction.register, light: true }))
+      dispatch(lightMdr(true))
+      dispatch(lightDataBus(true))
+      dispatch(lightRegister({ register: lodInstruction.register, light: true }))
       dispatch(lod(lodInstruction))
 
       await sleep(animationInterval)
 
-      dispatch(setLightMdr(false))
-      dispatch(setLightDataBus(false))
-      dispatch(setLightRegister({ register: lodInstruction.register, light: false }))
+      dispatch(lightMdr(false))
+      dispatch(lightDataBus(false))
+      dispatch(lightRegister({ register: lodInstruction.register, light: false }))
 
       break
     }
@@ -327,21 +327,21 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
     case InstructionType.StoSimple: {
       const stoInstruction = instruction as StoInstruction
 
-      dispatch(setLightDecoder(true))
-      dispatch(setLightAddressBus(true))
-      dispatch(setLightMar(true))
-      dispatch(setLightA(true))
-      dispatch(setLightDataBus(true))
-      dispatch(setLightMdr(true))
+      dispatch(lightDecoder(true))
+      dispatch(lightAddressBus(true))
+      dispatch(lightMar(true))
+      dispatch(lightA(true))
+      dispatch(lightDataBus(true))
+      dispatch(lightMdr(true))
 
       await sleep(animationInterval)
 
-      dispatch(setLightDecoder(false))
-      dispatch(setLightAddressBus(false))
-      dispatch(setLightMar(false))
-      dispatch(setLightA(false))
-      dispatch(setLightDataBus(false))
-      dispatch(setLightMdr(false))
+      dispatch(lightDecoder(false))
+      dispatch(lightAddressBus(false))
+      dispatch(lightMar(false))
+      dispatch(lightA(false))
+      dispatch(lightDataBus(false))
+      dispatch(lightMdr(false))
 
       dispatch(sto(stoInstruction))
       dispatch(lightRamAddress({ address: stoInstruction.address, light: true }))

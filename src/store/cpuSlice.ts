@@ -362,7 +362,7 @@ const cpuSlice = createSlice({
       state.lightMdr = action.payload
     },
 
-    setLightPc(state, action: PayloadAction<boolean>) {
+    lightPc(state, action: PayloadAction<boolean>) {
       state.lightPc = action.payload
     },
 
@@ -371,51 +371,51 @@ const cpuSlice = createSlice({
       state.lightDecoder = action.payload
     },
 
-    setLightR0(state, action: PayloadAction<boolean>) {
+    lightR0(state, action: PayloadAction<boolean>) {
       state.lightR0 = action.payload
     },
 
-    setLightR1(state, action: PayloadAction<boolean>) {
+    lightR1(state, action: PayloadAction<boolean>) {
       state.lightR1 = action.payload
     },
 
-    setLightAlu(state, action: PayloadAction<boolean>) {
+    lightAlu(state, action: PayloadAction<boolean>) {
       state.lightAlu = action.payload
     },
 
-    setLightA(state, action: PayloadAction<boolean>) {
+    lightA(state, action: PayloadAction<boolean>) {
       state.lightA = action.payload
     },
 
-    setLightIx(state, action: PayloadAction<boolean>) {
+    lightIx(state, action: PayloadAction<boolean>) {
       state.lightIx = action.payload
     },
 
-    setLightIxAdder(state, action: PayloadAction<boolean>) {
+    lightIxAdder(state, action: PayloadAction<boolean>) {
       state.lightIxAdder = action.payload
     },
 
-    setLightSp(state, action: PayloadAction<boolean>) {
+    lightSp(state, action: PayloadAction<boolean>) {
       state.lightSp = action.payload
     },
 
-    setLightSpAdder(state, action: PayloadAction<boolean>) {
+    lightSpAdder(state, action: PayloadAction<boolean>) {
       state.lightSpAdder = action.payload
     },
 
-    setLightAddressBus(state, action: PayloadAction<boolean>) {
+    lightAddressBus(state, action: PayloadAction<boolean>) {
       state.lightAddressBus = action.payload
     },
 
-    setLightDataBus(state, action: PayloadAction<boolean>) {
+    lightDataBus(state, action: PayloadAction<boolean>) {
       state.lightDataBus = action.payload
     },
 
-    setLightDecoder(state, action: PayloadAction<boolean>) {
+    lightDecoder(state, action: PayloadAction<boolean>) {
       state.lightDecoder = action.payload
     },
 
-    setLightRegister(state, action: PayloadAction<RegisterLight>) {
+    lightRegister(state, action: PayloadAction<RegisterLight>) {
       switch (action.payload.register) {
         case 'R0': {
           state.lightR0 = action.payload.light
@@ -440,11 +440,11 @@ const cpuSlice = createSlice({
       }
     },
 
-    setLightMar(state, action: PayloadAction<boolean>) {
+    lightMar(state, action: PayloadAction<boolean>) {
       state.lightMar = action.payload
     },
 
-    setLightMdr(state, action: PayloadAction<boolean>) {
+    lightMdr(state, action: PayloadAction<boolean>) {
       state.lightMdr = action.payload
     },
 
@@ -507,22 +507,22 @@ export const {
   ret,
   setLightsFetchStart,
   setLightsFetchEnd,
-  setLightPc,
+  lightPc,
   setLightsExecuteStart,
-  setLightR0,
-  setLightR1,
-  setLightAlu,
-  setLightA,
-  setLightIx,
-  setLightIxAdder,
-  setLightSp,
-  setLightSpAdder,
-  setLightAddressBus,
-  setLightDataBus,
-  setLightDecoder,
-  setLightRegister,
-  setLightMar,
-  setLightMdr,
+  lightR0,
+  lightR1,
+  lightAlu,
+  lightA,
+  lightIx,
+  lightIxAdder,
+  lightSp,
+  lightSpAdder,
+  lightAddressBus,
+  lightDataBus,
+  lightDecoder,
+  lightRegister,
+  lightMar,
+  lightMdr,
   lightRamAddress
 } = cpuSlice.actions
 
