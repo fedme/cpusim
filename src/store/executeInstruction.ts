@@ -354,12 +354,74 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
     }
 
     case InstructionType.StoComplexIX: {
-      dispatch(sto(instruction as StoInstruction))
+      const stoInstruction = instruction as StoInstruction
+
+      dispatch(lightDecoder(true))
+      dispatch(lightAddressBus(true))
+      dispatch(lightIx(true))
+      dispatch(lightIxAdder(true))
+
+      await sleep(animationInterval)
+
+      dispatch(lightDecoder(false))
+      dispatch(lightIx(false))
+      dispatch(lightIxAdder(false))
+      dispatch(lightMar(true))
+      dispatch(lightA(true))
+      dispatch(lightDataBus(true))
+      dispatch(lightMdr(true))
+
+      await sleep(animationInterval)
+
+      dispatch(lightAddressBus(false))
+      dispatch(lightMar(false))
+      dispatch(lightA(false))
+      dispatch(lightDataBus(false))
+      dispatch(lightMdr(false))
+
+      dispatch(sto(stoInstruction))
+      dispatch(lightRamAddress({ address: cpu.ix + stoInstruction.address, light: true }))
+
+      await sleep(animationInterval)
+
+      dispatch(lightRamAddress({ address: cpu.ix + stoInstruction.address, light: false }))
+
       break
     }
 
     case InstructionType.StoComplexSP: {
-      dispatch(sto(instruction as StoInstruction))
+      const stoInstruction = instruction as StoInstruction
+
+      dispatch(lightDecoder(true))
+      dispatch(lightAddressBus(true))
+      dispatch(lightSp(true))
+      dispatch(lightSpAdder(true))
+
+      await sleep(animationInterval)
+
+      dispatch(lightDecoder(false))
+      dispatch(lightSp(false))
+      dispatch(lightSpAdder(false))
+      dispatch(lightMar(true))
+      dispatch(lightA(true))
+      dispatch(lightDataBus(true))
+      dispatch(lightMdr(true))
+
+      await sleep(animationInterval)
+
+      dispatch(lightAddressBus(false))
+      dispatch(lightMar(false))
+      dispatch(lightA(false))
+      dispatch(lightDataBus(false))
+      dispatch(lightMdr(false))
+
+      dispatch(sto(stoInstruction))
+      dispatch(lightRamAddress({ address: cpu.sp - stoInstruction.address, light: true }))
+
+      await sleep(animationInterval)
+
+      dispatch(lightRamAddress({ address: cpu.sp - stoInstruction.address, light: false }))
+
       break
     }
 

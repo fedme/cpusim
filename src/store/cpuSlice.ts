@@ -460,7 +460,7 @@ const cpuSlice = createSlice({
         state.lightDataRow = light ? address - MEMORY_CODE_MAX_SIZE : null
       }
       else if (address < MEMORY_CODE_MAX_SIZE + MEMORY_DATA_MAX_SIZE + MEMORY_STACK_MAX_SIZE) {
-        state.lightStackRow = light ? address - (MEMORY_CODE_MAX_SIZE + MEMORY_DATA_MAX_SIZE) - MEMORY_CODE_MAX_SIZE : null
+        state.lightStackRow = light ? address - (MEMORY_CODE_MAX_SIZE + MEMORY_DATA_MAX_SIZE) : null
       }
     }
 
