@@ -61,9 +61,12 @@ export const RegisterEditorModal = ({ registerUnderEdit, onClose }: RegisterEdit
 
         {registerUnderEdit}: &nbsp;
         <input
+          // eslint-disable-next-line jsx-a11y/no-autofocus
+          autoFocus
           className="form-input"
           type="number" value={registerUnderEditValue}
           onChange={(e) => dispatch(set({ type: InstructionType.Set, register: registerUnderEdit, data: parseInt(e.target.value) }))}
+          onKeyPress={(e) => e.key === 'Enter' && onClose()}
         />
       </div>
     </>
