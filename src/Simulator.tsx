@@ -351,16 +351,34 @@ export const Simulator = () => {
           x2="127.55902099609375" y2="539.1580200195312"
         />
         <line
+          className="a_alu" stroke="gray"
+          strokeWidth="2" x1="224.59078598022464"
+          y1="470.5" x2="224.59078598022464"
+          y2="482"
+        />
+        <line
           id="r0_data_bus"
           stroke={lightR0 && lightDataBus ? '#ed1c24' : 'gray'} strokeWidth="2"
           x1="184.25" y1="345.8260192871094"
-          x2="184.24999999999997" y2="249.65158081054685"
+          x2="184.25" y2="249.65158081054685"
+        />
+        <line
+          id="r0_alu" stroke="gray"
+          strokeWidth="2" x1="184.25"
+          y1="384" x2="184.25"
+          y2="374"
         />
         <line
           id="r1_data_bus"
           stroke={lightR1 && lightDataBus ? '#ed1c24' : 'gray'} strokeWidth="2"
-          x1="265.0400390625" y1="345.8260192871094"
-          x2="265.0400390625" y2="249.6515808105469"
+          x1="265" y1="345.8260192871094"
+          x2="265" y2="249.6515808105469"
+        />
+        <line
+          id="r1_alu" stroke="gray"
+          strokeWidth="2" x1="265"
+          y1="384" x2="265"
+          y2="374"
         />
         <line
           stroke="gray" strokeWidth="2"
