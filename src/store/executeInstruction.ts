@@ -659,6 +659,7 @@ export const executeNextInstruction = (continueExecuting: boolean = true): AppTh
   if (continueExecuting) {
     dispatch(executeNextInstruction())
   } else {
+    dispatch(lightRamAddress({ address: cpu.pc, light: false }))
     dispatch(setStatus(CpuStatus.Idle))
   }
 }
