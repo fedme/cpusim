@@ -5,6 +5,7 @@ import { monaco, ControlledEditor } from '@monaco-editor/react'
 import { useDebouncedCallback } from 'use-debounce'
 import useResizeObserver from 'use-resize-observer'
 import { useSelector, useDispatch } from 'react-redux'
+import { MdClear } from 'react-icons/md'
 import { RootState } from './store/rootReducer'
 import {
   setCode, setData, setStack, CpuStatus, setInitialCodeAndData
@@ -217,7 +218,10 @@ export const Memory = () => {
 
           <SaveToFile />
 
-          <h3 className="bg-gray-200 px-4 my-2">Code</h3>
+          <div className="flex flex-row justify-between items-center bg-gray-200 px-4 my-2">
+            <h3>Code</h3>
+            <MdClear className="text-gray-600 hover:text-gray-800 cursor-pointer" onClick={() => dispatch(setCode(''))} />
+          </div>
 
           <ControlledEditor
             width={width}
@@ -235,7 +239,10 @@ export const Memory = () => {
             }}
           />
 
-          <h3 className="bg-gray-200 px-4 my-2">Data</h3>
+          <div className="flex flex-row justify-between items-center bg-gray-200 px-4 my-2">
+            <h3>Data</h3>
+            <MdClear className="text-gray-600 hover:text-gray-800 cursor-pointer" onClick={() => dispatch(setData(''))} />
+          </div>
 
           <ControlledEditor
             width={width}
@@ -253,7 +260,10 @@ export const Memory = () => {
             }}
           />
 
-          <h3 className="bg-gray-200 px-4 my-2">Stack</h3>
+          <div className="flex flex-row justify-between items-center bg-gray-200 px-4 my-2">
+            <h3>Stack</h3>
+            <MdClear className="text-gray-600 hover:text-gray-800 cursor-pointer" onClick={() => dispatch(setStack(''))} />
+          </div>
 
           <ControlledEditor
             width={width}

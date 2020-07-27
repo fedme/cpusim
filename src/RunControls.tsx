@@ -92,14 +92,14 @@ export const RunControls = () => {
               <AiOutlineClear />
             </button>
             <button
-              className="px-3 py-2 rounded text-sm font-medium bg-green-300 hover:bg-green-400 mr-2 focus:outline-none focus:text-white"
+              className="px-3 py-2 rounded text-sm font-medium bg-green-400 hover:bg-green-500 mr-2 focus:outline-none focus:text-white"
               onClick={runSingleInstruction}
               title="esegui prossima istruzione"
             >
               <GrPlay />
             </button>
             <button
-              className="px-3 py-2 rounded text-sm font-medium bg-green-400 hover:bg-green-500 mr-2 focus:outline-none focus:text-white"
+              className="px-3 py-2 rounded text-sm font-medium bg-green-300 hover:bg-green-400 mr-2 focus:outline-none focus:text-white"
               onClick={run}
               title="esegui codice"
             >
