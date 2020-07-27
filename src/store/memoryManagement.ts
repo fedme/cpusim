@@ -5,7 +5,6 @@ export const MEMORY_CODE_MAX_SIZE = 100
 export const MEMORY_DATA_MAX_SIZE = 400
 export const MEMORY_STACK_MAX_SIZE = 500
 
-// TODO: light up correct memory row
 export function readDataFromMemory(state: CpuState, address: number): number {
   let data: number | null = 0
 
@@ -28,7 +27,6 @@ export function readDataFromMemory(state: CpuState, address: number): number {
   }
 }
 
-// TODO: light up correct memory row
 export function writeDataToMemory(state: CpuState, address: number, value: number): void {
   if (address < MEMORY_CODE_MAX_SIZE || address >= MEMORY_CODE_MAX_SIZE + MEMORY_DATA_MAX_SIZE + MEMORY_STACK_MAX_SIZE) {
     // eslint-disable-next-line no-alert
