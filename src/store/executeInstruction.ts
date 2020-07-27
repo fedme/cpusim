@@ -426,42 +426,232 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
     }
 
     case InstructionType.Jmp: {
+      dispatch(lightDecoder(true))
+      dispatch(lightAddressBus(true))
+      dispatch(lightPc(true))
       dispatch(jmp(instruction as JmpInstruction))
+
+      await sleep(animationInterval)
+
+      dispatch(lightDecoder(false))
+      dispatch(lightAddressBus(false))
+      dispatch(lightPc(false))
       break
     }
 
     case InstructionType.Jmz: {
+      dispatch(lightA(true))
+
+      await sleep(animationInterval)
+
+      dispatch(lightA(false))
+
+      if (cpu.a === 0) {
+        dispatch(lightDecoder(true))
+        dispatch(lightAddressBus(true))
+      }
       dispatch(jmz(instruction as JmzInstruction))
+      dispatch(lightPc(true))
+
+      await sleep(animationInterval)
+
+      dispatch(lightDecoder(false))
+      dispatch(lightAddressBus(false))
+      dispatch(lightPc(false))
+
       break
     }
 
     case InstructionType.Jml: {
+      dispatch(lightA(true))
+
+      await sleep(animationInterval)
+
+      dispatch(lightA(false))
+
+      if (cpu.a < 0) {
+        dispatch(lightDecoder(true))
+        dispatch(lightAddressBus(true))
+      }
       dispatch(jml(instruction as JmlInstruction))
+      dispatch(lightPc(true))
+
+      await sleep(animationInterval)
+
+      dispatch(lightDecoder(false))
+      dispatch(lightAddressBus(false))
+      dispatch(lightPc(false))
+
       break
     }
 
     case InstructionType.Jmg: {
+      dispatch(lightA(true))
+
+      await sleep(animationInterval)
+
+      dispatch(lightA(false))
+
+      if (cpu.a > 0) {
+        dispatch(lightDecoder(true))
+        dispatch(lightAddressBus(true))
+      }
       dispatch(jmg(instruction as JmgInstruction))
+      dispatch(lightPc(true))
+
+      await sleep(animationInterval)
+
+      dispatch(lightDecoder(false))
+      dispatch(lightAddressBus(false))
+      dispatch(lightPc(false))
+
       break
     }
 
     case InstructionType.Psh: {
+      dispatch(lightSp(true))
+      dispatch(lightAddressBus(true))
+      dispatch(lightMar(true))
+      dispatch(lightA(true))
+      dispatch(lightDataBus(true))
+      dispatch(lightMdr(true))
+
+      await sleep(animationInterval)
+
+      dispatch(lightSp(false))
+      dispatch(lightAddressBus(false))
+      dispatch(lightMar(false))
+      dispatch(lightA(false))
+      dispatch(lightDataBus(false))
+      dispatch(lightMdr(false))
+
+      dispatch(lightRamAddress({ address: cpu.sp, light: true }))
       dispatch(psh())
+
+      await sleep(animationInterval)
+
+      dispatch(lightRamAddress({ address: cpu.sp, light: false }))
+      dispatch(lightSp(true))
+
+      await sleep(animationInterval)
+
+      dispatch(lightSp(false))
+
       break
     }
 
     case InstructionType.Pop: {
+      dispatch(lightSp(true))
+
+      await sleep(animationInterval)
+
+      dispatch(lightAddressBus(true))
+      dispatch(lightMar(true))
+
+      await sleep(animationInterval)
+
+      dispatch(lightSp(false))
+      dispatch(lightAddressBus(false))
+      dispatch(lightMar(false))
+
+      await sleep(animationInterval)
+
+      dispatch(lightRamAddress({ address: cpu.sp, light: true }))
       dispatch(pop())
+
+
+      await sleep(animationInterval)
+
+      dispatch(lightRamAddress({ address: cpu.sp, light: false }))
+      dispatch(lightMdr(true))
+      dispatch(lightDataBus(true))
+      dispatch(lightA(true))
+
+      await sleep(animationInterval)
+
+      dispatch(lightMdr(false))
+      dispatch(lightDataBus(false))
+      dispatch(lightA(false))
+
       break
     }
 
     case InstructionType.Cal: {
+      dispatch(lightSp(true))
+      dispatch(lightAddressBus(true))
+      dispatch(lightMar(true))
+      dispatch(lightPc(true))
+      dispatch(lightDataBus(true))
+      dispatch(lightMdr(true))
+
+      await sleep(animationInterval)
+
+      dispatch(lightSp(false))
+      dispatch(lightAddressBus(false))
+      dispatch(lightMar(false))
+      dispatch(lightPc(false))
+      dispatch(lightDataBus(false))
+      dispatch(lightMdr(false))
+
+      await sleep(animationInterval)
+
+      dispatch(lightRamAddress({ address: cpu.sp, light: true }))
       dispatch(cal(instruction as CalInstruction))
+
+      await sleep(animationInterval)
+
+      dispatch(lightRamAddress({ address: cpu.sp, light: false }))
+      dispatch(lightSp(true))
+
+      await sleep(animationInterval)
+
+      dispatch(lightSp(false))
+      dispatch(lightDecoder(true))
+      dispatch(lightAddressBus(true))
+      dispatch(lightPc(true))
+
+      await sleep(animationInterval)
+
+      dispatch(lightDecoder(false))
+      dispatch(lightAddressBus(false))
+      dispatch(lightPc(false))
+
       break
     }
 
     case InstructionType.Ret: {
+      // 2) reg. SP
+      // 3) reg. SP + bus indirizzi + reg. MAR
+      // 4) cella RAM[SP]
+      // 5) reg. MDR + bus dati + reg. PC
+      dispatch(lightSp(true))
+
+      await sleep(animationInterval)
+
+      dispatch(lightAddressBus(true))
+      dispatch(lightMar(true))
+
+      await sleep(animationInterval)
+
+      dispatch(lightSp(false))
+      dispatch(lightAddressBus(false))
+      dispatch(lightMar(false))
+      dispatch(lightRamAddress({ address: cpu.sp, light: true }))
       dispatch(ret())
+
+      await sleep(animationInterval)
+
+      dispatch(lightRamAddress({ address: cpu.sp, light: false }))
+      dispatch(lightMdr(true))
+      dispatch(lightDataBus(true))
+      dispatch(lightPc(true))
+
+      await sleep(animationInterval)
+
+      dispatch(lightMdr(false))
+      dispatch(lightDataBus(false))
+      dispatch(lightPc(false))
+
       break
     }
   }
@@ -470,5 +660,5 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
 }
 
 function computeAnimationInterval(executionSpeed: number) {
-  return Math.floor(executionSpeed / 10) - 150
+  return Math.floor(executionSpeed / 8)
 }
