@@ -11,7 +11,7 @@ import {
   JmlInstruction, JmgInstruction, CalInstruction
 } from '../instructionParser'
 
-export const executeNextInstruction = (): AppThunk => async (dispatch, getState) => {
+export const executeNextInstruction = (continueExecuting: boolean = true): AppThunk => async (dispatch, getState) => {
   const { cpu } = getState()
 
   if (cpu.status !== CpuStatus.Running) {
@@ -656,7 +656,11 @@ export const executeNextInstruction = (): AppThunk => async (dispatch, getState)
     }
   }
 
-  dispatch(executeNextInstruction())
+  if (continueExecuting) {
+    dispatch(executeNextInstruction())
+  } else {
+    dispatch(setStatus(CpuStatus.Idle))
+  }
 }
 
 function computeAnimationInterval(executionSpeed: number) {

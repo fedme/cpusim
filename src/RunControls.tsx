@@ -3,6 +3,10 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
+  GrPlayFill, GrPlay, GrPauseFill, GrStopFill
+} from 'react-icons/gr'
+import { AiOutlineClear } from 'react-icons/ai'
+import {
   reset, setStatus, setExecutionSpeed, CpuStatus
 } from './store/cpuSlice'
 import { RootState } from './store/rootReducer'
@@ -25,9 +29,17 @@ export const RunControls = () => {
       return
     }
 
-    // dispatch(reset())
     dispatch(setStatus(CpuStatus.Running))
     dispatch(executeNextInstruction())
+  }
+
+  function runSingleInstruction() {
+    if (instructions.length < 1) {
+      return
+    }
+
+    dispatch(setStatus(CpuStatus.Running))
+    dispatch(executeNextInstruction(false))
   }
 
   function stop() {
@@ -73,16 +85,25 @@ export const RunControls = () => {
           />
           <div>
             <button
-              className="px-3 py-2 rounded text-sm font-medium text-white bg-gray-400 hover:bg-gray-500 mr-4 focus:outline-none focus:text-white"
+              className="px-3 py-2 rounded text-sm font-medium bg-gray-400 hover:bg-gray-500 mr-2 focus:outline-none focus:text-white"
               onClick={() => dispatch(reset())}
+              title="resetta registri"
             >
-              Resetta registri
+              <AiOutlineClear />
             </button>
             <button
-              className="px-3 py-2 rounded text-sm font-medium text-white bg-green-400 hover:bg-green-500 focus:outline-none focus:text-white"
-              onClick={run}
+              className="px-3 py-2 rounded text-sm font-medium bg-green-300 hover:bg-green-400 mr-2 focus:outline-none focus:text-white"
+              onClick={runSingleInstruction}
+              title="esegui prossima istruzione"
             >
-              Esegui programma
+              <GrPlay />
+            </button>
+            <button
+              className="px-3 py-2 rounded text-sm font-medium bg-green-400 hover:bg-green-500 mr-2 focus:outline-none focus:text-white"
+              onClick={run}
+              title="esegui codice"
+            >
+              <GrPlayFill />
             </button>
           </div>
         </div>
@@ -94,23 +115,26 @@ export const RunControls = () => {
           <button
             className="px-3 py-2 mr-2 rounded text-sm font-medium text-white bg-yellow-400 focus:outline-none focus:text-white"
             onClick={pause}
+            title="pausa"
           >
-            Pausa
+            <GrPauseFill />
           </button>
           )}
           {status === CpuStatus.Paused && (
           <button
             className="px-3 py-2 mr-2 rounded text-sm font-medium text-white bg-green-500 focus:outline-none focus:text-white"
             onClick={resume}
+            title="riprendi"
           >
-            Riprendi
+            <GrPlayFill />
           </button>
           )}
           <button
             className="px-3 py-2 rounded text-sm font-medium text-white bg-red-500 focus:outline-none focus:text-white"
             onClick={stop}
+            title="stop"
           >
-            Stop
+            <GrStopFill />
           </button>
         </>
       )}
