@@ -3,10 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "Zanichelli - Simulatore CPU",
-  "author": "Zanichelli S.p.a.",
-  "build": {
-    "appId": "it.zanichelli.cpusim"
-  },
+  "author": "Zanichelli Editore S.p.A.",
   "main": "public/electron.js",
   "homepage": "./",
   "scripts": {
@@ -84,5 +81,16 @@
     "postcss-cli": "^7.1.1",
     "tailwindcss": "^1.4.4",
     "wait-on": "^5.1.0"
+  },
+  "build": {
+    "appId": "it.zanichelli.cpusim",
+    "win": {
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "installerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico",
+      "deleteAppDataOnUninstall": true
+    }
   }
 }
